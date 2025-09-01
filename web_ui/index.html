@@ -103,6 +103,10 @@
                         <span>⚙️</span>
                         <span>تنظیمات</span>
                     </a>
+                    <a href="#legal-db" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>🗄️</span>
+                        <span>پایگاه داده حقوقی</span>
+                    </a>
                     <a href="#export" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
                         <span>📤</span>
                         <span>خروجی</span>
@@ -417,6 +421,150 @@
                         <button onclick="clearCache()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
                             🗑️ پاک کردن کش
                         </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Legal Database Section -->
+            <section id="legal-db-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">🗄️ پایگاه داده حقوقی</h2>
+                    <p class="text-gray-600">مدیریت و جستجو در مجموعه اسناد حقوقی استخراج شده از منابع معتبر</p>
+                </div>
+
+                <!-- Database Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-indigo-100">کل اسناد</p>
+                                <p id="legal-db-total" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">📄</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-teal-100">منابع فعال</p>
+                                <p id="legal-db-sources" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🏛️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-pink-100">دسته‌بندی‌ها</p>
+                                <p id="legal-db-categories" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🏷️</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database Management -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">🔧 مدیریت پایگاه داده</h3>
+                        <div class="flex space-x-3 space-x-reverse">
+                            <button onclick="searchNafaqeDefinition()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                🔍 جستجوی نفقه
+                            </button>
+                            <button onclick="populateLegalDatabase()" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                📚 پر کردن پایگاه داده
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Source Statistics -->
+                        <div>
+                            <h4 class="font-semibold mb-3">📊 آمار منابع</h4>
+                            <div id="legal-sources-stats" class="space-y-2">
+                                <p class="text-gray-500">در حال بارگذاری...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Category Statistics -->
+                        <div>
+                            <h4 class="font-semibold mb-3">🏷️ آمار دسته‌بندی‌ها</h4>
+                            <div id="legal-categories-stats" class="space-y-2">
+                                <p class="text-gray-500">در حال بارگذاری...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Search -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">🔍 جستجوی پیشرفته</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">جستجو در متن</label>
+                            <input 
+                                type="text" 
+                                id="legal-search-input" 
+                                placeholder="نفقه، طلاق، قانون مدنی..."
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                            >
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">منبع</label>
+                            <select id="legal-source-filter" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option value="">همه منابع</option>
+                                <option value="مجلس شورای اسلامی">مجلس شورای اسلامی</option>
+                                <option value="پورتال ملی قوانین">پورتال ملی قوانین</option>
+                                <option value="قوه قضاییه">قوه قضاییه</option>
+                                <option value="کانون وکلای دادگستری">کانون وکلای دادگستری</option>
+                                <option value="روزنامه رسمی">روزنامه رسمی</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">دسته‌بندی</label>
+                            <select id="legal-category-filter" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option value="">همه دسته‌ها</option>
+                                <option value="قانون">قانون</option>
+                                <option value="دادنامه">دادنامه</option>
+                                <option value="رویه_قضایی">رویه قضایی</option>
+                                <option value="نفقه_و_حقوق_خانواده">نفقه و حقوق خانواده</option>
+                                <option value="آگهی_قانونی">آگهی قانونی</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button onclick="searchLegalDocuments()" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg transition-colors">
+                            🔍 جستجو
+                        </button>
+                        <button onclick="clearLegalSearch()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🗑️ پاک کردن
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">📋 نتایج جستجو</h3>
+                        <div class="text-sm text-gray-500">
+                            <span id="legal-search-count">0</span> سند یافت شد
+                        </div>
+                    </div>
+                    
+                    <div id="legal-documents-results" class="space-y-4 max-h-96 overflow-y-auto">
+                        <div class="text-center py-8 text-gray-500">
+                            <div class="text-4xl mb-4">📚</div>
+                            <p>برای مشاهده اسناد، جستجو کنید یا پایگاه داده را پر کنید</p>
+                            <button onclick="loadAllLegalDocuments()" class="mt-4 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                📄 نمایش همه اسناد
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>

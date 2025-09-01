@@ -6,6 +6,9 @@ A powerful, modern web interface for the Iranian Legal Document Archive System, 
 
 ### 🎯 Core Functionality
 - **AI-Powered Document Analysis**: Persian BERT classification and similarity analysis
+- **Legal Database System**: Dedicated SQLite database for structured legal documents
+- **Authoritative Source Integration**: Based on 5 major Iranian legal sources
+- **Advanced Search**: Full-text search with legal entity and key term extraction
 - **Intelligent DNS Management**: Hybrid DNS with DoH support and automatic failover
 - **Advanced Proxy System**: Smart proxy rotation with health monitoring
 - **Real-time Processing**: WebSocket-based live updates and progress tracking
@@ -15,9 +18,10 @@ A powerful, modern web interface for the Iranian Legal Document Archive System, 
 - **Modern Responsive Design**: Mobile-first design with Tailwind CSS
 - **Persian RTL Support**: Full right-to-left layout with proper typography
 - **Dark/Light Theme**: Automatic theme switching with user preference storage
+- **Legal Database Tab**: Dedicated interface for legal document management
 - **Real-time Dashboard**: Live charts and metrics visualization
 - **File Upload Support**: Bulk URL processing from CSV/TXT files
-- **Advanced Search**: Real-time document filtering and search
+- **Advanced Search**: Real-time document filtering and legal text search
 - **Export Capabilities**: JSON, CSV, and TXT export formats
 - **Offline Support**: Service Worker for offline functionality
 
@@ -35,28 +39,40 @@ A powerful, modern web interface for the Iranian Legal Document Archive System, 
    pip install -r requirements.txt
    ```
 
-3. **Run the web server**:
+3. **Create demo legal database** (optional):
    ```bash
-   python web_server.py
+   python demo_legal_db.py
    ```
 
-4. **Access the application**:
+4. **Run the enhanced system**:
+   ```bash
+   python run_legal_archive.py --mode web --create-demo
+   ```
+
+5. **Access the application**:
    Open your browser and navigate to `http://localhost:7860`
 
 ## 📁 Project Structure
 
 ```
 iranian-legal-archive/
-├── enhanced_legal_scraper (3).py  # Main backend system
-├── web_server.py                  # FastAPI web server
-├── requirements.txt               # Python dependencies
-├── web_ui/                        # Web interface files
-│   ├── index.html                # Main HTML page
-│   ├── styles.css                # Advanced CSS styling
-│   ├── script.js                 # JavaScript functionality
-│   ├── sw.js                     # Service Worker
-│   └── package.json              # Web dependencies info
-└── README.md                     # This file
+├── enhanced_legal_scraper (3).py  # Main backend system (5000+ lines)
+├── web_server.py                  # FastAPI web server with API endpoints
+├── legal_database.py              # Legal database system with AI analysis
+├── test_legal_db.py              # Comprehensive test suite
+├── demo_legal_db.py              # Demo script with sample نفقه data
+├── run_legal_archive.py          # Main launcher script
+├── deploy.py                     # Automated deployment script
+├── requirements.txt              # Python dependencies
+├── init_legal_database.sql       # Database schema and queries
+├── LEGAL_DATABASE_GUIDE.md       # Legal database documentation
+├── web_ui/                       # Advanced web interface
+│   ├── index.html               # Responsive HTML with legal DB tab
+│   ├── styles.css               # Advanced CSS with themes
+│   ├── script.js                # JavaScript with WebSocket support
+│   ├── sw.js                    # Service Worker for offline support
+│   └── package.json             # Web dependencies
+└── README.md                    # This comprehensive guide
 ```
 
 ## 🎛️ Usage Guide
@@ -79,7 +95,14 @@ iranian-legal-archive/
 - Select AI model preferences
 - Manage cache settings and cleanup
 
-### 4. Export and Analysis
+### 4. Legal Database Management
+- Access the "پایگاه داده حقوقی" (Legal Database) section
+- Search for legal terms like "نفقه" (alimony)
+- Populate database from authoritative sources
+- View structured legal document analysis
+- Filter by source and legal category
+
+### 5. Export and Analysis
 - Export processed documents in multiple formats
 - Search and filter through processed documents
 - View detailed analysis results and quality scores
@@ -99,6 +122,13 @@ The FastAPI server exposes the following endpoints:
 - `DELETE /api/cache` - Clear system cache
 - `GET /api/logs` - Get operation logs
 - `WebSocket /ws` - Real-time updates
+
+### Legal Database Endpoints
+- `GET /api/legal-db/stats` - Legal database statistics
+- `GET /api/legal-db/documents` - Get legal documents (with filtering)
+- `GET /api/legal-db/search` - Search legal documents by query
+- `POST /api/legal-db/populate` - Populate database from sources
+- `POST /api/legal-db/search-nafaqe` - Search نفقه definition
 
 ## 🌟 Advanced Features
 

@@ -58,6 +58,9 @@ else:
         def process_bulk_urls_enhanced(self, *args, **kwargs):
             return ("Mock processing result", "", "", "")
 
+# Import legal database system
+from legal_database import LegalDatabase, EnhancedLegalAnalyzer, LegalDocument
+
 # Set up logger
 logger = logging.getLogger(__name__)
 
@@ -95,6 +98,8 @@ class SystemStats(BaseModel):
 
 # Global application instance
 legal_archive = None
+legal_db = None
+legal_analyzer = None
 processing_status = ProcessingStatus(is_processing=False, message="Ready")
 
 # WebSocket connection manager
@@ -149,13 +154,24 @@ app.add_middleware(
 # Initialize the legal archive system
 @app.on_event("startup")
 async def startup_event():
-    global legal_archive
+    global legal_archive, legal_db, legal_analyzer
     try:
+        # Initialize legal archive system
         legal_archive = UltraModernLegalArchive()
         logger.info("Legal archive system initialized successfully")
+        
+        # Initialize legal database system
+        legal_db = LegalDatabase("legal_archive.db")
+        legal_analyzer = EnhancedLegalAnalyzer(cache_system=getattr(legal_archive, 'cache_system', None))
+        legal_analyzer.set_legal_database(legal_db)
+        logger.info("Legal database system initialized successfully")
+        
     except Exception as e:
-        logger.error(f"Failed to initialize legal archive: {e}")
-        raise
+        logger.error(f"Failed to initialize systems: {e}")
+        # Create mock instances for testing
+        legal_db = LegalDatabase()
+        legal_analyzer = EnhancedLegalAnalyzer()
+        legal_analyzer.set_legal_database(legal_db)
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="web_ui"), name="static")
@@ -463,6 +479,178 @@ async def get_operation_logs(limit: int = 50):
             return {"logs": []}
     except Exception as e:
         logger.error(f"Error getting logs: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Legal Database API Endpoints
+
+@app.get("/api/legal-db/stats")
+async def get_legal_database_stats():
+    """Get legal database statistics"""
+    if not legal_db:
+        raise HTTPException(status_code=503, detail="Legal database not initialized")
+    
+    try:
+        stats = legal_db.get_database_stats()
+        return stats
+    except Exception as e:
+        logger.error(f"Error getting legal database stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/legal-db/documents")
+async def get_legal_documents(
+    source: Optional[str] = None,
+    category: Optional[str] = None,
+    limit: int = 50,
+    offset: int = 0
+):
+    """Get legal documents with optional filtering"""
+    if not legal_db:
+        raise HTTPException(status_code=503, detail="Legal database not initialized")
+    
+    try:
+        if source:
+            documents = legal_db.get_documents_by_source(source, limit)
+        else:
+            # Get all documents with pagination
+            with sqlite3.connect(legal_db.db_path) as conn:
+                conn.row_factory = sqlite3.Row
+                
+                query = "SELECT * FROM legal_documents"
+                params = []
+                
+                if category:
+                    query += " WHERE category = ?"
+                    params.append(category)
+                
+                query += " ORDER BY timestamp DESC LIMIT ? OFFSET ?"
+                params.extend([limit, offset])
+                
+                cursor = conn.execute(query, params)
+                documents = [dict(row) for row in cursor.fetchall()]
+        
+        return {
+            "documents": documents,
+            "total": len(documents),
+            "limit": limit,
+            "offset": offset
+        }
+    
+    except Exception as e:
+        logger.error(f"Error getting legal documents: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/legal-db/search")
+async def search_legal_documents(q: str, limit: int = 50):
+    """Search legal documents by query"""
+    if not legal_db:
+        raise HTTPException(status_code=503, detail="Legal database not initialized")
+    
+    if not q.strip():
+        raise HTTPException(status_code=400, detail="Search query cannot be empty")
+    
+    try:
+        results = legal_db.search_documents(q, limit)
+        return {
+            "query": q,
+            "results": results,
+            "count": len(results)
+        }
+    except Exception as e:
+        logger.error(f"Error searching legal documents: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/legal-db/populate")
+async def populate_legal_database(background_tasks: BackgroundTasks, max_docs_per_source: int = 10):
+    """Populate legal database with documents from authoritative sources"""
+    if not legal_db or not legal_analyzer:
+        raise HTTPException(status_code=503, detail="Legal database system not initialized")
+    
+    if processing_status.is_processing:
+        raise HTTPException(status_code=409, detail="Another operation in progress")
+    
+    background_tasks.add_task(populate_database_background, max_docs_per_source)
+    
+    processing_status.is_processing = True
+    processing_status.current_operation = "Populating legal database"
+    processing_status.progress = 0.0
+    
+    return {"message": "Database population started", "max_docs_per_source": max_docs_per_source}
+
+async def populate_database_background(max_docs_per_source: int):
+    """Background task for populating legal database"""
+    global processing_status
+    
+    try:
+        processing_status.message = "Initializing database population..."
+        await manager.broadcast(json.dumps({
+            "type": "progress_update",
+            "progress": 0.1,
+            "message": "شروع پر کردن پایگاه داده حقوقی...",
+            "is_processing": True
+        }))
+        
+        # Populate database
+        results = legal_analyzer.populate_legal_database(legal_archive, max_docs_per_source)
+        
+        processing_status.is_processing = False
+        processing_status.current_operation = None
+        processing_status.progress = 1.0
+        processing_status.message = f"Database populated: {results['successful_inserts']} documents"
+        
+        # Broadcast completion
+        await manager.broadcast(json.dumps({
+            "type": "database_population_complete",
+            "progress": 1.0,
+            "message": f"پایگاه داده با {results['successful_inserts']} سند پر شد",
+            "is_processing": False,
+            "result": "success",
+            "stats": results
+        }))
+        
+    except Exception as e:
+        logger.error(f"Database population error: {e}")
+        processing_status.is_processing = False
+        processing_status.current_operation = None
+        processing_status.progress = 0.0
+        processing_status.message = f"Error: {str(e)}"
+        
+        # Broadcast error
+        await manager.broadcast(json.dumps({
+            "type": "database_population_error",
+            "progress": 0.0,
+            "message": f"خطا در پر کردن پایگاه داده: {str(e)}",
+            "is_processing": False,
+            "result": "error"
+        }))
+
+@app.post("/api/legal-db/search-nafaqe")
+async def search_nafaqe_definition():
+    """Search for نفقه definition from authoritative sources"""
+    if not legal_analyzer:
+        raise HTTPException(status_code=503, detail="Legal analyzer not initialized")
+    
+    try:
+        nafaqe_doc = legal_analyzer.search_nafaqe_definition(legal_archive)
+        
+        if nafaqe_doc:
+            if isinstance(nafaqe_doc, dict):
+                return {"success": True, "document": nafaqe_doc}
+            else:
+                return {
+                    "success": True, 
+                    "document": {
+                        "title": nafaqe_doc.title,
+                        "content": nafaqe_doc.content,
+                        "source": nafaqe_doc.source,
+                        "category": nafaqe_doc.category,
+                        "url": nafaqe_doc.url
+                    }
+                }
+        else:
+            return {"success": False, "message": "نفقه definition not found"}
+            
+    except Exception as e:
+        logger.error(f"Error searching نفقه definition: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

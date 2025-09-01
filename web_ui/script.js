@@ -198,6 +198,27 @@ class WebSocketManager {
                 }
                 break;
                 
+            case 'database_population_complete':
+                SystemMonitor.updateProgress(1.0, data.message);
+                AppState.isProcessing = false;
+                SystemMonitor.showProgressSection(false);
+                Utils.showToast('پایگاه داده حقوقی با موفقیت پر شد', 'success');
+                
+                // Refresh legal database stats
+                if (AppState.currentSection === 'legal-db') {
+                    setTimeout(() => {
+                        loadLegalDatabaseStats();
+                    }, 1000);
+                }
+                break;
+                
+            case 'database_population_error':
+                SystemMonitor.updateProgress(0, data.message);
+                AppState.isProcessing = false;
+                SystemMonitor.showProgressSection(false);
+                Utils.showToast(data.message, 'error');
+                break;
+                
             default:
                 console.log('Unknown WebSocket message type:', data.type);
         }
@@ -310,6 +331,9 @@ class NavigationManager {
                 break;
             case 'process':
                 await DocumentProcessor.loadProcessedDocuments();
+                break;
+            case 'legal-db':
+                await loadLegalDatabaseStats();
                 break;
         }
     }
@@ -935,6 +959,230 @@ async function clearCache() {
 
 function exportDocuments(format) {
     ExportManager.exportDocuments(format);
+}
+
+// Legal Database Functions
+async function loadLegalDatabaseStats() {
+    try {
+        const stats = await Utils.fetchAPI('/legal-db/stats');
+        
+        // Update stats display
+        document.getElementById('legal-db-total').textContent = stats.total_documents || 0;
+        document.getElementById('legal-db-sources').textContent = Object.keys(stats.sources || {}).length;
+        document.getElementById('legal-db-categories').textContent = Object.keys(stats.categories || {}).length;
+        
+        // Update source statistics
+        const sourcesContainer = document.getElementById('legal-sources-stats');
+        if (stats.sources && Object.keys(stats.sources).length > 0) {
+            sourcesContainer.innerHTML = Object.entries(stats.sources)
+                .map(([source, count]) => `
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span class="font-medium">${source}</span>
+                        <span class="bg-primary-500 text-white px-2 py-1 rounded text-sm">${count}</span>
+                    </div>
+                `).join('');
+        } else {
+            sourcesContainer.innerHTML = '<p class="text-gray-500">هنوز سندی ثبت نشده</p>';
+        }
+        
+        // Update category statistics
+        const categoriesContainer = document.getElementById('legal-categories-stats');
+        if (stats.categories && Object.keys(stats.categories).length > 0) {
+            categoriesContainer.innerHTML = Object.entries(stats.categories)
+                .map(([category, count]) => `
+                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <span class="font-medium">${category}</span>
+                        <span class="bg-secondary-500 text-white px-2 py-1 rounded text-sm">${count}</span>
+                    </div>
+                `).join('');
+        } else {
+            categoriesContainer.innerHTML = '<p class="text-gray-500">هنوز دسته‌بندی نشده</p>';
+        }
+        
+    } catch (error) {
+        Utils.showToast(`خطا در بارگذاری آمار پایگاه داده: ${error.message}`, 'error');
+    }
+}
+
+async function searchLegalDocuments() {
+    const query = document.getElementById('legal-search-input').value.trim();
+    const source = document.getElementById('legal-source-filter').value;
+    const category = document.getElementById('legal-category-filter').value;
+    
+    if (!query && !source && !category) {
+        Utils.showToast('لطفاً حداقل یکی از فیلدهای جستجو را پر کنید', 'warning');
+        return;
+    }
+    
+    try {
+        let results;
+        
+        if (query) {
+            // Text search
+            const response = await Utils.fetchAPI(`/legal-db/search?q=${encodeURIComponent(query)}`);
+            results = response.results;
+        } else {
+            // Filter by source/category
+            let url = '/legal-db/documents?';
+            if (source) url += `source=${encodeURIComponent(source)}&`;
+            if (category) url += `category=${encodeURIComponent(category)}&`;
+            
+            const response = await Utils.fetchAPI(url);
+            results = response.documents;
+        }
+        
+        displayLegalDocuments(results);
+        document.getElementById('legal-search-count').textContent = results.length;
+        
+    } catch (error) {
+        Utils.showToast(`خطا در جستجو: ${error.message}`, 'error');
+    }
+}
+
+async function loadAllLegalDocuments() {
+    try {
+        const response = await Utils.fetchAPI('/legal-db/documents?limit=100');
+        displayLegalDocuments(response.documents);
+        document.getElementById('legal-search-count').textContent = response.documents.length;
+    } catch (error) {
+        Utils.showToast(`خطا در بارگذاری اسناد: ${error.message}`, 'error');
+    }
+}
+
+function displayLegalDocuments(documents) {
+    const container = document.getElementById('legal-documents-results');
+    
+    if (!documents || documents.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-8 text-gray-500">
+                <div class="text-4xl mb-4">🔍</div>
+                <p>هیچ سندی یافت نشد</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = documents.map(doc => {
+        const analysis = doc.analysis ? JSON.parse(doc.analysis) : {};
+        const keyTerms = analysis.key_terms || [];
+        const entities = analysis.legal_entities || [];
+        
+        return `
+            <div class="legal-document-card border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-lg text-gray-800 mb-1">${doc.title || 'بدون عنوان'}</h4>
+                        <div class="flex items-center space-x-4 space-x-reverse text-sm text-gray-500 mb-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">${doc.source}</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded">${doc.category}</span>
+                            <span>امتیاز: ${(doc.reliability_score * 100).toFixed(0)}%</span>
+                        </div>
+                        <p class="text-sm text-gray-500 break-all" dir="ltr">${doc.url}</p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        ${Utils.truncateText(doc.content || 'محتوا در دسترس نیست', 300)}
+                    </p>
+                </div>
+                
+                ${keyTerms.length > 0 ? `
+                    <div class="mb-3">
+                        <p class="text-xs font-medium text-gray-600 mb-1">کلیدواژه‌های حقوقی:</p>
+                        <div class="flex flex-wrap gap-1">
+                            ${keyTerms.slice(0, 8).map(term => 
+                                `<span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">${term.term} (${term.count})</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                ${entities.length > 0 ? `
+                    <div class="mb-3">
+                        <p class="text-xs font-medium text-gray-600 mb-1">نهادهای حقوقی:</p>
+                        <div class="text-xs text-gray-600">
+                            ${entities.slice(0, 5).join('، ')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                    <span>📅 ${new Date(doc.timestamp).toLocaleDateString('fa-IR')}</span>
+                    <button onclick="showLegalDocumentDetails('${doc.id}')" class="text-primary-500 hover:text-primary-600">
+                        📖 جزئیات کامل
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+async function populateLegalDatabase() {
+    try {
+        const response = await Utils.fetchAPI('/legal-db/populate', {
+            method: 'POST',
+            body: JSON.stringify({ max_docs_per_source: 5 })
+        });
+        
+        Utils.showToast('شروع پر کردن پایگاه داده حقوقی...', 'info');
+        
+    } catch (error) {
+        Utils.showToast(`خطا در شروع پر کردن پایگاه داده: ${error.message}`, 'error');
+    }
+}
+
+async function searchNafaqeDefinition() {
+    try {
+        Utils.showToast('در حال جستجوی تعریف نفقه...', 'info');
+        
+        const response = await Utils.fetchAPI('/legal-db/search-nafaqe', {
+            method: 'POST'
+        });
+        
+        if (response.success) {
+            Utils.showToast('تعریف نفقه با موفقیت یافت شد', 'success');
+            
+            // Display the نفقه document
+            const nafaqeDoc = response.document;
+            displayLegalDocuments([nafaqeDoc]);
+            document.getElementById('legal-search-count').textContent = '1';
+            
+            // Also update search input
+            document.getElementById('legal-search-input').value = 'نفقه';
+            
+        } else {
+            Utils.showToast('تعریف نفقه یافت نشد', 'warning');
+        }
+        
+    } catch (error) {
+        Utils.showToast(`خطا در جستجوی نفقه: ${error.message}`, 'error');
+    }
+}
+
+function clearLegalSearch() {
+    document.getElementById('legal-search-input').value = '';
+    document.getElementById('legal-source-filter').value = '';
+    document.getElementById('legal-category-filter').value = '';
+    
+    const container = document.getElementById('legal-documents-results');
+    container.innerHTML = `
+        <div class="text-center py-8 text-gray-500">
+            <div class="text-4xl mb-4">📚</div>
+            <p>برای مشاهده اسناد، جستجو کنید یا پایگاه داده را پر کنید</p>
+            <button onclick="loadAllLegalDocuments()" class="mt-4 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                📄 نمایش همه اسناد
+            </button>
+        </div>
+    `;
+    
+    document.getElementById('legal-search-count').textContent = '0';
+    Utils.showToast('جستجو پاک شد', 'info');
+}
+
+function showLegalDocumentDetails(documentId) {
+    // This would show a modal with full document details
+    Utils.showToast(`نمایش جزئیات سند ${documentId}`, 'info');
 }
 
 // Keyboard Shortcuts
