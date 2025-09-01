@@ -1,0 +1,52 @@
+{
+  "name": "سیستم آرشیو اسناد حقوقی ایران",
+  "short_name": "آرشیو حقوقی",
+  "description": "سیستم پیشرفته آرشیو اسناد حقوقی ایران با قابلیت تحلیل هوشمند و استخراج داده",
+  "start_url": "/Aihoghoghi/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/Aihoghoghi/",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "utilities", "business"],
+  "shortcuts": [
+    {
+      "name": "جستجو در اسناد",
+      "short_name": "جستجو",
+      "description": "جستجو در پایگاه داده اسناد حقوقی",
+      "url": "/Aihoghoghi/search",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "پردازش اسناد",
+      "short_name": "پردازش",
+      "description": "آپلود و پردازش اسناد جدید",
+      "url": "/Aihoghoghi/process",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

@@ -118,7 +118,7 @@
         }
       }
     </style>
-    <script type="module" crossorigin src="/Aihoghoghi/assets/index-cc1bb1a5.js"></script>
+    <script type="module" crossorigin src="/Aihoghoghi/assets/index-c398d7d8.js"></script>
     <link rel="modulepreload" crossorigin href="/Aihoghoghi/assets/vendor-e048df97.js">
     <link rel="modulepreload" crossorigin href="/Aihoghoghi/assets/router-8da05b39.js">
     <link rel="modulepreload" crossorigin href="/Aihoghoghi/assets/charts-995ccff2.js">
@@ -144,7 +144,6 @@
     <!-- Loading timeout fallback script -->
     <script>
       // Prevent infinite loading by implementing timeout fallback
-      let loadingTimeout;
       let progressMessages = [
         'آماده‌سازی اجزا...',
         'بارگذاری کتابخانه‌ها...',
@@ -152,6 +151,7 @@
         'نهایی‌سازی رابط کاربری...'
       ];
       let messageIndex = 0;
+      let progressInterval;
       
       // Update loading progress messages
       const updateProgress = () => {
@@ -159,47 +159,46 @@
         if (progressEl && messageIndex < progressMessages.length) {
           progressEl.textContent = progressMessages[messageIndex];
           messageIndex++;
-          setTimeout(updateProgress, 1000);
         }
       };
       
       // Start progress updates
-      setTimeout(updateProgress, 1000);
+      progressInterval = setInterval(updateProgress, 800);
       
-      // Emergency fallback after 15 seconds
-      loadingTimeout = setTimeout(() => {
+      // Store timeout reference globally so React can clear it
+      window.loadingTimeout = setTimeout(() => {
         const loader = document.getElementById('initial-loader');
         if (loader && loader.style.display !== 'none') {
-          console.warn('⚠️ Loading timeout reached, forcing app display');
+          console.warn('⚠️ HTML Loading timeout reached, React should take over soon');
           
-          // Hide loader
-          loader.style.display = 'none';
-          
-          // Show emergency fallback UI
-          const root = document.getElementById('root');
-          root.innerHTML = `
-            <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-family: 'Vazirmatn', sans-serif; direction: rtl;">
-              <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">⚖️</div>
-                <h1 style="font-size: 1.5rem; margin-bottom: 1rem;">سیستم آرشیو اسناد حقوقی ایران</h1>
-                <p style="margin-bottom: 2rem; opacity: 0.9;">در حال بارگذاری...</p>
-                <button onclick="window.location.reload()" style="padding: 1rem 2rem; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; color: white; cursor: pointer; font-weight: 500;">
-                  🔄 رفرش صفحه
-                </button>
-              </div>
-            </div>
-          `;
+          // Don't force override - let React handle it
+          // Just show a message that React is loading
+          const progressEl = document.getElementById('loading-progress');
+          if (progressEl) {
+            progressEl.textContent = 'در حال راه‌اندازی React...';
+            progressEl.style.color = '#f59e0b';
+          }
         }
-      }, 15000);
+      }, 8000);
       
-      // Clear timeout when React takes over
+      // Clear intervals and timeouts when React takes over
       window.addEventListener('load', () => {
         setTimeout(() => {
-          if (loadingTimeout) {
-            clearTimeout(loadingTimeout);
+          if (progressInterval) {
+            clearInterval(progressInterval);
           }
-        }, 2000);
+        }, 1000);
       });
+      
+      // Clean up function for React to call
+      window.cleanupHTMLLoader = () => {
+        if (window.loadingTimeout) {
+          clearTimeout(window.loadingTimeout);
+        }
+        if (progressInterval) {
+          clearInterval(progressInterval);
+        }
+      };
     </script>
     
     <!-- Service Worker Registration -->

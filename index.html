@@ -36,7 +36,39 @@
     <link rel="manifest" href="./manifest.json" />
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="./src/main.jsx" as="script" crossorigin>
+    <script>
+      // Detect if we're on GitHub Pages or local/other deployment
+      const isGitHubPages = window.location.hostname.includes('github.io');
+      const basePath = isGitHubPages ? '/Aihoghoghi/' : './';
+      
+      // Dynamically load CSS
+      const cssLink = document.createElement('link');
+      cssLink.rel = 'stylesheet';
+      cssLink.href = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'index-c704e190.css';
+      document.head.appendChild(cssLink);
+      
+      // Preload resources
+      const preloadResources = [
+        'index-c398d7d8.js',
+        'vendor-e048df97.js', 
+        'router-8da05b39.js',
+        'charts-995ccff2.js',
+        'query-031079b4.js'
+      ];
+      
+      preloadResources.forEach((resource, index) => {
+        const link = document.createElement('link');
+        if (index === 0) {
+          link.rel = 'preload';
+          link.as = 'script';
+        } else {
+          link.rel = 'modulepreload';
+        }
+        link.crossOrigin = 'anonymous';
+        link.href = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + resource;
+        document.head.appendChild(link);
+      });
+    </script>
     
     <style>
       /* Critical CSS for initial load */
@@ -133,7 +165,18 @@
       </div>
     </div>
     
-    <script type="module" src="./src/main.jsx"></script>
+    <script>
+      // Dynamically load the main React app script
+      const isGitHubPages = window.location.hostname.includes('github.io');
+      const basePath = isGitHubPages ? '/Aihoghoghi/' : './';
+      const scriptSrc = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'index-c398d7d8.js';
+      
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.crossOrigin = 'anonymous';
+      script.src = scriptSrc;
+      document.head.appendChild(script);
+    </script>
     
     <!-- Loading timeout fallback script -->
     <script>
