@@ -2,25 +2,37 @@
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 python-multipart>=0.0.6
+jinja2>=3.1.0
 
-# Existing dependencies from the legal scraper
+# Web scraping and parsing
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# Persian NLP
+hazm>=0.7.0
+
+# AI and ML
 transformers>=4.35.0
 sentence-transformers>=2.2.2
 torch>=2.1.0
-gradio>=4.0.0
-requests>=2.31.0
-beautifulsoup4>=4.12.0
-hazm>=0.7.0
+
+# Data processing and analysis
 numpy>=1.24.0
+pandas>=2.0.0
+
+# Database and caching
+sqlite-utils>=3.35.0
+
+# System monitoring
 psutil>=5.9.0
 
 # DNS and networking
 dnspython>=2.4.0
 requests-doh>=0.3.0
 
-# Database
-sqlite3
-
-# Optional for enhanced functionality
+# Web UI enhancements
 aiofiles>=23.2.0
 websockets>=12.0
+
+# Optional: Keep Gradio for backward compatibility
+gradio>=4.0.0

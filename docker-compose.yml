@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  legal-archive:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - TRANSFORMERS_CACHE=/app/data/models
+      - HF_HOME=/app/data/models
+      - TORCH_HOME=/app/data/models
+      - CUDA_VISIBLE_DEVICES=""
+      - TOKENIZERS_PARALLELISM=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Optional: Add nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - legal-archive
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  data:
+  logs:
