@@ -1,0 +1,26 @@
+ERROR:root:Failed to import legal scraper: No module named 'hazm'
+ERROR:root:Failed to import legal scraper: No module named 'hazm'
+INFO:     Started server process [4354]
+INFO:     Waiting for application startup.
+WARNING:legal_database:AI models not available, using rule-based analysis only
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:7860 (Press CTRL+C to quit)
+🏛️ Iranian Legal Archive System - Enhanced with Legal Database
+======================================================================
+📅 Current Date: Monday, September 01, 2025 - 09:35 AM CEST
+🚀 Launch Mode: web
+
+🌐 Launching Advanced Web UI...
+🌐 Starting FastAPI web server...
+INFO:     127.0.0.1:52952 - "GET /api/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52968 - "GET /api/legal-db/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52870 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40414 - "GET /api/logs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46356 - "GET /web_ui/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:39352 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51992 - "POST /api/legal-db/search HTTP/1.1" 405 Method Not Allowed
+WARNING:  Invalid HTTP request received.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4354]
