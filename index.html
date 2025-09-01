@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ Iranian Legal Archive System - GitHub Pages</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Advanced Iranian Legal Document Archive System with AI-powered analysis, intelligent proxy management, and real-time processing capabilities">
+    <meta name="keywords" content="Iranian Legal, Legal Archive, AI Analysis, Persian BERT, Legal Documents, نفقه">
+    <meta name="author" content="Iranian Legal Archive Team">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Iranian Legal Archive System">
+    <meta property="og:description" content="AI-powered legal document analysis for Iranian legal system">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aminchedo.github.io/Aihoghoghi/">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Persian/Farsi fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Configure Tailwind for RTL -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'vazir': ['Vazirmatn', 'Tahoma', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                        },
+                        accent: {
+                            500: '#10b981',
+                            600: '#059669',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'bounce-subtle': 'bounceSubtle 2s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes bounceSubtle {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 font-vazir min-h-screen" dir="rtl">
+    <!-- Navigation Header -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-blue-200">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <span class="text-3xl animate-bounce-subtle">🏛️</span>
+                    <h1 class="text-2xl font-bold text-gray-800">سیستم آرشیو اسناد حقوقی ایران</h1>
+                </div>
+                <div class="hidden md:flex items-center space-x-6 space-x-reverse">
+                    <a href="#features" class="text-gray-700 hover:text-primary-600 transition-colors">ویژگی‌ها</a>
+                    <a href="#demo" class="text-gray-700 hover:text-primary-600 transition-colors">نمایش</a>
+                    <a href="#docs" class="text-gray-700 hover:text-primary-600 transition-colors">مستندات</a>
+                    <a href="#contact" class="text-gray-700 hover:text-primary-600 transition-colors">تماس</a>
+                </div>
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-moon text-gray-700"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg py-20 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center animate-fade-in">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                    🏛️ سیستم آرشیو اسناد حقوقی ایران
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 text-blue-100 max-w-4xl mx-auto leading-relaxed">
+                    سیستم پیشرفته آرشیو اسناد حقوقی با قابلیت تحلیل هوشمند، مدیریت پروکسی، و پردازش بلادرنگ
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">
+                    <a href="web_ui/" class="bg-white text-primary-700 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-50 transition-all hover-scale shadow-lg">
+                        <i class="fas fa-rocket ml-2"></i>
+                        شروع استفاده
+                    </a>
+                    <a href="https://github.com/aminchedo/Aihoghoghi" target="_blank" class="glass-effect text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/20 transition-all hover-scale">
+                        <i class="fab fa-github ml-2"></i>
+                        مشاهده کد منبع
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Animated Background Elements -->
+        <div class="absolute top-10 right-10 opacity-20">
+            <i class="fas fa-balance-scale text-6xl animate-bounce-subtle"></i>
+        </div>
+        <div class="absolute bottom-10 left-10 opacity-20">
+            <i class="fas fa-gavel text-5xl animate-bounce-subtle" style="animation-delay: 1s;"></i>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">
+                <i class="fas fa-star text-yellow-500 ml-3"></i>
+                ویژگی‌های کلیدی
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- AI Analysis -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-brain text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">تحلیل هوشمند با AI</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            استفاده از مدل Persian BERT برای طبقه‌بندی و تحلیل شباهت اسناد حقوقی فارسی
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Legal Database -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-database text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">پایگاه داده حقوقی</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            سیستم پایگاه داده اختصاصی SQLite برای ذخیره و مدیریت اسناد حقوقی ساختاریافته
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Real-time Processing -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-purple-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-bolt text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">پردازش بلادرنگ</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            به‌روزرسانی زنده با WebSocket و نمایش پیشرفت پردازش در زمان واقعی
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Advanced Search -->
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-orange-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-search text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">جستجوی پیشرفته</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            جستجوی متنی کامل با استخراج نهادهای حقوقی و کلیدواژه‌های مهم
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Proxy Management -->
+                <div class="bg-gradient-to-br from-red-50 to-red-100 p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-network-wired text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">مدیریت پروکسی هوشمند</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            چرخش خودکار پروکسی با نظارت بر سلامت و مقاومت در برابر خرابی
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Modern UI -->
+                <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-indigo-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">رابط کاربری مدرن</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            طراحی ریسپانسیو با پشتیبانی کامل از RTL و تم تاریک/روشن
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">
+                <i class="fas fa-play-circle text-primary-500 ml-3"></i>
+                نمایش سیستم
+            </h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-6">
+                        <h3 class="text-2xl font-bold text-white text-center">
+                            <i class="fas fa-desktop ml-2"></i>
+                            رابط کاربری سیستم
+                        </h3>
+                    </div>
+                    
+                    <div class="p-8">
+                        <div class="text-center mb-8">
+                            <p class="text-lg text-gray-600 mb-6">
+                                برای استفاده از سیستم کامل، روی دکمه زیر کلیک کنید:
+                            </p>
+                            <a href="web_ui/" class="inline-flex items-center bg-primary-500 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-600 transition-all hover-scale shadow-lg">
+                                <i class="fas fa-external-link-alt ml-2"></i>
+                                ورود به سیستم کامل
+                            </a>
+                        </div>
+                        
+                        <!-- Feature Preview -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                            <div class="bg-blue-50 p-6 rounded-xl">
+                                <h4 class="font-bold text-blue-800 mb-2">
+                                    <i class="fas fa-chart-line ml-2"></i>
+                                    داشبورد تحلیلی
+                                </h4>
+                                <p class="text-blue-600 text-sm">نمایش آمار و نمودارهای بلادرنگ</p>
+                            </div>
+                            <div class="bg-green-50 p-6 rounded-xl">
+                                <h4 class="font-bold text-green-800 mb-2">
+                                    <i class="fas fa-file-alt ml-2"></i>
+                                    پردازش اسناد
+                                </h4>
+                                <p class="text-green-600 text-sm">آپلود و تحلیل دسته‌ای اسناد</p>
+                            </div>
+                            <div class="bg-purple-50 p-6 rounded-xl">
+                                <h4 class="font-bold text-purple-800 mb-2">
+                                    <i class="fas fa-search ml-2"></i>
+                                    جستجوی نفقه
+                                </h4>
+                                <p class="text-purple-600 text-sm">جستجوی تخصصی مباحث نفقه</p>
+                            </div>
+                            <div class="bg-orange-50 p-6 rounded-xl">
+                                <h4 class="font-bold text-orange-800 mb-2">
+                                    <i class="fas fa-download ml-2"></i>
+                                    خروجی چندفرمته
+                                </h4>
+                                <p class="text-orange-600 text-sm">صادرات در قالب JSON، CSV، TXT</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specs -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">
+                <i class="fas fa-cogs text-gray-600 ml-3"></i>
+                مشخصات فنی
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center bg-gray-50 p-6 rounded-xl">
+                    <div class="text-3xl font-bold text-primary-500 mb-2">5000+</div>
+                    <div class="text-gray-600">خط کد</div>
+                </div>
+                <div class="text-center bg-gray-50 p-6 rounded-xl">
+                    <div class="text-3xl font-bold text-green-500 mb-2">Python 3.8+</div>
+                    <div class="text-gray-600">نسخه پایتون</div>
+                </div>
+                <div class="text-center bg-gray-50 p-6 rounded-xl">
+                    <div class="text-3xl font-bold text-purple-500 mb-2">FastAPI</div>
+                    <div class="text-gray-600">فریمورک وب</div>
+                </div>
+                <div class="text-center bg-gray-50 p-6 rounded-xl">
+                    <div class="text-3xl font-bold text-orange-500 mb-2">SQLite</div>
+                    <div class="text-gray-600">پایگاه داده</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="docs" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">
+                <i class="fas fa-book text-blue-500 ml-3"></i>
+                مستندات و منابع
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- GitHub Repository -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fab fa-github text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">مخزن GitHub</h3>
+                        <p class="text-gray-600 mb-6">دسترسی به کد منبع کامل پروژه</p>
+                        <a href="https://github.com/aminchedo/Aihoghoghi" target="_blank" class="bg-gray-800 text-white px-6 py-2 rounded-full hover:bg-gray-700 transition-colors">
+                            مشاهده در GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- API Documentation -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-code text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">مستندات API</h3>
+                        <p class="text-gray-600 mb-6">راهنمای استفاده از APIهای سیستم</p>
+                        <a href="web_ui/" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">
+                            مشاهده API Docs
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Legal Database Guide -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover-scale">
+                    <div class="text-center">
+                        <div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-gavel text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">راهنمای پایگاه داده</h3>
+                        <p class="text-gray-600 mb-6">نحوه استفاده از پایگاه داده حقوقی</p>
+                        <a href="https://github.com/aminchedo/Aihoghoghi/blob/main/LEGAL_DATABASE_GUIDE.md" target="_blank" class="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors">
+                            مطالعه راهنما
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">
+                <i class="fas fa-envelope text-primary-500 ml-3"></i>
+                تماس و پشتیبانی
+            </h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-8 rounded-2xl text-white text-center">
+                    <h3 class="text-2xl font-bold mb-4">آماده همکاری هستیم</h3>
+                    <p class="text-xl mb-8 text-blue-100">
+                        برای پیشنهادات، گزارش باگ، یا همکاری در توسعه پروژه با ما در ارتباط باشید
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <a href="https://github.com/aminchedo/Aihoghoghi/issues" target="_blank" class="bg-white text-primary-700 px-6 py-3 rounded-full font-semibold hover:bg-blue-50 transition-all hover-scale">
+                            <i class="fas fa-bug ml-2"></i>
+                            گزارش مشکل
+                        </a>
+                        <a href="https://github.com/aminchedo/Aihoghoghi/discussions" target="_blank" class="glass-effect text-white px-6 py-3 rounded-full font-semibold hover:bg-white/20 transition-all hover-scale">
+                            <i class="fas fa-comments ml-2"></i>
+                            بحث و گفتگو
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Project Info -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                        🏛️ سیستم آرشیو حقوقی ایران
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        سیستم پیشرفته تحلیل و آرشیو اسناد حقوقی با استفاده از هوش مصنوعی و تکنولوژی‌های مدرن
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">لینک‌های سریع</h4>
+                    <ul class="space-y-2">
+                        <li><a href="web_ui/" class="text-gray-300 hover:text-white transition-colors">رابط کاربری</a></li>
+                        <li><a href="https://github.com/aminchedo/Aihoghoghi" target="_blank" class="text-gray-300 hover:text-white transition-colors">کد منبع</a></li>
+                        <li><a href="https://github.com/aminchedo/Aihoghoghi/blob/main/README.md" target="_blank" class="text-gray-300 hover:text-white transition-colors">مستندات</a></li>
+                        <li><a href="https://github.com/aminchedo/Aihoghoghi/issues" target="_blank" class="text-gray-300 hover:text-white transition-colors">پشتیبانی</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Tech Stack -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">تکنولوژی‌ها</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-blue-600 px-3 py-1 rounded-full text-sm">Python</span>
+                        <span class="bg-green-600 px-3 py-1 rounded-full text-sm">FastAPI</span>
+                        <span class="bg-purple-600 px-3 py-1 rounded-full text-sm">AI/ML</span>
+                        <span class="bg-orange-600 px-3 py-1 rounded-full text-sm">SQLite</span>
+                        <span class="bg-red-600 px-3 py-1 rounded-full text-sm">WebSocket</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    © 2024 Iranian Legal Archive System. ساخته شده با ❤️ برای جامعه حقوقی ایران
+                </p>
+                <div class="mt-4 flex justify-center space-x-4 space-x-reverse">
+                    <a href="https://github.com/aminchedo/Aihoghoghi" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun text-yellow-500"></i>';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun text-yellow-500"></i>';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon text-gray-700"></i>';
+            }
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add loading animation to external links
+        document.querySelectorAll('a[target="_blank"]').forEach(link => {
+            link.addEventListener('click', function() {
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
