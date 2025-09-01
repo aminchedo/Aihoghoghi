@@ -42,12 +42,38 @@ function App() {
   const [initializationComplete, setInitializationComplete] = useState(false);
 
   useEffect(() => {
-    // Initialize application with proper cleanup
+    // Initialize application with auto-startup integration
     const initializeApp = async () => {
       const startTime = Date.now();
       
       try {
         console.log('🚀 Initializing Iranian Legal Archive System...');
+        console.log('🔗 Connecting to auto-startup services...');
+        
+        // Wait for auto-startup service to be ready
+        let attempts = 0;
+        while (!window.autoStartupService && attempts < 10) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          attempts++;
+        }
+        
+        if (window.autoStartupService) {
+          console.log('✅ Auto-startup service connected');
+          
+          // Get navigation guidance for returning users
+          const guidance = window.autoStartupService.getNavigationGuidance();
+          console.log('🧭 Navigation guidance:', guidance);
+          
+          // Start background scraping if enabled
+          if (window.iranianLegalArchive?.features?.autoScraping) {
+            console.log('🔄 Starting background scraping...');
+            setTimeout(() => {
+              window.autoStartupService.startBackgroundScraping();
+            }, 5000);
+          }
+        } else {
+          console.warn('⚠️ Auto-startup service not available, continuing with basic initialization');
+        }
         
         // Clear any existing HTML loading screen immediately
         const htmlLoader = document.querySelector('.loading-container');

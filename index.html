@@ -166,16 +166,128 @@
     </div>
     
     <script>
+      // Auto-startup system for Iranian Legal Archive
+      window.iranianLegalArchive = {
+        isGitHubPages: window.location.hostname.includes('github.io'),
+        basePath: window.location.hostname.includes('github.io') ? '/Aihoghoghi/' : './',
+        startupTime: Date.now(),
+        sessionId: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        features: {
+          smartProxy: true,
+          iranianDNS: true,
+          autoScraping: true,
+          realTimeAnalysis: true,
+          backgroundSync: true
+        }
+      };
+
+      // Log system startup
+      console.log('🚀 Iranian Legal Archive System Starting...');
+      console.log('📍 Environment:', window.iranianLegalArchive.isGitHubPages ? 'GitHub Pages' : 'Local');
+      console.log('🆔 Session ID:', window.iranianLegalArchive.sessionId);
+      
       // Dynamically load the main React app script
-      const isGitHubPages = window.location.hostname.includes('github.io');
-      const basePath = isGitHubPages ? '/Aihoghoghi/' : './';
+      const { isGitHubPages, basePath } = window.iranianLegalArchive;
       const scriptSrc = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'index-c398d7d8.js';
       
       const script = document.createElement('script');
       script.type = 'module';
       script.crossOrigin = 'anonymous';
       script.src = scriptSrc;
+      script.onload = () => {
+        console.log('✅ React app loaded successfully');
+        window.iranianLegalArchive.reactLoaded = true;
+      };
+      script.onerror = () => {
+        console.error('❌ Failed to load React app');
+        window.iranianLegalArchive.reactError = true;
+      };
       document.head.appendChild(script);
+
+      // Initialize background services
+      window.iranianLegalArchive.initializeServices = async () => {
+        console.log('⚙️ Initializing background services...');
+        
+        try {
+          // Setup service worker for offline functionality
+          if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.register('./sw.js');
+            console.log('✅ Service Worker registered');
+            window.iranianLegalArchive.serviceWorker = registration;
+          }
+
+          // Setup IndexedDB for client-side storage
+          const dbRequest = indexedDB.open('IranianLegalArchive', 1);
+          dbRequest.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            
+            if (!db.objectStoreNames.contains('documents')) {
+              const store = db.createObjectStore('documents', { keyPath: 'id', autoIncrement: true });
+              store.createIndex('url', 'url', { unique: false });
+              store.createIndex('category', 'category', { unique: false });
+            }
+            
+            if (!db.objectStoreNames.contains('scrapingResults')) {
+              db.createObjectStore('scrapingResults', { keyPath: 'id', autoIncrement: true });
+            }
+          };
+          
+          dbRequest.onsuccess = () => {
+            window.iranianLegalArchive.database = dbRequest.result;
+            console.log('✅ IndexedDB initialized');
+          };
+
+          // Setup auto-scraping interval
+          if (window.iranianLegalArchive.features.autoScraping) {
+            setInterval(() => {
+              console.log('🔄 Auto-scraping check...');
+              // This will be handled by React components when loaded
+              if (window.autoStartupService) {
+                window.autoStartupService.performHealthCheck();
+              }
+            }, 30 * 60 * 1000); // Every 30 minutes
+          }
+
+          console.log('✅ All background services initialized');
+          window.iranianLegalArchive.servicesReady = true;
+          
+        } catch (error) {
+          console.error('❌ Service initialization failed:', error);
+          window.iranianLegalArchive.servicesError = error.message;
+        }
+      };
+
+      // Load auto-startup services dynamically
+      const loadAutoStartupServices = async () => {
+        try {
+          // Create script elements for services
+          const scripts = [
+            'smartProxyService.js',
+            'advancedScrapingService.js', 
+            'autoStartupService.js',
+            'githubPagesConfig.js'
+          ];
+          
+          for (const scriptName of scripts) {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + scriptName;
+            script.onload = () => console.log(`✅ Loaded: ${scriptName}`);
+            script.onerror = () => console.warn(`⚠️ Failed to load: ${scriptName}`);
+            document.head.appendChild(script);
+          }
+          
+          console.log('✅ Advanced services loading initiated');
+        } catch (error) {
+          console.warn('⚠️ Advanced services not available, using basic mode:', error.message);
+        }
+      };
+
+      // Start services after a short delay
+      setTimeout(async () => {
+        await loadAutoStartupServices();
+        await window.iranianLegalArchive.initializeServices();
+      }, 2000);
     </script>
     
     <!-- Loading timeout fallback script -->

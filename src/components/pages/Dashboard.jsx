@@ -10,6 +10,7 @@ import RecentActivity from '../ui/RecentActivity';
 import SystemHealth from '../ui/SystemHealth';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ErrorMessage from '../ui/ErrorMessage';
+import AutoStartupStatus from '../ui/AutoStartupStatus';
 
 const Dashboard = () => {
   const { getApiUrl, config } = useConfig();
@@ -160,6 +161,9 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
+      {/* Auto-Startup Status */}
+      <AutoStartupStatus />
+      
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
