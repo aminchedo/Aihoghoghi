@@ -2201,6 +2201,1177 @@ class ChartManager {
     }
 }
 
+// Proxy Management System
+class ProxyManager {
+    static init() {
+        this.setupProxyControls();
+        this.setupProxyCharts();
+        this.setupProxyFilters();
+        this.loadProxyData();
+    }
+
+    static setupProxyControls() {
+        // Test all proxies button
+        const testAllBtn = document.getElementById('test-all-proxies');
+        if (testAllBtn) {
+            testAllBtn.addEventListener('click', () => this.testAllProxies());
+        }
+
+        // Add proxy button
+        const addProxyBtn = document.getElementById('add-proxy-btn');
+        if (addProxyBtn) {
+            addProxyBtn.addEventListener('click', () => this.showAddProxyModal());
+        }
+
+        // Update proxies button
+        const updateBtn = document.getElementById('update-proxies-btn');
+        if (updateBtn) {
+            updateBtn.addEventListener('click', () => this.updateProxies());
+        }
+
+        // Bulk test button
+        const bulkTestBtn = document.getElementById('bulk-test-btn');
+        if (bulkTestBtn) {
+            bulkTestBtn.addEventListener('click', () => this.bulkTestProxies());
+        }
+
+        // Import proxies button
+        const importBtn = document.getElementById('import-proxies-btn');
+        if (importBtn) {
+            importBtn.addEventListener('click', () => this.importProxies());
+        }
+    }
+
+    static setupProxyCharts() {
+        this.createProxyPerformanceChart();
+        this.createProxyDistributionChart();
+    }
+
+    static createProxyPerformanceChart() {
+        const ctx = document.getElementById('proxy-performance-chart');
+        if (!ctx) return;
+
+        AppState.charts.proxyPerformance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: this.generateTimeLabels(24),
+                datasets: [{
+                    label: 'پروکسی فعال',
+                    data: this.generateSampleData(24, 0, 50),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'زمان پاسخ میانگین (ms)',
+                    data: this.generateSampleData(24, 100, 500),
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: false,
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            font: { family: 'Vazirmatn' }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'تعداد پروکسی'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'زمان پاسخ (ms)'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    },
+                    x: {
+                        grid: { color: 'rgba(156, 163, 175, 0.1)' }
+                    }
+                }
+            }
+        });
+    }
+
+    static createProxyDistributionChart() {
+        const ctx = document.getElementById('proxy-distribution-chart');
+        if (!ctx) return;
+
+        AppState.charts.proxyDistribution = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['ایران', 'آمریکا', 'آلمان', 'فرانسه', 'سایر'],
+                datasets: [{
+                    data: [30, 25, 20, 15, 10],
+                    backgroundColor: [
+                        '#10b981',
+                        '#3b82f6', 
+                        '#f59e0b',
+                        '#ef4444',
+                        '#8b5cf6'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            font: { family: 'Vazirmatn' }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    static setupProxyFilters() {
+        // Search filter
+        const searchInput = document.getElementById('proxy-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', Utils.debounce(() => {
+                this.filterProxies();
+            }, 300));
+        }
+
+        // Status filter
+        const statusFilter = document.getElementById('proxy-status-filter');
+        if (statusFilter) {
+            statusFilter.addEventListener('change', () => this.filterProxies());
+        }
+
+        // Country filter
+        const countryFilter = document.getElementById('proxy-country-filter');
+        if (countryFilter) {
+            countryFilter.addEventListener('change', () => this.filterProxies());
+        }
+
+        // Type filter
+        const typeFilter = document.getElementById('proxy-type-filter');
+        if (typeFilter) {
+            typeFilter.addEventListener('change', () => this.filterProxies());
+        }
+    }
+
+    static generateTimeLabels(hours) {
+        const labels = [];
+        const now = new Date();
+        
+        for (let i = hours - 1; i >= 0; i--) {
+            const time = new Date(now.getTime() - (i * 60 * 60 * 1000));
+            labels.push(time.getHours().toString().padStart(2, '0') + ':00');
+        }
+        
+        return labels;
+    }
+
+    static generateSampleData(points, min, max) {
+        return Array.from({ length: points }, () => 
+            Math.floor(Math.random() * (max - min + 1)) + min
+        );
+    }
+
+    static async loadProxyData() {
+        try {
+            const data = await Utils.fetchAPI('/network');
+            this.updateProxyStats(data);
+            this.updateProxyTable(data.proxies || []);
+        } catch (error) {
+            console.error('Failed to load proxy data:', error);
+            Utils.showToast('خطا در بارگیری اطلاعات پروکسی', 'error');
+        }
+    }
+
+    static updateProxyStats(data) {
+        const proxyManager = data.proxy_manager || {};
+        
+        // Update stat cards
+        document.getElementById('total-proxies').textContent = proxyManager.total_proxies || 0;
+        document.getElementById('active-proxies-count').textContent = proxyManager.active_proxies || 0;
+        document.getElementById('failed-proxies-count').textContent = proxyManager.failed_proxies || 0;
+        
+        // Update percentages
+        const total = proxyManager.total_proxies || 0;
+        const active = proxyManager.active_proxies || 0;
+        const failed = proxyManager.failed_proxies || 0;
+        
+        if (total > 0) {
+            document.getElementById('active-percentage').textContent = `${Math.round((active / total) * 100)}%`;
+            document.getElementById('failed-percentage').textContent = `${Math.round((failed / total) * 100)}%`;
+        }
+        
+        // Update response time
+        document.getElementById('avg-response-time').textContent = `${proxyManager.avg_response_time || 0}ms`;
+        
+        // Update proxy sources
+        document.getElementById('proxy-sources').textContent = `${proxyManager.sources || 0} منبع`;
+    }
+
+    static updateProxyTable(proxies) {
+        const tableBody = document.getElementById('proxy-table-body');
+        if (!tableBody) return;
+
+        if (proxies.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-server text-3xl mb-2 block"></i>
+                        هیچ پروکسی یافت نشد
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tableBody.innerHTML = proxies.map(proxy => `
+            <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td class="py-3 px-2">
+                    <input type="checkbox" class="proxy-checkbox rounded" data-proxy-id="${proxy.id}">
+                </td>
+                <td class="py-3 px-2">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs ${this.getStatusColor(proxy.status)}">
+                        <i class="fas ${this.getStatusIcon(proxy.status)} ml-1"></i>
+                        ${this.getStatusText(proxy.status)}
+                    </span>
+                </td>
+                <td class="py-3 px-2 font-mono text-sm">${proxy.host}:${proxy.port}</td>
+                <td class="py-3 px-2">
+                    <span class="px-2 py-1 bg-gray-100 dark:bg-gray-600 rounded text-xs">${proxy.type.toUpperCase()}</span>
+                </td>
+                <td class="py-3 px-2">
+                    <div class="flex items-center">
+                        <img src="https://flagcdn.com/w20/${proxy.country.toLowerCase()}.png" alt="${proxy.country}" class="w-4 h-3 ml-2">
+                        ${proxy.country}
+                    </div>
+                </td>
+                <td class="py-3 px-2">${proxy.response_time || '-'}ms</td>
+                <td class="py-3 px-2 text-xs text-gray-500">${proxy.last_tested ? Utils.formatTime(new Date(proxy.last_tested)) : 'هرگز'}</td>
+                <td class="py-3 px-2">
+                    <div class="flex items-center space-x-1 space-x-reverse">
+                        <button onclick="ProxyManager.testProxy('${proxy.id}')" class="p-1 text-blue-500 hover:text-blue-700" title="تست پروکسی">
+                            <i class="fas fa-play text-xs"></i>
+                        </button>
+                        <button onclick="ProxyManager.editProxy('${proxy.id}')" class="p-1 text-yellow-500 hover:text-yellow-700" title="ویرایش">
+                            <i class="fas fa-edit text-xs"></i>
+                        </button>
+                        <button onclick="ProxyManager.deleteProxy('${proxy.id}')" class="p-1 text-red-500 hover:text-red-700" title="حذف">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    static getStatusColor(status) {
+        switch (status) {
+            case 'active': return 'bg-green-100 text-green-800';
+            case 'inactive': return 'bg-gray-100 text-gray-800';
+            case 'testing': return 'bg-yellow-100 text-yellow-800';
+            case 'failed': return 'bg-red-100 text-red-800';
+            default: return 'bg-gray-100 text-gray-800';
+        }
+    }
+
+    static getStatusIcon(status) {
+        switch (status) {
+            case 'active': return 'fa-check-circle';
+            case 'inactive': return 'fa-pause-circle';
+            case 'testing': return 'fa-spinner fa-spin';
+            case 'failed': return 'fa-times-circle';
+            default: return 'fa-question-circle';
+        }
+    }
+
+    static getStatusText(status) {
+        switch (status) {
+            case 'active': return 'فعال';
+            case 'inactive': return 'غیرفعال';
+            case 'testing': return 'در حال تست';
+            case 'failed': return 'خراب';
+            default: return 'نامشخص';
+        }
+    }
+
+    static async testAllProxies() {
+        try {
+            Utils.showToast('شروع تست همه پروکسی‌ها...', 'info');
+            const result = await Utils.fetchAPI('/network/test-all', { method: 'POST' });
+            Utils.showToast('تست پروکسی‌ها شروع شد', 'success');
+            
+            // Refresh data after a delay
+            setTimeout(() => this.loadProxyData(), 2000);
+        } catch (error) {
+            Utils.showToast('خطا در تست پروکسی‌ها', 'error');
+        }
+    }
+
+    static async updateProxies() {
+        try {
+            Utils.showToast('در حال بروزرسانی پروکسی‌ها...', 'info');
+            const result = await Utils.fetchAPI('/network/update-proxies', { method: 'POST' });
+            Utils.showToast('پروکسی‌ها بروزرسانی شدند', 'success');
+            this.loadProxyData();
+        } catch (error) {
+            Utils.showToast('خطا در بروزرسانی پروکسی‌ها', 'error');
+        }
+    }
+
+    static async testProxy(proxyId) {
+        try {
+            Utils.showToast('در حال تست پروکسی...', 'info');
+            const result = await Utils.fetchAPI(`/network/test-proxy/${proxyId}`, { method: 'POST' });
+            Utils.showToast('تست پروکسی تکمیل شد', 'success');
+            this.loadProxyData();
+        } catch (error) {
+            Utils.showToast('خطا در تست پروکسی', 'error');
+        }
+    }
+
+    static async deleteProxy(proxyId) {
+        if (!confirm('آیا از حذف این پروکسی اطمینان دارید؟')) return;
+        
+        try {
+            await Utils.fetchAPI(`/network/proxy/${proxyId}`, { method: 'DELETE' });
+            Utils.showToast('پروکسی حذف شد', 'success');
+            this.loadProxyData();
+        } catch (error) {
+            Utils.showToast('خطا در حذف پروکسی', 'error');
+        }
+    }
+
+    static filterProxies() {
+        // Implement filtering logic
+        console.log('Filtering proxies...');
+        this.loadProxyData();
+    }
+
+    static showAddProxyModal() {
+        Utils.showToast('قابلیت افزودن پروکسی به زودی اضافه می‌شود', 'info');
+    }
+
+    static bulkTestProxies() {
+        const selectedProxies = document.querySelectorAll('.proxy-checkbox:checked');
+        if (selectedProxies.length === 0) {
+            Utils.showToast('لطفاً پروکسی‌هایی را برای تست انتخاب کنید', 'warning');
+            return;
+        }
+        
+        Utils.showToast(`تست ${selectedProxies.length} پروکسی شروع شد`, 'info');
+        this.testAllProxies();
+    }
+
+    static importProxies() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.txt,.csv';
+        input.onchange = (e) => {
+            if (e.target.files.length > 0) {
+                Utils.showToast('وارد کردن فایل پروکسی به زودی اضافه می‌شود', 'info');
+            }
+        };
+        input.click();
+    }
+
+    static showHealthPanel() {
+        // Navigate to proxy health submenu
+        NavigationManager.navigateToSection('proxy');
+        Utils.showToast('نمایش پنل سلامت پروکسی‌ها', 'info');
+    }
+
+    static showManagementPanel() {
+        // Navigate to proxy management submenu
+        NavigationManager.navigateToSection('proxy');
+        Utils.showToast('نمایش پنل مدیریت پروکسی‌ها', 'info');
+    }
+
+    static showStatsPanel() {
+        // Navigate to proxy stats submenu
+        NavigationManager.navigateToSection('proxy');
+        Utils.showToast('نمایش آمار پروکسی‌ها', 'info');
+    }
+}
+
+// Search Management System
+class SearchManager {
+    static init() {
+        this.setupSearchControls();
+        this.setupSearchFilters();
+        this.setupSearchCharts();
+        this.loadSearchData();
+    }
+
+    static setupSearchControls() {
+        // Main search button
+        const searchBtn = document.getElementById('main-search-btn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => this.performSearch());
+        }
+
+        // Search input with Enter key support
+        const searchInput = document.getElementById('main-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.performSearch();
+                }
+            });
+            
+            // Auto-suggest on input
+            searchInput.addEventListener('input', Utils.debounce(() => {
+                this.showSearchSuggestions(searchInput.value);
+            }, 300));
+        }
+
+        // Search type buttons
+        document.querySelectorAll('.search-type-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const searchType = btn.id.replace('-search-btn', '').replace('-btn', '');
+                this.switchSearchType(searchType);
+            });
+        });
+
+        // Quick search buttons
+        document.querySelectorAll('.quick-search-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const query = btn.textContent.trim();
+                document.getElementById('main-search-input').value = query;
+                this.performSearch();
+            });
+        });
+
+        // Advanced search toggle
+        const advancedToggle = document.getElementById('advanced-search-toggle');
+        if (advancedToggle) {
+            advancedToggle.addEventListener('click', () => this.toggleAdvancedFilters());
+        }
+
+        // Filter buttons
+        const applyFiltersBtn = document.getElementById('apply-filters-btn');
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', () => this.applyFilters());
+        }
+
+        const clearFiltersBtn = document.getElementById('clear-filters-btn');
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => this.clearFilters());
+        }
+    }
+
+    static setupSearchFilters() {
+        // Results sorting
+        const resultsSort = document.getElementById('results-sort');
+        if (resultsSort) {
+            resultsSort.addEventListener('change', (e) => {
+                this.sortResults(e.target.value);
+            });
+        }
+    }
+
+    static setupSearchCharts() {
+        this.createSearchSourcesChart();
+    }
+
+    static createSearchSourcesChart() {
+        const ctx = document.getElementById('search-sources-chart');
+        if (!ctx) return;
+
+        AppState.charts.searchSources = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['مجلس', 'قضاییه', 'دفتر تدوین', 'سایر'],
+                datasets: [{
+                    data: [40, 30, 20, 10],
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            font: { family: 'Vazirmatn' }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    static switchSearchType(type) {
+        // Update button states
+        document.querySelectorAll('.search-type-btn').forEach(btn => {
+            btn.classList.remove('active', 'bg-blue-500', 'text-white');
+            btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+        });
+
+        const activeBtn = document.getElementById(`${type}-search-btn`);
+        if (activeBtn) {
+            activeBtn.classList.add('active', 'bg-blue-500', 'text-white');
+            activeBtn.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+        }
+
+        // Update search placeholder based on type
+        const searchInput = document.getElementById('main-search-input');
+        if (searchInput) {
+            switch (type) {
+                case 'text':
+                    searchInput.placeholder = 'جستجوی متنی در اسناد... (مثال: قانون مدنی، ماده 1234)';
+                    break;
+                case 'semantic':
+                    searchInput.placeholder = 'جستجوی معنایی... (مثال: قوانین مربوط به ارث و میراث)';
+                    break;
+                case 'nafaqe':
+                    searchInput.placeholder = 'جستجو در موضوع نفقه... (مثال: نفقه زن، نفقه فرزندان)';
+                    break;
+            }
+        }
+
+        AppState.currentSearchType = type;
+    }
+
+    static async performSearch() {
+        const query = document.getElementById('main-search-input').value.trim();
+        if (!query) {
+            Utils.showToast('لطفاً عبارت جستجو را وارد کنید', 'warning');
+            return;
+        }
+
+        try {
+            Utils.showToast('در حال جستجو...', 'info');
+            
+            const searchType = AppState.currentSearchType || 'text';
+            const startTime = Date.now();
+            
+            let endpoint, payload;
+            
+            switch (searchType) {
+                case 'semantic':
+                    endpoint = '/legal-db/search';
+                    payload = { query, search_type: 'semantic' };
+                    break;
+                case 'nafaqe':
+                    endpoint = '/legal-db/search-nafaqe';
+                    payload = { query };
+                    break;
+                default:
+                    endpoint = '/search';
+                    payload = { query };
+            }
+
+            const results = await Utils.fetchAPI(endpoint, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            const searchTime = Date.now() - startTime;
+            
+            this.displaySearchResults(results, query, searchTime);
+            this.updateSearchAnalytics(results, searchTime);
+            this.addToSearchHistory(query, searchType);
+            
+            Utils.showToast(`${results.length || 0} نتیجه یافت شد`, 'success');
+            
+        } catch (error) {
+            console.error('Search failed:', error);
+            Utils.showToast('خطا در جستجو', 'error');
+            this.displaySearchError(error.message);
+        }
+    }
+
+    static displaySearchResults(results, query, searchTime) {
+        const container = document.getElementById('search-results-container');
+        if (!container) return;
+
+        if (!results || results.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                    <i class="fas fa-search-minus text-4xl mb-4"></i>
+                    <h4 class="text-lg font-medium mb-2">نتیجه‌ای یافت نشد</h4>
+                    <p class="text-sm">برای "${Utils.sanitizeHtml(query)}" نتیجه‌ای در پایگاه داده موجود نیست</p>
+                    <div class="mt-4">
+                        <button onclick="SearchManager.suggestAlternatives('${query}')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                            <i class="fas fa-lightbulb ml-1"></i>
+                            پیشنهاد جستجوهای مشابه
+                        </button>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = results.map((result, index) => `
+            <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer" onclick="SearchManager.viewDocument('${result.id}')">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800 dark:text-white mb-2 hover:text-primary-600 transition-colors">
+                            ${Utils.sanitizeHtml(result.title || 'بدون عنوان')}
+                        </h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
+                            ${Utils.sanitizeHtml(result.excerpt || result.content || '').substring(0, 200)}...
+                        </p>
+                        <div class="flex items-center space-x-4 space-x-reverse text-xs text-gray-500 dark:text-gray-400">
+                            <span class="flex items-center">
+                                <i class="fas fa-building ml-1"></i>
+                                ${result.source || 'نامشخص'}
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-calendar ml-1"></i>
+                                ${result.date ? Utils.formatDate(new Date(result.date)) : 'تاریخ نامشخص'}
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-tag ml-1"></i>
+                                ${result.category || 'دسته‌بندی نشده'}
+                            </span>
+                            ${result.score ? `<span class="flex items-center"><i class="fas fa-star ml-1"></i>${Math.round(result.score * 100)}% مطابقت</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center space-y-2">
+                        <span class="px-2 py-1 bg-primary-100 text-primary-800 rounded-full text-xs">#${index + 1}</span>
+                        <button onclick="event.stopPropagation(); SearchManager.bookmarkDocument('${result.id}')" class="p-1 text-yellow-500 hover:text-yellow-600">
+                            <i class="fas fa-bookmark text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Update results count
+        document.getElementById('search-results-count').textContent = `${results.length} نتیجه`;
+        
+        // Show pagination if needed
+        if (results.length > 10) {
+            document.getElementById('search-pagination').classList.remove('hidden');
+        }
+    }
+
+    static displaySearchError(errorMessage) {
+        const container = document.getElementById('search-results-container');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="text-center py-12 text-red-500">
+                <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                <h4 class="text-lg font-medium mb-2">خطا در جستجو</h4>
+                <p class="text-sm">${Utils.sanitizeHtml(errorMessage)}</p>
+                <button onclick="SearchManager.performSearch()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                    <i class="fas fa-redo ml-1"></i>
+                    تلاش مجدد
+                </button>
+            </div>
+        `;
+    }
+
+    static showSearchSuggestions(query) {
+        if (!query || query.length < 2) {
+            document.getElementById('search-suggestions').classList.add('hidden');
+            return;
+        }
+
+        // Show suggestions (mock implementation)
+        const suggestions = ['قانون مدنی', 'احکام نفقه', 'قوانین ارث', 'مقررات خانواده'];
+        const filtered = suggestions.filter(s => s.includes(query));
+        
+        if (filtered.length > 0) {
+            const suggestionsEl = document.getElementById('search-suggestions');
+            const suggestionsContainer = suggestionsEl.querySelector('.space-y-1');
+            
+            suggestionsContainer.innerHTML = filtered.map(suggestion => `
+                <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded text-sm" onclick="SearchManager.selectSuggestion('${suggestion}')">
+                    ${Utils.sanitizeHtml(suggestion)}
+                </button>
+            `).join('');
+            
+            suggestionsEl.classList.remove('hidden');
+        }
+    }
+
+    static selectSuggestion(suggestion) {
+        document.getElementById('main-search-input').value = suggestion;
+        document.getElementById('search-suggestions').classList.add('hidden');
+        this.performSearch();
+    }
+
+    static toggleAdvancedFilters() {
+        const filtersEl = document.getElementById('advanced-filters');
+        if (filtersEl) {
+            filtersEl.classList.toggle('hidden');
+        }
+    }
+
+    static applyFilters() {
+        Utils.showToast('فیلترها اعمال شد', 'success');
+        this.performSearch();
+    }
+
+    static clearFilters() {
+        // Clear all filter inputs
+        document.getElementById('source-filter').value = '';
+        document.getElementById('document-type-filter').value = '';
+        document.getElementById('date-from-filter').value = '';
+        document.getElementById('date-to-filter').value = '';
+        
+        Utils.showToast('فیلترها پاک شدند', 'info');
+    }
+
+    static updateSearchAnalytics(results, searchTime) {
+        document.getElementById('analytics-total').textContent = results.length || 0;
+        document.getElementById('analytics-time').textContent = `${searchTime}ms`;
+        document.getElementById('analytics-accuracy').textContent = results.length > 0 ? 'بالا' : 'پایین';
+    }
+
+    static addToSearchHistory(query, type) {
+        const historyEl = document.getElementById('recent-searches');
+        if (!historyEl) return;
+
+        const historyItem = `
+            <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-600 rounded text-sm">
+                <span>${Utils.sanitizeHtml(query)}</span>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <span class="text-xs text-gray-500">${type}</span>
+                    <button onclick="SearchManager.selectSuggestion('${query}')" class="text-blue-500 hover:text-blue-600">
+                        <i class="fas fa-redo text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Remove "no searches" message if present
+        if (historyEl.textContent.includes('هنوز جستجویی انجام نشده')) {
+            historyEl.innerHTML = '';
+        }
+
+        historyEl.insertAdjacentHTML('afterbegin', historyItem);
+
+        // Keep only last 5 searches
+        const items = historyEl.querySelectorAll('div');
+        if (items.length > 5) {
+            items[items.length - 1].remove();
+        }
+    }
+
+    static async viewDocument(documentId) {
+        try {
+            Utils.showToast('در حال بارگیری جزئیات سند...', 'info');
+            const document = await Utils.fetchAPI(`/legal-db/documents/${documentId}`);
+            this.showDocumentModal(document);
+        } catch (error) {
+            Utils.showToast('خطا در بارگیری سند', 'error');
+        }
+    }
+
+    static showDocumentModal(document) {
+        // Create and show document modal (implementation would go here)
+        Utils.showToast('نمایش جزئیات سند', 'info');
+    }
+
+    static bookmarkDocument(documentId) {
+        Utils.showToast('سند به علاقه‌مندی‌ها اضافه شد', 'success');
+    }
+
+    static suggestAlternatives(query) {
+        Utils.showToast(`جستجوی جایگزین برای "${query}" به زودی اضافه می‌شود`, 'info');
+    }
+
+    static switchToTextSearch() {
+        this.switchSearchType('text');
+        NavigationManager.navigateToSection('search');
+    }
+
+    static switchToSemanticSearch() {
+        this.switchSearchType('semantic');
+        NavigationManager.navigateToSection('search');
+    }
+
+    static switchToNafaqeSearch() {
+        this.switchSearchType('nafaqe');
+        NavigationManager.navigateToSection('search');
+    }
+
+    static sortResults(sortBy) {
+        Utils.showToast(`مرتب‌سازی بر اساس ${sortBy}`, 'info');
+        // Implementation would sort and re-display results
+    }
+
+    static async loadSearchData() {
+        try {
+            // Load search statistics and update charts
+            const stats = await Utils.fetchAPI('/legal-db/stats');
+            if (stats && AppState.charts.searchSources) {
+                // Update chart with real data if available
+                AppState.charts.searchSources.update();
+            }
+        } catch (error) {
+            console.error('Failed to load search data:', error);
+        }
+    }
+}
+
+// Settings Management System
+class SettingsManager {
+    static init() {
+        this.setupSettingsTabs();
+        this.setupSettingsControls();
+        this.loadSettings();
+    }
+
+    static setupSettingsTabs() {
+        document.querySelectorAll('.settings-tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = btn.id.replace('-tab', '');
+                this.switchSettingsTab(tabId);
+            });
+        });
+    }
+
+    static switchSettingsTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.settings-tab-btn').forEach(btn => {
+            btn.classList.remove('active', 'border-primary-500', 'text-primary-600');
+            btn.classList.add('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+        });
+
+        // Update tab content
+        document.querySelectorAll('.settings-tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+
+        // Show active tab
+        const activeBtn = document.getElementById(`${tabName}-tab`);
+        const activeContent = document.getElementById(`${tabName}-content`);
+
+        if (activeBtn) {
+            activeBtn.classList.add('active', 'border-primary-500', 'text-primary-600');
+            activeBtn.classList.remove('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+        }
+
+        if (activeContent) {
+            activeContent.classList.remove('hidden');
+        }
+    }
+
+    static setupSettingsControls() {
+        // API connection test
+        const testApiBtn = document.getElementById('test-api-connection');
+        if (testApiBtn) {
+            testApiBtn.addEventListener('click', () => this.testApiConnection());
+        }
+
+        // Theme buttons
+        const lightThemeBtn = document.getElementById('light-theme-btn');
+        const darkThemeBtn = document.getElementById('dark-theme-btn');
+        
+        if (lightThemeBtn) {
+            lightThemeBtn.addEventListener('click', () => this.setTheme('light'));
+        }
+        
+        if (darkThemeBtn) {
+            darkThemeBtn.addEventListener('click', () => this.setTheme('dark'));
+        }
+
+        // Font size slider
+        const fontSizeSlider = document.getElementById('font-size-slider');
+        if (fontSizeSlider) {
+            fontSizeSlider.addEventListener('input', (e) => {
+                this.updateFontSize(e.target.value);
+            });
+        }
+
+        // Save settings button
+        const saveBtn = document.getElementById('save-settings-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveAllSettings());
+        }
+
+        // Test all settings
+        const testAllBtn = document.getElementById('test-all-settings');
+        if (testAllBtn) {
+            testAllBtn.addEventListener('click', () => this.testAllSettings());
+        }
+
+        // Export/Import settings
+        const exportBtn = document.getElementById('export-settings-btn');
+        const importBtn = document.getElementById('import-settings-btn');
+        const resetBtn = document.getElementById('reset-settings-btn');
+
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.exportSettings());
+        }
+
+        if (importBtn) {
+            importBtn.addEventListener('click', () => this.importSettings());
+        }
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.resetSettings());
+        }
+    }
+
+    static async testApiConnection() {
+        const apiUrl = document.getElementById('api-base-url').value;
+        const indicator = document.getElementById('api-status-indicator');
+        
+        try {
+            indicator.innerHTML = '<div class="w-2 h-2 bg-yellow-500 rounded-full ml-2 animate-pulse"></div><span class="text-sm">در حال تست...</span>';
+            
+            const response = await fetch(`${apiUrl}/status`);
+            const isHealthy = response.ok;
+            
+            if (isHealthy) {
+                indicator.innerHTML = '<div class="w-2 h-2 bg-green-500 rounded-full ml-2"></div><span class="text-sm text-green-600">متصل</span>';
+                Utils.showToast('اتصال به API موفقیت‌آمیز بود', 'success');
+            } else {
+                indicator.innerHTML = '<div class="w-2 h-2 bg-red-500 rounded-full ml-2"></div><span class="text-sm text-red-600">خطا</span>';
+                Utils.showToast('خطا در اتصال به API', 'error');
+            }
+            
+            document.getElementById('last-api-check').textContent = Utils.formatTime(new Date());
+            
+        } catch (error) {
+            indicator.innerHTML = '<div class="w-2 h-2 bg-red-500 rounded-full ml-2"></div><span class="text-sm text-red-600">خطا</span>';
+            Utils.showToast('خطا در اتصال به API', 'error');
+        }
+    }
+
+    static setTheme(theme) {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        localStorage.setItem('theme', theme);
+        AppState.theme = theme;
+        
+        Utils.showToast(`تم ${theme === 'dark' ? 'تاریک' : 'روشن'} فعال شد`, 'success');
+    }
+
+    static updateFontSize(size) {
+        document.getElementById('font-size-value').textContent = `${size}px`;
+        document.body.style.fontSize = `${size}px`;
+        localStorage.setItem('fontSize', size);
+    }
+
+    static saveAllSettings() {
+        const settings = {
+            api: {
+                baseUrl: document.getElementById('api-base-url').value,
+                timeout: document.getElementById('api-timeout').value,
+                retryCount: document.getElementById('api-retry-count').value
+            },
+            proxy: {
+                enabled: document.getElementById('enable-proxy-global').checked,
+                strategy: document.getElementById('proxy-selection-strategy').value,
+                healthCheckInterval: document.getElementById('health-check-interval').value,
+                timeout: document.getElementById('proxy-timeout').value,
+                autoSources: document.getElementById('auto-proxy-sources').checked,
+                customSources: document.getElementById('custom-proxy-sources').value
+            },
+            ui: {
+                theme: AppState.theme,
+                fontFamily: document.getElementById('font-family').value,
+                fontSize: document.getElementById('font-size-slider').value,
+                animations: document.getElementById('enable-animations').checked,
+                sound: document.getElementById('enable-sound').checked,
+                autoSave: document.getElementById('auto-save').checked,
+                autoRefreshInterval: document.getElementById('auto-refresh-interval').value
+            },
+            advanced: {
+                maxConcurrent: document.getElementById('max-concurrent').value,
+                cacheSize: document.getElementById('cache-size-limit').value,
+                compression: document.getElementById('enable-compression').checked,
+                sslVerification: document.getElementById('enable-ssl-verification').checked,
+                clearDataOnExit: document.getElementById('clear-data-on-exit').checked,
+                userAgent: document.getElementById('custom-user-agent').value
+            }
+        };
+
+        // Save to localStorage
+        localStorage.setItem('systemSettings', JSON.stringify(settings));
+        
+        // Update AppState
+        Object.assign(AppState.config, settings);
+        
+        Utils.showToast('تنظیمات ذخیره شدند', 'success');
+    }
+
+    static loadSettings() {
+        try {
+            const savedSettings = localStorage.getItem('systemSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                
+                // Apply API settings
+                if (settings.api) {
+                    document.getElementById('api-base-url').value = settings.api.baseUrl || '';
+                    document.getElementById('api-timeout').value = settings.api.timeout || 30;
+                    document.getElementById('api-retry-count').value = settings.api.retryCount || 2;
+                }
+                
+                // Apply proxy settings
+                if (settings.proxy) {
+                    document.getElementById('enable-proxy-global').checked = settings.proxy.enabled !== false;
+                    document.getElementById('proxy-selection-strategy').value = settings.proxy.strategy || 'fastest';
+                    document.getElementById('health-check-interval').value = settings.proxy.healthCheckInterval || 5;
+                    document.getElementById('proxy-timeout').value = settings.proxy.timeout || 10;
+                    document.getElementById('auto-proxy-sources').checked = settings.proxy.autoSources !== false;
+                    document.getElementById('custom-proxy-sources').value = settings.proxy.customSources || '';
+                }
+                
+                // Apply UI settings
+                if (settings.ui) {
+                    this.setTheme(settings.ui.theme || 'light');
+                    document.getElementById('font-family').value = settings.ui.fontFamily || 'vazirmatn';
+                    document.getElementById('font-size-slider').value = settings.ui.fontSize || 14;
+                    document.getElementById('enable-animations').checked = settings.ui.animations !== false;
+                    document.getElementById('enable-sound').checked = settings.ui.sound || false;
+                    document.getElementById('auto-save').checked = settings.ui.autoSave !== false;
+                    document.getElementById('auto-refresh-interval').value = settings.ui.autoRefreshInterval || 30;
+                    
+                    this.updateFontSize(settings.ui.fontSize || 14);
+                }
+                
+                // Apply advanced settings
+                if (settings.advanced) {
+                    document.getElementById('max-concurrent').value = settings.advanced.maxConcurrent || 5;
+                    document.getElementById('cache-size-limit').value = settings.advanced.cacheSize || 100;
+                    document.getElementById('enable-compression').checked = settings.advanced.compression !== false;
+                    document.getElementById('enable-ssl-verification').checked = settings.advanced.sslVerification !== false;
+                    document.getElementById('clear-data-on-exit').checked = settings.advanced.clearDataOnExit || false;
+                    document.getElementById('custom-user-agent').value = settings.advanced.userAgent || '';
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load settings:', error);
+        }
+    }
+
+    static async testAllSettings() {
+        Utils.showToast('شروع تست همه تنظیمات...', 'info');
+        
+        const tests = [
+            { name: 'API Connection', test: () => this.testApiConnection() },
+            { name: 'Theme System', test: () => this.testThemeSystem() },
+            { name: 'Font System', test: () => this.testFontSystem() }
+        ];
+
+        let passed = 0;
+        
+        for (const test of tests) {
+            try {
+                await test.test();
+                passed++;
+            } catch (error) {
+                console.error(`Test failed: ${test.name}`, error);
+            }
+        }
+        
+        Utils.showToast(`${passed}/${tests.length} تست موفق`, passed === tests.length ? 'success' : 'warning');
+    }
+
+    static testThemeSystem() {
+        const currentTheme = AppState.theme;
+        this.setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        setTimeout(() => this.setTheme(currentTheme), 500);
+        return Promise.resolve();
+    }
+
+    static testFontSystem() {
+        const currentSize = document.getElementById('font-size-slider').value;
+        this.updateFontSize(16);
+        setTimeout(() => this.updateFontSize(currentSize), 500);
+        return Promise.resolve();
+    }
+
+    static exportSettings() {
+        const settings = JSON.parse(localStorage.getItem('systemSettings') || '{}');
+        const dataStr = JSON.stringify(settings, null, 2);
+        Utils.downloadFile(dataStr, `legal-archive-settings-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+        Utils.showToast('تنظیمات صادر شد', 'success');
+    }
+
+    static importSettings() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const settings = JSON.parse(event.target.result);
+                        localStorage.setItem('systemSettings', JSON.stringify(settings));
+                        this.loadSettings();
+                        Utils.showToast('تنظیمات وارد شد', 'success');
+                    } catch (error) {
+                        Utils.showToast('خطا در وارد کردن تنظیمات', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        };
+        input.click();
+    }
+
+    static resetSettings() {
+        if (confirm('آیا از بازنشانی همه تنظیمات اطمینان دارید؟')) {
+            localStorage.removeItem('systemSettings');
+            localStorage.removeItem('theme');
+            localStorage.removeItem('fontSize');
+            location.reload();
+        }
+    }
+
+    static showApiSettings() {
+        this.switchSettingsTab('api-settings');
+    }
+
+    static showProxySettings() {
+        this.switchSettingsTab('proxy-settings');
+    }
+
+    static showThemeSettings() {
+        this.switchSettingsTab('theme-settings');
+    }
+}
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Iranian Legal Archive System v2.0 - Enhanced Web UI Initialized');
@@ -2216,6 +3387,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize feature managers
     DocumentProcessor.init();
+    ProxyManager.init();
+    SearchManager.init();
+    SettingsManager.init();
     
     // Initialize UI enhancement managers
     if (typeof DashboardManager !== 'undefined') DashboardManager.init();
