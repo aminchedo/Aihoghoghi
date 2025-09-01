@@ -14,7 +14,10 @@ const AppState = {
     charts: {},
     websocket: null,
     reconnectAttempts: 0,
-    maxReconnectAttempts: 5
+    maxReconnectAttempts: 5,
+    apiRetryAttempts: 0,
+    maxApiRetryAttempts: 3,
+    backendStatus: 'unknown'
 };
 
 // API Base URL - configurable for different environments
@@ -37,60 +40,74 @@ console.log('API Base URL:', API_BASE);
 
 // Utility Functions
 class Utils {
-    static async fetchAPI(endpoint, options = {}, retries = 3) {
-        let lastError;
-        
-        for (let attempt = 0; attempt <= retries; attempt++) {
-            try {
-                const response = await fetch(`${API_BASE}${endpoint}`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...options.headers
-                    },
-                    ...options
-                });
+    static async fetchAPI(endpoint, options = {}, retryCount = 0) {
+        try {
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                timeout: 30000, // 30 second timeout
+                ...options
+            });
+            
+            if (!response.ok) {
+                let errorMessage = `خطای ${response.status}`;
                 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error(`API endpoint not found: ${endpoint}. Please check if the backend server is running properly.`);
-                    } else if (response.status >= 500) {
-                        throw new Error(`Server error (${response.status}): ${response.statusText}`);
-                    } else if (response.status === 400) {
-                        const errorData = await response.json().catch(() => ({}));
-                        throw new Error(`Bad request: ${errorData.detail || response.statusText}`);
-                    } else {
-                        throw new Error(`API Error: ${response.status} ${response.statusText}`);
-                    }
+                // Provide user-friendly error messages
+                switch (response.status) {
+                    case 404:
+                        errorMessage = 'آدرس API یافت نشد - لطفاً از اجرای صحیح سرور اطمینان حاصل کنید';
+                        break;
+                    case 500:
+                        errorMessage = 'خطای داخلی سرور - لطفاً مجدداً تلاش کنید';
+                        break;
+                    case 503:
+                        errorMessage = 'سرویس در دسترس نیست - سیستم در حال راه‌اندازی است';
+                        break;
+                    case 409:
+                        errorMessage = 'عملیات دیگری در حال انجام است - لطفاً منتظر بمانید';
+                        break;
+                    case 400:
+                        errorMessage = 'درخواست نامعتبر - لطفاً اطلاعات ورودی را بررسی کنید';
+                        break;
+                    default:
+                        errorMessage = `خطای ${response.status}: ${response.statusText}`;
                 }
                 
-                return await response.json();
-            } catch (error) {
-                lastError = error;
-                
-                // Don't retry for client errors (4xx) except 429 (rate limit)
-                if (error.message.includes('404') || error.message.includes('400')) {
-                    break;
-                }
-                
-                if (attempt < retries) {
-                    console.warn(`API call attempt ${attempt + 1} failed, retrying...`, error);
-                    await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))); // Exponential backoff
-                }
+                AppState.backendStatus = 'error';
+                this.updateBackendStatus('error');
+                throw new Error(errorMessage);
             }
+            
+            // Success - update backend status
+            AppState.backendStatus = 'connected';
+            AppState.apiRetryAttempts = 0;
+            this.updateBackendStatus('connected');
+            
+            return await response.json();
+        } catch (error) {
+            console.error('API call failed:', error);
+            AppState.backendStatus = 'error';
+            this.updateBackendStatus('error');
+            
+            // Check if it's a network error and retry
+            if (error.name === 'TypeError' && error.message.includes('fetch') && retryCount < AppState.maxApiRetryAttempts) {
+                this.showToast(`اتصال ناموفق - تلاش مجدد ${retryCount + 1}/${AppState.maxApiRetryAttempts}`, 'warning', 3000);
+                await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1))); // Exponential backoff
+                return this.fetchAPI(endpoint, options, retryCount + 1);
+            }
+            
+            // Final error handling
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                this.showToast('خطا در اتصال به سرور - لطفاً اتصال اینترنت و وضعیت سرور را بررسی کنید', 'error', 10000);
+                this.showBackendInstructions();
+            } else {
+                this.showToast(error.message, 'error', 8000);
+            }
+            
+            throw error;
         }
-        
-        console.error('API call failed after all retries:', lastError);
-        
-        // Show user-friendly error messages
-        if (lastError.message.includes('404')) {
-            this.showToast('خطا: سرور در دسترس نیست یا مسیر API موجود نمی‌باشد. لطفاً بررسی کنید که سرور در حال اجرا باشد.', 'error', 8000);
-        } else if (lastError.message.includes('Failed to fetch') || lastError.message.includes('NetworkError')) {
-            this.showToast('خطا در اتصال به سرور. لطفاً اتصال اینترنت خود را بررسی کنید.', 'error', 8000);
-        } else {
-            this.showToast(`خطا در ارتباط با سرور: ${lastError.message}`, 'error', 8000);
-        }
-        
-        throw lastError;
     }
 
     static async checkServerHealth() {
@@ -112,6 +129,61 @@ class Utils {
             console.error('❌ Server health check failed:', error);
             this.showToast('سرور در دسترس نیست. لطفاً بررسی کنید که سرور FastAPI در حال اجرا باشد.', 'error', 10000);
             return false;
+        }
+    }
+
+    static updateBackendStatus(status) {
+        const statusIndicator = document.getElementById('status-indicator');
+        const statusText = document.getElementById('status-text');
+        
+        if (statusIndicator && statusText) {
+            switch (status) {
+                case 'connected':
+                    statusIndicator.className = 'w-3 h-3 bg-green-500 rounded-full animate-pulse';
+                    statusText.textContent = 'متصل';
+                    break;
+                case 'error':
+                    statusIndicator.className = 'w-3 h-3 bg-red-500 rounded-full animate-pulse';
+                    statusText.textContent = 'خطا';
+                    break;
+                case 'connecting':
+                    statusIndicator.className = 'w-3 h-3 bg-yellow-500 rounded-full animate-pulse';
+                    statusText.textContent = 'در حال اتصال';
+                    break;
+                default:
+                    statusIndicator.className = 'w-3 h-3 bg-gray-500 rounded-full';
+                    statusText.textContent = 'نامشخص';
+            }
+        }
+    }
+
+    static showBackendInstructions() {
+        const instructionsHtml = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                <h3 class="text-red-800 font-bold mb-2">🚨 سرور در دسترس نیست</h3>
+                <p class="text-red-700 mb-3">برای حل مشکل، مراحل زیر را دنبال کنید:</p>
+                <ol class="list-decimal list-inside text-red-700 space-y-1 text-sm">
+                    <li>اطمینان از اجرای سرور: <code class="bg-red-100 px-2 py-1 rounded">uvicorn web_server:app --reload --host 0.0.0.0 --port 7860</code></li>
+                    <li>بررسی اتصال اینترنت</li>
+                    <li>بررسی آدرس سرور: <code class="bg-red-100 px-2 py-1 rounded">http://127.0.0.1:7860</code></li>
+                    <li>بررسی فایروال و تنظیمات امنیتی</li>
+                    <li>مراجعه به لاگ‌های سرور برای جزئیات بیشتر</li>
+                </ol>
+                <button onclick="location.reload()" class="mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    🔄 تلاش مجدد
+                </button>
+            </div>
+        `;
+        
+        // Show instructions in the main content area
+        const mainContent = document.querySelector('main') || document.body;
+        const existingInstructions = document.getElementById('backend-instructions');
+        
+        if (!existingInstructions) {
+            const instructionsDiv = document.createElement('div');
+            instructionsDiv.id = 'backend-instructions';
+            instructionsDiv.innerHTML = instructionsHtml;
+            mainContent.insertBefore(instructionsDiv, mainContent.firstChild);
         }
     }
 
