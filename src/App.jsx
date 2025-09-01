@@ -42,51 +42,49 @@ function App() {
   const [initializationComplete, setInitializationComplete] = useState(false);
 
   useEffect(() => {
-    // Initialize application with timeout fallback
+    // Initialize application with proper cleanup
     const initializeApp = async () => {
       const startTime = Date.now();
-      const maxLoadTime = 10000; // 10 second timeout
       
       try {
         console.log('🚀 Initializing Iranian Legal Archive System...');
         
-        // Clear any existing HTML loading screen
+        // Clear any existing HTML loading screen immediately
         const htmlLoader = document.querySelector('.loading-container');
+        const initialLoader = document.getElementById('initial-loader');
+        
         if (htmlLoader) {
           htmlLoader.style.display = 'none';
+          htmlLoader.remove();
+        }
+        if (initialLoader) {
+          initialLoader.style.display = 'none';
+          initialLoader.remove();
         }
         
-        // Simulate app initialization with real checks
-        const initPromises = [
-          // Check if React Router is ready
-          new Promise(resolve => {
-            if (typeof window !== 'undefined' && window.location) {
+        // Clear any loading timeouts from HTML
+        if (window.cleanupHTMLLoader) {
+          window.cleanupHTMLLoader();
+        }
+        
+        // Ensure DOM is ready
+        if (document.readyState !== 'complete') {
+          await new Promise(resolve => {
+            if (document.readyState === 'complete') {
               resolve();
             } else {
-              setTimeout(resolve, 100);
+              window.addEventListener('load', resolve, { once: true });
             }
-          }),
-          
-          // Check if essential components can load
-          new Promise(resolve => {
-            // Simulate component readiness check
-            setTimeout(resolve, 500);
-          }),
-          
-          // Minimum loading time for smooth UX
-          new Promise(resolve => setTimeout(resolve, 800))
-        ];
+          });
+        }
         
-        // Race between initialization and timeout
-        await Promise.race([
-          Promise.all(initPromises),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Initialization timeout')), maxLoadTime)
-          )
-        ]);
+        // Minimum loading time for smooth transition
+        await new Promise(resolve => setTimeout(resolve, 500));
         
         const loadTime = Date.now() - startTime;
         console.log(`✅ App initialized successfully in ${loadTime}ms`);
+        console.log('🎯 Current location:', window.location.href);
+        console.log('🎯 Base URL:', import.meta.env.BASE_URL);
         setInitializationComplete(true);
         
       } catch (error) {
@@ -95,11 +93,23 @@ function App() {
         // Still allow app to load even if initialization fails
         setInitializationComplete(true);
       } finally {
-        setIsLoading(false);
+        // Always set loading to false to prevent infinite loading
+        setTimeout(() => setIsLoading(false), 100);
       }
     };
 
     initializeApp();
+    
+    // Failsafe: Force app to load after 3 seconds maximum
+    const failsafeTimeout = setTimeout(() => {
+      console.warn('⚠️ Failsafe timeout reached, forcing app display');
+      setIsLoading(false);
+      setInitializationComplete(true);
+    }, 3000);
+
+    return () => {
+      clearTimeout(failsafeTimeout);
+    };
   }, []);
 
   // Loading screen with timeout fallback
@@ -169,7 +179,7 @@ function App() {
       <ThemeProvider>
         <ConfigProvider>
           <NotificationProvider>
-            <Router>
+            <Router basename={import.meta.env.BASE_URL}>
               <ErrorBoundary>
                 <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-vazir" dir="rtl">
                   <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
