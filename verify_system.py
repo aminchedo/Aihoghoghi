@@ -87,11 +87,11 @@ class SystemVerifier:
         self.test_endpoint("/legal-db/stats")
         self.test_endpoint("/legal-db/documents")
         
-        # Search endpoint
-        self.test_endpoint("/search", "POST", {"query": "تست جستجو"})
+        # Search endpoint (correct method is GET with query parameter)
+        self.test_endpoint("/search?q=تست جستجو")
         
-        # Process endpoint (should return processing status)
-        self.test_endpoint("/process")
+        # Process endpoint (correct method is POST)
+        self.test_endpoint("/process", "POST", {"urls": ["https://example.com"], "batch_size": 1, "use_proxy": False})
         
         # Export endpoint
         self.test_endpoint("/export/json")
@@ -151,7 +151,7 @@ class SystemVerifier:
         })
         
         # Test proxy update
-        self.test_endpoint("/update-proxies", "POST", {})
+        self.test_endpoint("/update-proxies", "POST", {"include_fresh": True})
         
         self.log("✅ Integration Tests completed")
     

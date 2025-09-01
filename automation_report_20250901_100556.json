@@ -1,0 +1,195 @@
+{
+  "automation_suite": {
+    "version": "1.0.0",
+    "timestamp": "2025-09-01T10:05:56.377862",
+    "duration_seconds": 0.220077
+  },
+  "system_info": {
+    "python_version": "3.13.3",
+    "platform": "linux",
+    "api_base": "http://127.0.0.1:7860/api",
+    "ui_base": "http://127.0.0.1:7860/web_ui/"
+  },
+  "test_results": {
+    "api_tests": [
+      {
+        "endpoint": "/status",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.03,
+        "success": true,
+        "data_size": 119
+      },
+      {
+        "endpoint": "/stats",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.44,
+        "success": true,
+        "data_size": 123
+      },
+      {
+        "endpoint": "/network",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.32,
+        "success": true,
+        "data_size": 163
+      },
+      {
+        "endpoint": "/legal-db/stats",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.43,
+        "success": true,
+        "data_size": 308
+      },
+      {
+        "endpoint": "/legal-db/documents",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.85,
+        "success": true,
+        "data_size": 2378
+      },
+      {
+        "endpoint": "/search?q=test",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.42,
+        "success": true,
+        "data_size": 85
+      },
+      {
+        "endpoint": "/legal-db/search-nafaqe",
+        "method": "POST",
+        "status_code": 200,
+        "response_time_ms": 1.82,
+        "success": true,
+        "data_size": 2358
+      },
+      {
+        "endpoint": "/process",
+        "method": "POST",
+        "status_code": 200,
+        "response_time_ms": 1.2,
+        "success": true,
+        "data_size": 46
+      },
+      {
+        "endpoint": "/export/json",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.21,
+        "success": true,
+        "data_size": 2
+      },
+      {
+        "endpoint": "/logs?limit=10",
+        "method": "GET",
+        "status_code": 200,
+        "response_time_ms": 1.49,
+        "success": true,
+        "data_size": 11
+      }
+    ],
+    "ui_tests": [
+      {
+        "file": "web_ui/index.html",
+        "size_bytes": 156577,
+        "size_kb": 152.9,
+        "success": true,
+        "issues": []
+      },
+      {
+        "file": "web_ui/script.js",
+        "size_bytes": 140456,
+        "size_kb": 137.2,
+        "success": true,
+        "issues": []
+      },
+      {
+        "file": "web_ui/styles.css",
+        "size_bytes": 14439,
+        "size_kb": 14.1,
+        "success": true,
+        "issues": []
+      },
+      {
+        "file": "test_ui.html",
+        "size_bytes": 19742,
+        "size_kb": 19.3,
+        "success": true,
+        "issues": []
+      },
+      {
+        "file": "e2e_test_suite.html",
+        "size_bytes": 30029,
+        "size_kb": 29.3,
+        "success": true,
+        "issues": []
+      }
+    ],
+    "integration_tests": [
+      {
+        "workflow": "Document Processing",
+        "success": true,
+        "duration_ms": 2.3
+      },
+      {
+        "workflow": "Search Functionality",
+        "success": true,
+        "duration_ms": 2.97
+      },
+      {
+        "workflow": "Proxy Management",
+        "success": true,
+        "duration_ms": 2.36
+      },
+      {
+        "workflow": "Export Functionality",
+        "success": true,
+        "duration_ms": 4.78
+      }
+    ],
+    "performance_tests": [
+      {
+        "avg_response_time_ms": 1.25,
+        "max_response_time_ms": 1.46,
+        "min_response_time_ms": 0.95,
+        "name": "API Response Time",
+        "success": true
+      },
+      {
+        "concurrent_requests": 10,
+        "successful_requests": 10,
+        "success_rate": 100.0,
+        "avg_response_time_ms": 2.76,
+        "name": "Concurrent Requests",
+        "success": true
+      },
+      {
+        "memory_usage_mb": 50.66,
+        "memory_percentage": 0.32,
+        "name": "Memory Usage",
+        "success": true
+      },
+      {
+        "total_ui_size_kb": 304.2,
+        "estimated_load_time_ms": 3042.0,
+        "name": "UI Load Time",
+        "success": true
+      }
+    ],
+    "summary": {
+      "total_tests": 23,
+      "successful_tests": 23,
+      "failed_tests": 0,
+      "success_rate": 100.0,
+      "timestamp": "2025-09-01T10:05:56.377858"
+    }
+  },
+  "recommendations": [
+    "🎉 System is performing excellently! No immediate improvements needed."
+  ]
+}

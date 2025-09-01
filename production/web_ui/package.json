@@ -1,0 +1,40 @@
+{
+  "name": "iranian-legal-archive-ui",
+  "version": "1.0.0",
+  "description": "Advanced web UI for Iranian Legal Archive System",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build process needed for static files'",
+    "serve": "python -m http.server 8000",
+    "dev": "python ../web_server.py",
+    "install-deps": "pip install fastapi uvicorn python-multipart"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.0",
+    "tailwindcss": "^3.3.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "legal",
+    "archive",
+    "ai",
+    "persian",
+    "farsi",
+    "document-processing",
+    "web-scraping"
+  ],
+  "author": "Iranian Legal Archive Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/user/iranian-legal-archive"
+  },
+  "engines": {
+    "python": ">=3.8"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
