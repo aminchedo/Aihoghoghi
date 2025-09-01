@@ -22,7 +22,7 @@ import threading
 
 class UltimateProxySystem:
     def __init__(self):
-        # Enhanced Iranian DNS servers with more options
+        # Enhanced Iranian DNS servers with more options + Alternative DNS
         self.iranian_dns = [
             '178.22.122.100',  # Shecan Primary
             '178.22.122.101',  # Shecan Secondary
@@ -39,7 +39,14 @@ class UltimateProxySystem:
             '8.8.4.4',         # Google Secondary
             '4.2.2.4',         # Level3
             '208.67.222.222',  # OpenDNS
-            '208.67.220.220'   # OpenDNS Secondary
+            '208.67.220.220',  # OpenDNS Secondary
+            # Additional powerful DNS servers
+            '9.9.9.9',         # Quad9 Primary
+            '149.112.112.112', # Quad9 Secondary
+            '76.76.19.19',     # Alternate DNS Primary
+            '76.223.100.101',  # Alternate DNS Secondary
+            '94.140.14.14',    # AdGuard DNS
+            '94.140.15.15'     # AdGuard DNS Secondary
         ]
         
         # Comprehensive proxy pools
@@ -62,12 +69,21 @@ class UltimateProxySystem:
                 'https://api.allorigins.win/get?url=',
                 'https://corsproxy.io/?',
                 'https://proxy.cors.sh/',
-                'https://yacdn.org/proxy/'
+                'https://yacdn.org/proxy/',
+                'https://api.codetabs.com/v1/proxy?quest=',
+                'https://thingproxy.freeboard.io/fetch/'
             ],
             'mirror_services': [
                 'https://web.archive.org/web/',
                 'https://archive.today/newest/',
-                'https://webcache.googleusercontent.com/search?q=cache:'
+                'https://webcache.googleusercontent.com/search?q=cache:',
+                'https://cc.bingj.com/cache.aspx?q=cache:',
+                'https://www.bing.com/search?q=cache:'
+            ],
+            'advanced_bypass': [
+                'https://translate.google.com/translate?sl=fa&tl=en&u=',
+                'https://www.google.com/search?q=site:',
+                'https://duckduckgo.com/?q=site:'
             ]
         }
         
@@ -112,6 +128,24 @@ class UltimateProxySystem:
             'wget_like': {
                 'User-Agent': 'Wget/1.20.3 (linux-gnu)',
                 'Accept': '*/*'
+            },
+            'arvan_bypass': {
+                'User-Agent': 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Accept-Encoding': 'gzip, deflate',
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache',
+                'X-Forwarded-For': '66.249.66.1',  # Google IP
+                'X-Real-IP': '66.249.66.1'
+            },
+            'cloudflare_bypass': {
+                'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                'Accept': '*/*',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'X-Forwarded-For': '66.249.79.1',  # Googlebot IP
+                'X-Real-IP': '66.249.79.1',
+                'CF-Connecting-IP': '66.249.79.1'
             }
         }
         
@@ -121,14 +155,24 @@ class UltimateProxySystem:
                 'https://www.judiciary.ir',
                 'https://judiciary.ir',
                 'http://www.judiciary.ir',
-                'http://judiciary.ir'
+                'http://judiciary.ir',
+                # Alternative judiciary sites
+                'https://eadl.ir',  # Electronic Archive of Legal Documents
+                'https://www.eadl.ir',
+                'https://divan.ir', # Administrative Justice Court
+                'https://www.divan.ir'
             ],
             'dolat.ir': [
                 'https://www.dolat.ir',
                 'https://dolat.ir',
                 'http://www.dolat.ir',
                 'http://dolat.ir',
-                'https://portal.dolat.ir'
+                'https://portal.dolat.ir',
+                # Alternative government sites
+                'https://www.president.ir',
+                'https://president.ir',
+                'https://www.moi.ir',  # Ministry of Interior
+                'https://moi.ir'
             ],
             'majlis.ir': [
                 'https://rc.majlis.ir',
@@ -186,17 +230,17 @@ class UltimateProxySystem:
         self.session.mount("https://", adapter)
     
     def resolve_dns_advanced(self, hostname: str) -> List[str]:
-        """Advanced DNS resolution with multiple servers"""
+        """Advanced DNS resolution with multiple servers + fallback techniques"""
         ips = []
         self.stats['dns_resolutions'] += 1
         
-        # Try each DNS server
-        for dns_server in self.iranian_dns[:8]:  # Use first 8
+        # Try each DNS server with extended list
+        for dns_server in self.iranian_dns:  # Use all DNS servers
             try:
                 resolver = dns.resolver.Resolver()
                 resolver.nameservers = [dns_server]
-                resolver.timeout = 3
-                resolver.lifetime = 5
+                resolver.timeout = 5  # Increased timeout
+                resolver.lifetime = 8
                 
                 result = resolver.resolve(hostname, 'A')
                 for rdata in result:
@@ -211,6 +255,44 @@ class UltimateProxySystem:
             except Exception as e:
                 print(f"❌ DNS {dns_server} failed for {hostname}: {str(e)[:50]}")
                 continue
+        
+        # Fallback: Try alternative hostnames if main fails
+        if not ips and hostname:
+            alternative_hostnames = []
+            
+            # Try www variant
+            if not hostname.startswith('www.'):
+                alternative_hostnames.append(f"www.{hostname}")
+            else:
+                alternative_hostnames.append(hostname.replace('www.', ''))
+            
+            # Try alternative TLDs for Iranian sites
+            if hostname.endswith('.ir'):
+                base_name = hostname.replace('.ir', '')
+                alternative_hostnames.extend([
+                    f"{base_name}.org",
+                    f"{base_name}.com",
+                    f"{base_name}.net"
+                ])
+            
+            # Try resolving alternatives
+            for alt_hostname in alternative_hostnames:
+                for dns_server in self.iranian_dns[:5]:  # Try top 5 DNS
+                    try:
+                        resolver = dns.resolver.Resolver()
+                        resolver.nameservers = [dns_server]
+                        resolver.timeout = 3
+                        resolver.lifetime = 5
+                        
+                        result = resolver.resolve(alt_hostname, 'A')
+                        for rdata in result:
+                            ip = str(rdata)
+                            if ip not in ips:
+                                ips.append(ip)
+                                print(f"🔄 Alternative DNS {dns_server}: {alt_hostname} -> {ip}")
+                        break  # Stop after first success
+                    except:
+                        continue
         
         return ips
     
@@ -266,7 +348,7 @@ class UltimateProxySystem:
         # Get all possible URLs to try
         url_variants = self.get_all_site_variants(url)
         
-        # All possible strategies
+        # All possible strategies + Advanced bypass techniques
         strategies = [
             ('Direct Connection', self._direct_request),
             ('Mobile Headers', self._mobile_request),
@@ -275,11 +357,17 @@ class UltimateProxySystem:
             ('News Aggregator', self._news_request),
             ('Curl Minimal', self._curl_request),
             ('Wget Style', self._wget_request),
+            ('ArvanCloud Bypass', self._arvan_bypass_request),
+            ('Cloudflare Bypass', self._cloudflare_bypass_request),
+            ('Google Translate Proxy', self._google_translate_request),
             ('CORS Bypass #1', lambda u: self._cors_bypass_request(u, 0)),
             ('CORS Bypass #2', lambda u: self._cors_bypass_request(u, 1)),
             ('CORS Bypass #3', lambda u: self._cors_bypass_request(u, 2)),
+            ('CORS Bypass #4', lambda u: self._cors_bypass_request(u, 5)),
+            ('CORS Bypass #5', lambda u: self._cors_bypass_request(u, 6)),
             ('Archive.org Mirror', self._archive_request),
             ('Google Cache', self._google_cache_request),
+            ('Bing Cache', self._bing_cache_request),
             ('Proxy Chain #1', lambda u: self._proxy_request(u, 0)),
             ('Proxy Chain #2', lambda u: self._proxy_request(u, 1)),
             ('Proxy Chain #3', lambda u: self._proxy_request(u, 2))
@@ -293,10 +381,10 @@ class UltimateProxySystem:
             random.shuffle(strategies)
             random.shuffle(url_variants)
             
-            for url_variant in url_variants[:5]:  # Try top 5 variants
+            for url_variant in url_variants[:8]:  # Try top 8 variants (increased)
                 print(f"   🌐 Trying variant: {url_variant}")
                 
-                for strategy_name, strategy_func in strategies[:8]:  # Try top 8 strategies
+                for strategy_name, strategy_func in strategies[:12]:  # Try top 12 strategies (increased)
                     try:
                         print(f"      📡 Strategy: {strategy_name}")
                         
@@ -557,6 +645,94 @@ class UltimateProxySystem:
             }
         except Exception as e:
             return {'success': False, 'error': str(e), 'method': 'proxy_chain'}
+    
+    def _arvan_bypass_request(self, url: str) -> Dict[str, Any]:
+        """ArvanCloud bypass using search bot headers"""
+        try:
+            headers = self.header_pools['arvan_bypass'].copy()
+            
+            # Add random delay to avoid rate limiting
+            time.sleep(random.uniform(1, 3))
+            
+            response = self.session.get(url, headers=headers, timeout=25)
+            
+            return {
+                'success': response.status_code == 200,
+                'status_code': response.status_code,
+                'content': response.text,
+                'content_length': len(response.text),
+                'method': 'arvan_bypass'
+            }
+        except Exception as e:
+            return {'success': False, 'error': str(e), 'method': 'arvan_bypass'}
+    
+    def _cloudflare_bypass_request(self, url: str) -> Dict[str, Any]:
+        """Cloudflare bypass using Googlebot headers"""
+        try:
+            headers = self.header_pools['cloudflare_bypass'].copy()
+            
+            # Add random delay to avoid detection
+            time.sleep(random.uniform(0.5, 2))
+            
+            response = self.session.get(url, headers=headers, timeout=25)
+            
+            return {
+                'success': response.status_code == 200,
+                'status_code': response.status_code,
+                'content': response.text,
+                'content_length': len(response.text),
+                'method': 'cloudflare_bypass'
+            }
+        except Exception as e:
+            return {'success': False, 'error': str(e), 'method': 'cloudflare_bypass'}
+    
+    def _google_translate_request(self, url: str) -> Dict[str, Any]:
+        """Google Translate proxy bypass"""
+        try:
+            translate_url = f"https://translate.google.com/translate?sl=fa&tl=en&u={url}"
+            headers = self.header_pools['standard_browser'].copy()
+            
+            response = self.session.get(translate_url, headers=headers, timeout=25)
+            
+            if response.status_code == 200:
+                # Extract content from Google Translate page
+                soup = BeautifulSoup(response.text, 'html.parser')
+                translated_content = soup.find('div', {'class': 'result-container'})
+                
+                if translated_content:
+                    content = translated_content.get_text()
+                else:
+                    content = response.text
+                
+                return {
+                    'success': True,
+                    'status_code': 200,
+                    'content': content,
+                    'content_length': len(content),
+                    'method': 'google_translate'
+                }
+            
+            return {'success': False, 'error': f'Status {response.status_code}', 'method': 'google_translate'}
+        except Exception as e:
+            return {'success': False, 'error': str(e), 'method': 'google_translate'}
+    
+    def _bing_cache_request(self, url: str) -> Dict[str, Any]:
+        """Bing cache request"""
+        try:
+            cache_url = f"https://cc.bingj.com/cache.aspx?q=cache:{url}"
+            headers = self.header_pools['search_bot'].copy()
+            
+            response = self.session.get(cache_url, headers=headers, timeout=25)
+            
+            return {
+                'success': response.status_code == 200,
+                'status_code': response.status_code,
+                'content': response.text,
+                'content_length': len(response.text),
+                'method': 'bing_cache'
+            }
+        except Exception as e:
+            return {'success': False, 'error': str(e), 'method': 'bing_cache'}
     
     def extract_comprehensive_content(self, html: str, url: str) -> Dict[str, Any]:
         """Comprehensive content extraction and analysis"""
