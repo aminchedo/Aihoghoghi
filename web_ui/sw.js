@@ -6,8 +6,8 @@
 const CACHE_NAME = 'iranian-legal-archive-v1';
 const urlsToCache = [
     '/',
-    '/static/styles.css',
-    '/static/script.js',
+    'styles.css',
+    'script.js',
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
     'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap'
@@ -137,8 +137,7 @@ self.addEventListener('push', (event) => {
         const data = event.data.json();
         const options = {
             body: data.body,
-            icon: '/static/icon-192.png',
-            badge: '/static/badge-72.png',
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🏛️</text></svg>',
             dir: 'rtl',
             lang: 'fa'
         };
