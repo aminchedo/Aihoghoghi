@@ -41,19 +41,39 @@
       const isGitHubPages = window.location.hostname.includes('github.io');
       const basePath = isGitHubPages ? '/Aihoghoghi/' : './';
       
-      // Dynamically load CSS
-      const cssLink = document.createElement('link');
-      cssLink.rel = 'stylesheet';
-      cssLink.href = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'index-c704e190.css';
-      document.head.appendChild(cssLink);
+      // Dynamically load CSS (try multiple versions)
+      const cssFiles = ['index-c704e190.css', 'index-4ed993c7.css', 'index.css'];
+      let cssLoaded = false;
+      
+      for (const cssFile of cssFiles) {
+        try {
+          const cssLink = document.createElement('link');
+          cssLink.rel = 'stylesheet';
+          cssLink.href = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + cssFile;
+          cssLink.onload = () => {
+            if (!cssLoaded) {
+              console.log(`✅ CSS loaded: ${cssFile}`);
+              cssLoaded = true;
+            }
+          };
+          cssLink.onerror = () => {
+            console.warn(`⚠️ CSS not found: ${cssFile}`);
+          };
+          document.head.appendChild(cssLink);
+          
+          if (!cssLoaded) break; // Try only first available
+        } catch (error) {
+          console.warn(`❌ CSS load error: ${error.message}`);
+        }
+      }
       
       // Preload resources
       const preloadResources = [
-        'index-c398d7d8.js',
-        'vendor-e048df97.js', 
-        'router-8da05b39.js',
-        'charts-995ccff2.js',
-        'query-031079b4.js'
+        'index-4ed993c7.js',
+        'vendor-4ed993c7.js', 
+        'router-4ed993c7.js',
+        'charts-4ed993c7.js',
+        'query-4ed993c7.js'
       ];
       
       preloadResources.forEach((resource, index) => {
@@ -188,7 +208,7 @@
       
       // Dynamically load the main React app script
       const { isGitHubPages, basePath } = window.iranianLegalArchive;
-      const scriptSrc = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'index-c398d7d8.js';
+      const scriptSrc = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'index-4ed993c7.js';
       
       const script = document.createElement('script');
       script.type = 'module';
@@ -260,15 +280,24 @@
       // Load auto-startup services dynamically
       const loadAutoStartupServices = async () => {
         try {
-          // Load smart proxy service
-          const smartProxyModule = await import(basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'smartProxyService.js');
-          window.SmartProxyService = smartProxyModule.default;
+          // Create script elements for services
+          const scripts = [
+            'smartProxyService.js',
+            'advancedScrapingService.js', 
+            'autoStartupService.js',
+            'githubPagesConfig.js'
+          ];
           
-          // Load advanced scraping service  
-          const scrapingModule = await import(basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + 'advancedScrapingService.js');
-          window.AdvancedScrapingService = scrapingModule.default;
+          for (const scriptName of scripts) {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = basePath + (isGitHubPages ? 'assets/' : 'dist/assets/') + scriptName;
+            script.onload = () => console.log(`✅ Loaded: ${scriptName}`);
+            script.onerror = () => console.warn(`⚠️ Failed to load: ${scriptName}`);
+            document.head.appendChild(script);
+          }
           
-          console.log('✅ Advanced services loaded');
+          console.log('✅ Advanced services loading initiated');
         } catch (error) {
           console.warn('⚠️ Advanced services not available, using basic mode:', error.message);
         }

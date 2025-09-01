@@ -50,10 +50,10 @@ function App() {
         console.log('🚀 Initializing Iranian Legal Archive System...');
         console.log('🔗 Connecting to auto-startup services...');
         
-        // Wait for auto-startup service to be ready
+        // Wait for auto-startup service to be ready (reduced timeout)
         let attempts = 0;
-        while (!window.autoStartupService && attempts < 10) {
-          await new Promise(resolve => setTimeout(resolve, 500));
+        while (!window.autoStartupService && attempts < 3) {
+          await new Promise(resolve => setTimeout(resolve, 200));
           attempts++;
         }
         
@@ -126,12 +126,12 @@ function App() {
 
     initializeApp();
     
-    // Failsafe: Force app to load after 3 seconds maximum
+    // Failsafe: Force app to load after 1 second maximum (fast loading)
     const failsafeTimeout = setTimeout(() => {
       console.warn('⚠️ Failsafe timeout reached, forcing app display');
       setIsLoading(false);
       setInitializationComplete(true);
-    }, 3000);
+    }, 1000);
 
     return () => {
       clearTimeout(failsafeTimeout);
