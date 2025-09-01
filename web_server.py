@@ -10,6 +10,7 @@ import asyncio
 import logging
 import time
 import io
+import sqlite3
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from pathlib import Path
@@ -456,7 +457,6 @@ async def export_documents(format: str):
         
         elif format == "csv":
             import csv
-            import io
             output = io.StringIO()
             if documents:
                 writer = csv.DictWriter(output, fieldnames=documents[0].keys())
@@ -678,6 +678,85 @@ async def search_nafaqe_definition():
     except Exception as e:
         logger.error(f"Error searching نفقه definition: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# Additional API endpoints to match frontend requirements
+
+@app.post("/api/process")
+async def bulk_process(request: URLProcessRequest, background_tasks: BackgroundTasks):
+    """Alternative endpoint for bulk processing (alias for process-urls)"""
+    return await process_urls(request, background_tasks)
+
+@app.get("/api/network")
+async def get_network_status():
+    """Get proxy and DNS manager status"""
+    if not legal_archive:
+        raise HTTPException(status_code=503, detail="System not initialized")
+    
+    try:
+        proxy_stats = legal_archive.proxy_manager.get_proxy_stats()
+        dns_stats = legal_archive.dns_manager.get_stats()
+        
+        return {
+            "proxy_manager": {
+                "active_proxies": proxy_stats.get('active_count', 0),
+                "total_tested": proxy_stats.get('total_tested', 0),
+                "success_rate": proxy_stats.get('success_rate', 0.0),
+                "last_update": proxy_stats.get('last_update', 'Never')
+            },
+            "dns_manager": {
+                "strategy": dns_stats.get('strategy', 'default'),
+                "total_queries": dns_stats.get('queries', 0),
+                "cache_size": dns_stats.get('cache_size', 0)
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error getting network status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/network/update-proxies")
+async def update_network_proxies(request: ProxyUpdateRequest, background_tasks: BackgroundTasks):
+    """Alternative endpoint for proxy updates"""
+    return await update_proxies(request, background_tasks)
+
+@app.get("/api/search")
+async def search_documents(q: str, limit: int = 50, source: str = None):
+    """General search endpoint for all documents"""
+    if not q.strip():
+        raise HTTPException(status_code=400, detail="Search query cannot be empty")
+    
+    try:
+        # Search in legal database
+        legal_results = []
+        if legal_db:
+            legal_results = legal_db.search_documents(q, limit // 2)
+        
+        # Search in processed documents cache
+        cache_results = []
+        if legal_archive:
+            cache_stats = legal_archive.cache_system.get_cache_stats()
+            documents = cache_stats.get('recent_entries', [])
+            for doc in documents:
+                if q.lower() in str(doc).lower():
+                    cache_results.append(doc)
+                    if len(cache_results) >= limit // 2:
+                        break
+        
+        return {
+            "query": q,
+            "results": {
+                "legal_database": legal_results,
+                "processed_cache": cache_results
+            },
+            "total_count": len(legal_results) + len(cache_results)
+        }
+    except Exception as e:
+        logger.error(f"Error in general search: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/export")
+async def export_all_documents(format: str = "json"):
+    """Alternative export endpoint"""
+    return await export_documents(format)
 
 if __name__ == "__main__":
     # Create web_ui directory if it doesn't exist

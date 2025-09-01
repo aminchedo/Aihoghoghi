@@ -14,7 +14,10 @@ const AppState = {
     charts: {},
     websocket: null,
     reconnectAttempts: 0,
-    maxReconnectAttempts: 5
+    maxReconnectAttempts: 5,
+    apiRetryAttempts: 0,
+    maxApiRetryAttempts: 3,
+    backendStatus: 'unknown'
 };
 
 // API Base URL
@@ -22,25 +25,128 @@ const API_BASE = window.location.origin + '/api';
 
 // Utility Functions
 class Utils {
-    static async fetchAPI(endpoint, options = {}) {
+    static async fetchAPI(endpoint, options = {}, retryCount = 0) {
         try {
             const response = await fetch(`${API_BASE}${endpoint}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     ...options.headers
                 },
+                timeout: 30000, // 30 second timeout
                 ...options
             });
             
             if (!response.ok) {
-                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                let errorMessage = `خطای ${response.status}`;
+                
+                // Provide user-friendly error messages
+                switch (response.status) {
+                    case 404:
+                        errorMessage = 'آدرس API یافت نشد - لطفاً از اجرای صحیح سرور اطمینان حاصل کنید';
+                        break;
+                    case 500:
+                        errorMessage = 'خطای داخلی سرور - لطفاً مجدداً تلاش کنید';
+                        break;
+                    case 503:
+                        errorMessage = 'سرویس در دسترس نیست - سیستم در حال راه‌اندازی است';
+                        break;
+                    case 409:
+                        errorMessage = 'عملیات دیگری در حال انجام است - لطفاً منتظر بمانید';
+                        break;
+                    case 400:
+                        errorMessage = 'درخواست نامعتبر - لطفاً اطلاعات ورودی را بررسی کنید';
+                        break;
+                    default:
+                        errorMessage = `خطای ${response.status}: ${response.statusText}`;
+                }
+                
+                AppState.backendStatus = 'error';
+                this.updateBackendStatus('error');
+                throw new Error(errorMessage);
             }
+            
+            // Success - update backend status
+            AppState.backendStatus = 'connected';
+            AppState.apiRetryAttempts = 0;
+            this.updateBackendStatus('connected');
             
             return await response.json();
         } catch (error) {
             console.error('API call failed:', error);
-            this.showToast(`خطا در ارتباط با سرور: ${error.message}`, 'error');
+            AppState.backendStatus = 'error';
+            this.updateBackendStatus('error');
+            
+            // Check if it's a network error and retry
+            if (error.name === 'TypeError' && error.message.includes('fetch') && retryCount < AppState.maxApiRetryAttempts) {
+                this.showToast(`اتصال ناموفق - تلاش مجدد ${retryCount + 1}/${AppState.maxApiRetryAttempts}`, 'warning', 3000);
+                await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1))); // Exponential backoff
+                return this.fetchAPI(endpoint, options, retryCount + 1);
+            }
+            
+            // Final error handling
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                this.showToast('خطا در اتصال به سرور - لطفاً اتصال اینترنت و وضعیت سرور را بررسی کنید', 'error', 10000);
+                this.showBackendInstructions();
+            } else {
+                this.showToast(error.message, 'error', 8000);
+            }
+            
             throw error;
+        }
+    }
+
+    static updateBackendStatus(status) {
+        const statusIndicator = document.getElementById('status-indicator');
+        const statusText = document.getElementById('status-text');
+        
+        if (statusIndicator && statusText) {
+            switch (status) {
+                case 'connected':
+                    statusIndicator.className = 'w-3 h-3 bg-green-500 rounded-full animate-pulse';
+                    statusText.textContent = 'متصل';
+                    break;
+                case 'error':
+                    statusIndicator.className = 'w-3 h-3 bg-red-500 rounded-full animate-pulse';
+                    statusText.textContent = 'خطا';
+                    break;
+                case 'connecting':
+                    statusIndicator.className = 'w-3 h-3 bg-yellow-500 rounded-full animate-pulse';
+                    statusText.textContent = 'در حال اتصال';
+                    break;
+                default:
+                    statusIndicator.className = 'w-3 h-3 bg-gray-500 rounded-full';
+                    statusText.textContent = 'نامشخص';
+            }
+        }
+    }
+
+    static showBackendInstructions() {
+        const instructionsHtml = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                <h3 class="text-red-800 font-bold mb-2">🚨 سرور در دسترس نیست</h3>
+                <p class="text-red-700 mb-3">برای حل مشکل، مراحل زیر را دنبال کنید:</p>
+                <ol class="list-decimal list-inside text-red-700 space-y-1 text-sm">
+                    <li>اطمینان از اجرای سرور: <code class="bg-red-100 px-2 py-1 rounded">uvicorn web_server:app --reload --host 0.0.0.0 --port 7860</code></li>
+                    <li>بررسی اتصال اینترنت</li>
+                    <li>بررسی آدرس سرور: <code class="bg-red-100 px-2 py-1 rounded">http://127.0.0.1:7860</code></li>
+                    <li>بررسی فایروال و تنظیمات امنیتی</li>
+                    <li>مراجعه به لاگ‌های سرور برای جزئیات بیشتر</li>
+                </ol>
+                <button onclick="location.reload()" class="mt-3 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    🔄 تلاش مجدد
+                </button>
+            </div>
+        `;
+        
+        // Show instructions in the main content area
+        const mainContent = document.querySelector('main') || document.body;
+        const existingInstructions = document.getElementById('backend-instructions');
+        
+        if (!existingInstructions) {
+            const instructionsDiv = document.createElement('div');
+            instructionsDiv.id = 'backend-instructions';
+            instructionsDiv.innerHTML = instructionsHtml;
+            mainContent.insertBefore(instructionsDiv, mainContent.firstChild);
         }
     }
 
