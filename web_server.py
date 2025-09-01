@@ -8,6 +8,8 @@ import sys
 import json
 import asyncio
 import logging
+import time
+import io
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from pathlib import Path
@@ -54,9 +56,33 @@ else:
                 'start_time': time.time()
             }
             self.operation_logs = []
+            # Mock proxy manager
+            class MockProxyManager:
+                def get_proxy_stats(self):
+                    return {'active_proxies': 0, 'total_tested': 0, 'success_rate': 0.0}
+                def update_proxy_list(self, *args, **kwargs):
+                    return True
+            self.proxy_manager = MockProxyManager()
+            
+            # Mock cache system
+            class MockCacheSystem:
+                def get_cache_stats(self):
+                    return {'total_entries': 0, 'cache_size_mb': 0.0, 'hit_rate': 0.0}
+                def clear_cache(self):
+                    return True
+            self.cache_system = MockCacheSystem()
+            
+            # Mock DNS manager
+            class MockDNSManager:
+                def get_stats(self):
+                    return {'strategy': 'mock', 'queries': 0}
+            self.dns_manager = MockDNSManager()
         
         def process_bulk_urls_enhanced(self, *args, **kwargs):
             return ("Mock processing result", "", "", "")
+        
+        def get_processed_documents(self):
+            return []
 
 # Import legal database system
 from legal_database import LegalDatabase, EnhancedLegalAnalyzer, LegalDocument

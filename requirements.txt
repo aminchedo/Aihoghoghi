@@ -18,8 +18,7 @@ psutil>=5.9.0
 dnspython>=2.4.0
 requests-doh>=0.3.0
 
-# Database
-sqlite3
+# Database (sqlite3 is built into Python)
 
 # Optional for enhanced functionality
 aiofiles>=23.2.0
