@@ -1,0 +1,94 @@
+{
+  "name": "iranian-legal-archive-ui",
+  "version": "2.0.0",
+  "description": "Modern React-based UI for Iranian Legal Document Archive & Analyzer",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint src --ext js,jsx --fix",
+    "format": "prettier --write src/**/*.{js,jsx,css,md}",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
+    "@tanstack/react-query": "^4.24.6",
+    "@tanstack/react-query-devtools": "^4.24.6",
+    "react-hot-toast": "^2.4.0",
+    "chart.js": "^4.2.1",
+    "react-chartjs-2": "^5.2.0",
+    "date-fns": "^2.29.3",
+    "date-fns-jalali": "^2.29.3-0",
+    "clsx": "^1.2.1",
+    "react-dropzone": "^14.2.3",
+    "react-virtualized-auto-sizer": "^1.0.20",
+    "react-window": "^1.8.8"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@types/react-window": "^1.8.5",
+    "@vitejs/plugin-react": "^3.1.0",
+    "vite": "^4.1.0",
+    "tailwindcss": "^3.2.6",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "eslint": "^8.34.0",
+    "@eslint/js": "^9.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "prettier": "^2.8.4",
+    "prettier-plugin-tailwindcss": "^0.2.2",
+    "vitest": "^0.28.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/user-event": "^14.4.3",
+    "jsdom": "^21.1.0",
+    "@vitest/ui": "^0.28.5",
+    "@vitest/coverage-c8": "^0.28.5",
+    "typescript": "^4.9.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "react",
+    "legal-documents",
+    "archive",
+    "persian",
+    "rtl",
+    "document-processing",
+    "legal-analysis"
+  ],
+  "author": "Iranian Legal Archive Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iranian-legal-archive/ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iranian-legal-archive/ui/issues"
+  },
+  "homepage": "https://github.com/iranian-legal-archive/ui#readme"
+}
