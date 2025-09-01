@@ -73,11 +73,13 @@ class SystemVerifier:
         """Test all major API endpoints"""
         endpoints = [
             {"path": "/status", "method": "GET", "expected_fields": ["is_processing", "message"]},
+            {"path": "/health", "method": "GET", "expected_fields": ["status", "timestamp", "components"]},
             {"path": "/stats", "method": "GET", "expected_fields": ["total_operations", "uptime"]},
             {"path": "/legal-db/stats", "method": "GET", "expected_fields": ["total_documents"]},
             {"path": "/processed-documents", "method": "GET", "expected_fields": ["documents", "total"]},
             {"path": "/logs", "method": "GET", "expected_fields": []},
-            {"path": "/docs", "method": "GET", "expected_content": "swagger", "base_url": True}
+            {"path": "/docs", "method": "GET", "expected_content": "swagger", "base_url": True},
+            {"path": "/openapi.json", "method": "GET", "expected_fields": ["openapi", "info"], "base_url": True}
         ]
 
         for endpoint in endpoints:
@@ -162,23 +164,115 @@ class SystemVerifier:
     def test_system_performance(self):
         """Test system performance metrics"""
         try:
-            start_time = time.time()
-            response = requests.get(f"{self.api_base}/status", timeout=10)
-            response_time = (time.time() - start_time) * 1000  # milliseconds
+            # Test multiple endpoints for comprehensive performance analysis
+            endpoints_to_test = ["/status", "/stats", "/legal-db/stats"]
+            total_response_time = 0
+            successful_tests = 0
             
-            if response.status_code == 200:
-                if response_time < 1000:  # Less than 1 second
-                    self.log_test("Response Time", "PASS", f"Fast response ({response_time:.0f}ms)")
-                elif response_time < 3000:  # Less than 3 seconds
-                    self.log_test("Response Time", "PASS", f"Acceptable response ({response_time:.0f}ms)")
-                else:
-                    self.log_test("Response Time", "FAIL", f"Slow response ({response_time:.0f}ms)")
-                    self.results["recommendations"].append("Consider optimizing server performance - response times are slow")
-            else:
-                self.log_test("Response Time", "FAIL", f"HTTP {response.status_code}")
+            for endpoint in endpoints_to_test:
+                try:
+                    start_time = time.time()
+                    response = requests.get(f"{self.api_base}{endpoint}", timeout=10)
+                    response_time = (time.time() - start_time) * 1000  # milliseconds
+                    
+                    if response.status_code == 200:
+                        total_response_time += response_time
+                        successful_tests += 1
+                        
+                        if response_time < 500:  # Less than 0.5 seconds
+                            self.log_test(f"Response Time {endpoint}", "PASS", f"Excellent response ({response_time:.0f}ms)")
+                        elif response_time < 1000:  # Less than 1 second
+                            self.log_test(f"Response Time {endpoint}", "PASS", f"Good response ({response_time:.0f}ms)")
+                        elif response_time < 3000:  # Less than 3 seconds
+                            self.log_test(f"Response Time {endpoint}", "PASS", f"Acceptable response ({response_time:.0f}ms)")
+                        else:
+                            self.log_test(f"Response Time {endpoint}", "FAIL", f"Slow response ({response_time:.0f}ms)")
+                            self.results["recommendations"].append(f"Consider optimizing {endpoint} endpoint - response time is slow")
+                    else:
+                        self.log_test(f"Response Time {endpoint}", "FAIL", f"HTTP {response.status_code}")
+                        
+                except requests.exceptions.Timeout:
+                    self.log_test(f"Response Time {endpoint}", "FAIL", "Request timeout (>10s)")
+                except requests.exceptions.RequestException as e:
+                    self.log_test(f"Response Time {endpoint}", "FAIL", f"Request failed: {str(e)}")
+            
+            # Calculate average response time
+            if successful_tests > 0:
+                avg_response_time = total_response_time / successful_tests
+                self.results["system_info"]["average_response_time_ms"] = avg_response_time
                 
-        except requests.exceptions.RequestException as e:
+                if avg_response_time < 500:
+                    self.log_test("Average Performance", "PASS", f"Excellent average response time ({avg_response_time:.0f}ms)")
+                elif avg_response_time < 1000:
+                    self.log_test("Average Performance", "PASS", f"Good average response time ({avg_response_time:.0f}ms)")
+                else:
+                    self.log_test("Average Performance", "FAIL", f"Poor average response time ({avg_response_time:.0f}ms)")
+                    
+        except Exception as e:
             self.log_test("System Performance", "FAIL", f"Performance test failed: {str(e)}")
+
+    def test_security_and_errors(self):
+        """Test security measures and error handling"""
+        try:
+            # Test 404 handling for non-existent endpoints
+            response = requests.get(f"{self.api_base}/nonexistent-endpoint", timeout=10)
+            if response.status_code == 404:
+                try:
+                    error_data = response.json()
+                    if "detail" in error_data and not any(sensitive in str(error_data).lower() 
+                                                        for sensitive in ["password", "token", "key", "secret", "internal"]):
+                        self.log_test("404 Error Handling", "PASS", "Proper 404 responses without information leakage")
+                    else:
+                        self.log_test("404 Error Handling", "FAIL", "404 response may contain sensitive information")
+                except:
+                    self.log_test("404 Error Handling", "FAIL", "404 response is not valid JSON")
+            else:
+                self.log_test("404 Error Handling", "FAIL", f"Expected 404, got {response.status_code}")
+                
+            # Test CORS headers
+            try:
+                # Test CORS with a cross-origin request simulation
+                headers = {'Origin': 'http://localhost:3000'}
+                response = requests.get(f"{self.api_base}/status", headers=headers, timeout=10)
+                cors_headers = [h for h in response.headers.keys() if h.lower().startswith('access-control')]
+                if cors_headers:
+                    self.log_test("CORS Configuration", "PASS", f"CORS headers present: {len(cors_headers)} headers")
+                else:
+                    # Try OPTIONS method as fallback
+                    options_response = requests.options(f"{self.api_base}/status", headers=headers, timeout=10)
+                    cors_headers = [h for h in options_response.headers.keys() if h.lower().startswith('access-control')]
+                    if cors_headers:
+                        self.log_test("CORS Configuration", "PASS", f"CORS headers present in OPTIONS: {len(cors_headers)} headers")
+                    else:
+                        self.log_test("CORS Configuration", "FAIL", "No CORS headers found")
+            except Exception as e:
+                self.log_test("CORS Configuration", "FAIL", f"Could not test CORS configuration: {str(e)}")
+                
+            # Test for common security headers
+            try:
+                response = requests.get(f"{self.base_url}/", timeout=10)
+                security_headers = {
+                    'x-content-type-options': 'Content type protection',
+                    'x-frame-options': 'Clickjacking protection', 
+                    'x-xss-protection': 'XSS protection'
+                }
+                
+                found_headers = 0
+                for header, description in security_headers.items():
+                    if header in response.headers:
+                        found_headers += 1
+                        
+                if found_headers > 0:
+                    self.log_test("Security Headers", "PASS", f"{found_headers}/{len(security_headers)} security headers present")
+                else:
+                    self.log_test("Security Headers", "FAIL", "No security headers found")
+                    self.results["recommendations"].append("Consider adding security headers (X-Content-Type-Options, X-Frame-Options, X-XSS-Protection)")
+                    
+            except Exception as e:
+                self.log_test("Security Headers", "FAIL", f"Could not test security headers: {str(e)}")
+                
+        except Exception as e:
+            self.log_test("Security Testing", "FAIL", f"Security tests failed: {str(e)}")
 
     def collect_system_info(self):
         """Collect system information"""
@@ -248,6 +342,9 @@ class SystemVerifier:
         
         print("\n⚡ Testing System Performance...")
         self.test_system_performance()
+        
+        print("\n🔒 Testing Security & Error Handling...")
+        self.test_security_and_errors()
         
         print("\n📊 Collecting System Information...")
         self.collect_system_info()

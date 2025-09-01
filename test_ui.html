@@ -103,22 +103,42 @@
             `;
         }
 
-        async function testEndpoint(endpoint, expectedFields = []) {
+        async function testEndpoint(endpoint, expectedFields = [], options = {}) {
             try {
-                const response = await fetch(`${API_BASE}${endpoint}`);
+                const url = options.baseUrl ? `http://localhost:7860${endpoint}` : `${API_BASE}${endpoint}`;
+                const response = await fetch(url, { 
+                    timeout: options.timeout || 10000,
+                    signal: AbortSignal.timeout(options.timeout || 10000)
+                });
+                
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                const data = await response.json();
-                
-                // Check for expected fields
-                const missingFields = expectedFields.filter(field => !(field in data));
-                if (missingFields.length > 0) {
-                    throw new Error(`Missing fields: ${missingFields.join(', ')}`);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
-                return { success: true, data };
+                // Handle different content types
+                let data;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                    
+                    // Check for expected fields
+                    const missingFields = expectedFields.filter(field => !(field in data));
+                    if (missingFields.length > 0) {
+                        throw new Error(`Missing fields: ${missingFields.join(', ')}`);
+                    }
+                } else {
+                    // For HTML/text content, just check if it's not empty
+                    data = await response.text();
+                    if (!data || data.length < 10) {
+                        throw new Error('Empty or invalid response');
+                    }
+                }
+                
+                return { success: true, data, contentType, size: response.headers.get('content-length') };
             } catch (error) {
+                if (error.name === 'AbortError') {
+                    return { success: false, error: 'Request timeout' };
+                }
                 return { success: false, error: error.message };
             }
         }
@@ -131,19 +151,22 @@
                 { endpoint: '/stats', fields: ['total_operations', 'uptime'] },
                 { endpoint: '/legal-db/stats', fields: ['total_documents'] },
                 { endpoint: '/processed-documents', fields: ['documents', 'total'] },
-                { endpoint: '/logs', fields: [] }
+                { endpoint: '/logs', fields: [] },
+                { endpoint: '/docs', fields: [], options: { baseUrl: true } },
+                { endpoint: '/openapi.json', fields: ['openapi', 'info'], options: { baseUrl: true } }
             ];
 
             for (const test of tests) {
                 addResult('backend-tests', `GET ${test.endpoint}`, 'loading', 'Testing...');
-                const result = await testEndpoint(test.endpoint, test.fields);
+                const result = await testEndpoint(test.endpoint, test.fields, test.options || {});
                 
                 // Remove loading message
                 const lastChild = document.getElementById('backend-tests').lastChild;
                 lastChild.remove();
                 
                 if (result.success) {
-                    addResult('backend-tests', `GET ${test.endpoint}`, 'success', 'OK');
+                    const sizeInfo = result.size ? ` (${(result.size / 1024).toFixed(1)} KB)` : '';
+                    addResult('backend-tests', `GET ${test.endpoint}`, 'success', `OK${sizeInfo}`);
                 } else {
                     addResult('backend-tests', `GET ${test.endpoint}`, 'error', result.error);
                 }

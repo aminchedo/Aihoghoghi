@@ -1,0 +1,190 @@
+{
+  "timestamp": "2025-09-01T14:24:09.961882",
+  "base_url": "http://localhost:7860",
+  "tests": [
+    {
+      "test_name": "Server Connectivity",
+      "status": "PASS",
+      "message": "Server is accessible and responding",
+      "timestamp": "2025-09-01T14:24:09.972316",
+      "details": {}
+    },
+    {
+      "test_name": "API Endpoint: /status",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T14:24:09.974548",
+      "details": {
+        "response_size": 88
+      }
+    },
+    {
+      "test_name": "API Endpoint: /health",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T14:24:09.976465",
+      "details": {
+        "response_size": 201
+      }
+    },
+    {
+      "test_name": "API Endpoint: /stats",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T14:24:09.978189",
+      "details": {
+        "response_size": 134
+      }
+    },
+    {
+      "test_name": "API Endpoint: /legal-db/stats",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T14:24:09.980253",
+      "details": {
+        "response_size": 79
+      }
+    },
+    {
+      "test_name": "API Endpoint: /processed-documents",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T14:24:09.982133",
+      "details": {
+        "response_size": 55
+      }
+    },
+    {
+      "test_name": "API Endpoint: /logs",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T14:24:09.983854",
+      "details": {
+        "response_size": 12
+      }
+    },
+    {
+      "test_name": "API Endpoint: /docs",
+      "status": "PASS",
+      "message": "Documentation accessible",
+      "timestamp": "2025-09-01T14:24:09.985267",
+      "details": {}
+    },
+    {
+      "test_name": "API Endpoint: /openapi.json",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T14:24:09.992556",
+      "details": {
+        "response_size": 9102
+      }
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/styles.css",
+      "status": "PASS",
+      "message": "Asset loaded successfully (14.1 KB)",
+      "timestamp": "2025-09-01T14:24:09.999883",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/script.js",
+      "status": "PASS",
+      "message": "Asset loaded successfully (45.9 KB)",
+      "timestamp": "2025-09-01T14:24:10.002123",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/sw.js",
+      "status": "PASS",
+      "message": "Asset loaded successfully (5.4 KB)",
+      "timestamp": "2025-09-01T14:24:10.004175",
+      "details": {}
+    },
+    {
+      "test_name": "Database Stats",
+      "status": "PASS",
+      "message": "Database accessible with 0 documents",
+      "timestamp": "2025-09-01T14:24:10.006104",
+      "details": {}
+    },
+    {
+      "test_name": "Database Search",
+      "status": "SKIP",
+      "message": "No documents in database to search",
+      "timestamp": "2025-09-01T14:24:10.006127",
+      "details": {}
+    },
+    {
+      "test_name": "Response Time /status",
+      "status": "PASS",
+      "message": "Excellent response (1ms)",
+      "timestamp": "2025-09-01T14:24:10.007531",
+      "details": {}
+    },
+    {
+      "test_name": "Response Time /stats",
+      "status": "PASS",
+      "message": "Excellent response (1ms)",
+      "timestamp": "2025-09-01T14:24:10.008934",
+      "details": {}
+    },
+    {
+      "test_name": "Response Time /legal-db/stats",
+      "status": "PASS",
+      "message": "Excellent response (2ms)",
+      "timestamp": "2025-09-01T14:24:10.010737",
+      "details": {}
+    },
+    {
+      "test_name": "Average Performance",
+      "status": "PASS",
+      "message": "Excellent average response time (2ms)",
+      "timestamp": "2025-09-01T14:24:10.010759",
+      "details": {}
+    },
+    {
+      "test_name": "404 Error Handling",
+      "status": "PASS",
+      "message": "Proper 404 responses without information leakage",
+      "timestamp": "2025-09-01T14:24:10.012209",
+      "details": {}
+    },
+    {
+      "test_name": "CORS Configuration",
+      "status": "PASS",
+      "message": "CORS headers present: 2 headers",
+      "timestamp": "2025-09-01T14:24:10.013578",
+      "details": {}
+    },
+    {
+      "test_name": "Security Headers",
+      "status": "PASS",
+      "message": "3/3 security headers present",
+      "timestamp": "2025-09-01T14:24:10.015670",
+      "details": {}
+    }
+  ],
+  "summary": {
+    "total_tests": 21,
+    "passed_tests": 20,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "execution_time": 0.06113386154174805
+  },
+  "system_info": {
+    "average_response_time_ms": 1.5004475911458333,
+    "api_stats": {
+      "total_operations": 0,
+      "successful_operations": 0,
+      "failed_operations": 0,
+      "active_proxies": 0,
+      "cache_size": 0,
+      "uptime": "0:00:09"
+    },
+    "python_processes": 3,
+    "disk_info": "Filesystem      Size  Used Avail Use% Mounted on\noverlay         126G  5.9G  114G   5% /"
+  },
+  "recommendations": [
+    "🎉 All tests passed! System is fully operational."
+  ]
+}

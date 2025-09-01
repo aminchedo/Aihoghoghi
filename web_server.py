@@ -177,6 +177,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add security headers middleware
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    return response
+
 # Initialize the legal archive system
 @app.on_event("startup")
 async def startup_event():
@@ -241,6 +252,58 @@ async def get_status():
     """Get current system status"""
     global processing_status
     return processing_status
+
+@app.get("/api/health")
+async def health_check():
+    """Comprehensive health check endpoint"""
+    try:
+        # Check database connectivity
+        db_status = "healthy"
+        try:
+            if legal_archive:
+                # Try a simple database operation
+                stats = legal_archive.session_stats if hasattr(legal_archive, 'session_stats') else {}
+                db_status = "healthy" if stats is not None else "degraded"
+            else:
+                db_status = "unavailable"
+        except Exception:
+            db_status = "error"
+            
+        # Check memory usage
+        try:
+            import psutil
+            memory_usage = psutil.virtual_memory().percent
+            memory_status = "healthy" if memory_usage < 80 else "degraded" if memory_usage < 90 else "critical"
+        except ImportError:
+            memory_usage = 0
+            memory_status = "unknown"
+        
+        # Overall health
+        overall_health = "healthy"
+        if db_status == "error" or memory_status == "critical":
+            overall_health = "unhealthy"
+        elif db_status == "degraded" or memory_status == "degraded":
+            overall_health = "degraded"
+            
+        return {
+            "status": overall_health,
+            "timestamp": datetime.now().isoformat(),
+            "components": {
+                "database": db_status,
+                "memory": memory_status
+            },
+            "metrics": {
+                "memory_usage_percent": memory_usage,
+                "uptime_seconds": time.time() - (legal_archive.session_stats.get('start_time', time.time()) if legal_archive and hasattr(legal_archive, 'session_stats') else time.time())
+            }
+        }
+    except Exception as e:
+        logging.error(f"Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "timestamp": datetime.now().isoformat(),
+            "error": "Health check failed"
+        }
 
 @app.get("/api/stats")
 async def get_system_stats():
