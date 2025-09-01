@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Loading Behavior</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🔍 تست رفتار بارگذاری سیستم آرشیو حقوقی</h1>
+    
+    <div class="test-section info">
+        <h2>📋 نتایج تست:</h2>
+        <div id="test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🚀 تست‌های خودکار:</h3>
+        <button onclick="testMainApp()">تست اپلیکیشن اصلی</button>
+        <button onclick="testLoadingTimeout()">تست تایم‌اوت بارگذاری</button>
+        <button onclick="testNavigation()">تست ناوبری</button>
+        <button onclick="clearTests()">پاک کردن نتایج</button>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 وضعیت سرور:</h3>
+        <div id="server-status">در حال بررسی...</div>
+    </div>
+
+    <script>
+        const results = document.getElementById('test-results');
+        const serverStatus = document.getElementById('server-status');
+
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-section ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString('fa-IR')}:</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        function clearTests() {
+            results.innerHTML = '';
+        }
+
+        async function testMainApp() {
+            addResult('🔄 در حال تست اپلیکیشن اصلی...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:3000');
+                const html = await response.text();
+                
+                if (html.includes('سیستم آرشیو اسناد حقوقی')) {
+                    addResult('✅ اپلیکیشن اصلی با موفقیت بارگذاری شد', 'success');
+                    
+                    // Check for loading elements
+                    if (html.includes('loading-container')) {
+                        addResult('✅ المنت‌های بارگذاری موجود هستند', 'success');
+                    }
+                    
+                    // Check for React script
+                    if (html.includes('main.jsx')) {
+                        addResult('✅ اسکریپت React موجود است', 'success');
+                    }
+                } else {
+                    addResult('❌ محتوای اپلیکیشن یافت نشد', 'error');
+                }
+            } catch (error) {
+                addResult(`❌ خطا در تست اپلیکیشن: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLoadingTimeout() {
+            addResult('🔄 تست تایم‌اوت بارگذاری...', 'info');
+            
+            // Simulate loading behavior
+            const testFrame = document.createElement('iframe');
+            testFrame.style.display = 'none';
+            testFrame.src = 'http://localhost:3000';
+            document.body.appendChild(testFrame);
+            
+            let loadingComplete = false;
+            
+            testFrame.onload = () => {
+                loadingComplete = true;
+                addResult('✅ صفحه با موفقیت بارگذاری شد', 'success');
+                document.body.removeChild(testFrame);
+            };
+            
+            // Check if loading completes within reasonable time
+            setTimeout(() => {
+                if (!loadingComplete) {
+                    addResult('⚠️ بارگذاری بیش از حد طول کشید', 'error');
+                    if (document.body.contains(testFrame)) {
+                        document.body.removeChild(testFrame);
+                    }
+                }
+            }, 10000);
+        }
+
+        async function testNavigation() {
+            addResult('🔄 تست ناوبری...', 'info');
+            
+            const testUrls = [
+                'http://localhost:3000/',
+                'http://localhost:3000/dashboard',
+                'http://localhost:3000/process',
+                'http://localhost:3000/search'
+            ];
+            
+            for (const url of testUrls) {
+                try {
+                    const response = await fetch(url);
+                    if (response.ok) {
+                        addResult(`✅ مسیر ${url} در دسترس است`, 'success');
+                    } else {
+                        addResult(`⚠️ مسیر ${url} خطای ${response.status} برگرداند`, 'error');
+                    }
+                } catch (error) {
+                    addResult(`❌ خطا در دسترسی به ${url}: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function checkServerStatus() {
+            try {
+                const response = await fetch('http://localhost:3000');
+                if (response.ok) {
+                    serverStatus.innerHTML = '✅ سرور فعال است (پورت 3000)';
+                    serverStatus.className = 'test-section success';
+                } else {
+                    serverStatus.innerHTML = `⚠️ سرور پاسخ داد اما با خطا: ${response.status}`;
+                    serverStatus.className = 'test-section error';
+                }
+            } catch (error) {
+                serverStatus.innerHTML = `❌ سرور در دسترس نیست: ${error.message}`;
+                serverStatus.className = 'test-section error';
+            }
+        }
+
+        // Check server status on load
+        checkServerStatus();
+        
+        // Auto-run basic test
+        setTimeout(testMainApp, 1000);
+    </script>
+</body>
+</html>
