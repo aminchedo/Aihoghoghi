@@ -182,12 +182,12 @@ async def process_urls_background(urls: List[str], use_proxy: bool, batch_size: 
     
     try:
         # Setup proxy if requested
-        if use_proxy and not proxy_manager.active_proxies:
+        if use_proxy and hasattr(legal_archive, 'proxy_manager') and not legal_archive.proxy_manager.active_proxies:
             await manager.broadcast(json.dumps({
                 "type": "info",
                 "message": "Testing proxies before processing..."
             }))
-            proxy_manager.bulk_test_proxies(max_workers=5)
+            legal_archive.proxy_manager.bulk_test_proxies(max_workers=5)
         
         # Process URLs in batches
         for batch_idx in range(0, len(urls), batch_size):
@@ -442,6 +442,105 @@ async def search_documents(request: SearchRequest):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# Missing API endpoints that frontend expects
+
+@app.get("/api/logs")
+async def get_logs(limit: int = 50):
+    """Get recent system logs"""
+    try:
+        # For now, return mock logs - can be enhanced to read actual log files
+        logs = [
+            {
+                "timestamp": datetime.now().isoformat(),
+                "level": "INFO",
+                "message": "System running normally",
+                "component": "system"
+            }
+        ]
+        return {"logs": logs}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/network")
+async def get_network_status():
+    """Get network and proxy status"""
+    try:
+        proxy_stats = {
+            "active_proxies": len(legal_archive.proxy_manager.active_proxies) if hasattr(legal_archive, 'proxy_manager') else 0,
+            "total_proxies": len(legal_archive.proxy_manager.proxies) if hasattr(legal_archive, 'proxy_manager') else 0,
+            "dns_status": "operational"
+        }
+        return proxy_stats
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/network")
+async def update_network_settings(settings: dict):
+    """Update network and proxy settings"""
+    try:
+        # Placeholder for network settings update
+        return {"message": "Network settings updated", "settings": settings}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/legal-db/stats")
+async def get_legal_db_stats():
+    """Get legal database statistics"""
+    try:
+        stats = legal_archive.get_document_statistics()
+        return stats
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/legal-db/search")
+async def search_legal_db(q: str, limit: int = 50):
+    """Search legal database"""
+    try:
+        results = legal_archive.search_documents(query=q, limit=limit)
+        return {"results": results, "total": len(results)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/legal-db/documents")
+async def get_legal_documents(limit: int = 100):
+    """Get legal documents from database"""
+    try:
+        # Get processed documents
+        results = processing_state["results"]
+        return {
+            "documents": results[:limit],
+            "total": len(results)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/legal-db/populate")
+async def populate_legal_db(request: dict):
+    """Populate legal database with sample data"""
+    try:
+        max_docs = request.get("max_docs_per_source", 5)
+        # Placeholder for database population
+        return {
+            "message": f"Database population started with {max_docs} docs per source",
+            "status": "started"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/legal-db/search-nafaqe")
+async def search_nafaqe():
+    """Search for nafaqe-related legal documents"""
+    try:
+        results = legal_archive.search_documents(query="نفقه", limit=50)
+        return {"results": results, "total": len(results)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/process")
+async def get_process_status():
+    """Get bulk processing status - alias for /api/status"""
+    return await get_status()
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

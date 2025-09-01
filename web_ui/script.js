@@ -17,30 +17,101 @@ const AppState = {
     maxReconnectAttempts: 5
 };
 
-// API Base URL
-const API_BASE = window.location.origin + '/api';
+// API Base URL - configurable for different environments
+const API_BASE = (() => {
+    // Check if we're in development mode or if a custom API URL is set
+    const customApiUrl = localStorage.getItem('apiBaseUrl');
+    if (customApiUrl) {
+        return customApiUrl;
+    }
+    
+    // Default to current origin with /api prefix
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://127.0.0.1:8000/api';
+    }
+    
+    return window.location.origin + '/api';
+})();
+
+console.log('API Base URL:', API_BASE);
 
 // Utility Functions
 class Utils {
-    static async fetchAPI(endpoint, options = {}) {
+    static async fetchAPI(endpoint, options = {}, retries = 3) {
+        let lastError;
+        
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error(`API endpoint not found: ${endpoint}. Please check if the backend server is running properly.`);
+                    } else if (response.status >= 500) {
+                        throw new Error(`Server error (${response.status}): ${response.statusText}`);
+                    } else if (response.status === 400) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`Bad request: ${errorData.detail || response.statusText}`);
+                    } else {
+                        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                    }
+                }
+                
+                return await response.json();
+            } catch (error) {
+                lastError = error;
+                
+                // Don't retry for client errors (4xx) except 429 (rate limit)
+                if (error.message.includes('404') || error.message.includes('400')) {
+                    break;
+                }
+                
+                if (attempt < retries) {
+                    console.warn(`API call attempt ${attempt + 1} failed, retrying...`, error);
+                    await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))); // Exponential backoff
+                }
+            }
+        }
+        
+        console.error('API call failed after all retries:', lastError);
+        
+        // Show user-friendly error messages
+        if (lastError.message.includes('404')) {
+            this.showToast('خطا: سرور در دسترس نیست یا مسیر API موجود نمی‌باشد. لطفاً بررسی کنید که سرور در حال اجرا باشد.', 'error', 8000);
+        } else if (lastError.message.includes('Failed to fetch') || lastError.message.includes('NetworkError')) {
+            this.showToast('خطا در اتصال به سرور. لطفاً اتصال اینترنت خود را بررسی کنید.', 'error', 8000);
+        } else {
+            this.showToast(`خطا در ارتباط با سرور: ${lastError.message}`, 'error', 8000);
+        }
+        
+        throw lastError;
+    }
+
+    static async checkServerHealth() {
         try {
-            const response = await fetch(`${API_BASE}${endpoint}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...options.headers
-                },
-                ...options
+            const response = await fetch(`${API_BASE}/status`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                timeout: 5000
             });
             
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            if (response.ok) {
+                console.log('✅ Server is healthy');
+                return true;
+            } else {
+                console.warn('⚠️ Server responded but with error:', response.status);
+                return false;
             }
-            
-            return await response.json();
         } catch (error) {
-            console.error('API call failed:', error);
-            this.showToast(`خطا در ارتباط با سرور: ${error.message}`, 'error');
-            throw error;
+            console.error('❌ Server health check failed:', error);
+            this.showToast('سرور در دسترس نیست. لطفاً بررسی کنید که سرور FastAPI در حال اجرا باشد.', 'error', 10000);
+            return false;
         }
     }
 
