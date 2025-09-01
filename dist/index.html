@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ Iranian Legal Archive System - Professional Legal Document Analysis</title>
+    
+    <!-- SEO and Performance Meta Tags -->
+    <meta name="description" content="Advanced Iranian Legal Document Archive System with AI-powered analysis, intelligent proxy management, and real-time processing capabilities">
+    <meta name="keywords" content="Iranian Legal, Legal Archive, AI Analysis, Persian BERT, Legal Documents, نفقه, حقوقی, آرشیو">
+    <meta name="author" content="Iranian Legal Archive Team">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- Progressive Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Legal Archive">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Iranian Legal Archive System">
+    <meta property="og:description" content="AI-powered legal document analysis for Iranian legal system">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/3b82f6/ffffff?text=Iranian+Legal+Archive">
+    <meta property="og:site_name" content="Iranian Legal Archive System">
+    <meta property="og:locale" content="fa_IR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Iranian Legal Archive System">
+    <meta name="twitter:description" content="AI-powered legal document analysis for Iranian legal system">
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/3b82f6/ffffff?text=Iranian+Legal+Archive">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    
+    <!-- Performance optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/npm">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Persian/Farsi fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Configure Tailwind for RTL -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'vazir': ['Vazirmatn', 'Tahoma', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        secondary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        accent: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'bounce-subtle': 'bounceSubtle 2s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient': 'gradient 15s ease infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        bounceSubtle: {
+                            '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
+                            '40%': { transform: 'translateY(-10px)' },
+                            '60%': { transform: 'translateY(-5px)' }
+                        },
+                        gradient: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' }
+                        }
+                    },
+                    backgroundSize: {
+                        '400%': '400%'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-vazir" dir="rtl">
+    <!-- Fixed Header -->
+    <header class="bg-gradient-to-r from-primary-600 via-primary-500 to-secondary-600 shadow-lg fixed top-0 left-0 right-0 z-50 animate-gradient bg-400%">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="text-2xl">⚖️</div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white drop-shadow-lg">سیستم آرشیو اسناد حقوقی ایران</h1>
+                        <p class="text-sm text-primary-100">پلتفرم هوشمند تحلیل اسناد حقوقی</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <!-- Real-time clock -->
+                    <div class="text-left" dir="ltr">
+                        <div id="current-time" class="text-lg font-semibold text-white drop-shadow-lg"></div>
+                        <div id="current-date" class="text-sm text-primary-100"></div>
+                    </div>
+                    
+                    <!-- System status indicator -->
+                    <div class="flex items-center space-x-2 space-x-reverse bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                        <div id="status-indicator" class="w-3 h-3 bg-accent-400 rounded-full animate-pulse-slow shadow-lg shadow-accent-400/50"></div>
+                        <span id="status-text" class="text-sm text-white font-medium">آماده</span>
+                    </div>
+                    
+                    <!-- Theme toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 text-white">
+                        <span id="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-20 min-h-screen">
+        <!-- Collapsible Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white shadow-lg transform transition-transform duration-300 fixed right-0 h-full z-40">
+            <div class="p-4">
+                <!-- Sidebar Toggle -->
+                <button id="sidebar-toggle" class="lg:hidden mb-4 p-2 rounded-lg bg-primary-500 text-white">
+                    ☰
+                </button>
+                
+                <nav class="space-y-2">
+                    <a href="#home" class="nav-link active flex items-center space-x-3 space-x-reverse p-3 rounded-lg bg-primary-500 text-white">
+                        <span>🏠</span>
+                        <span>خانه</span>
+                    </a>
+                    <a href="#process" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>⚡</span>
+                        <span>پردازش اسناد</span>
+                    </a>
+                    <a href="#dashboard" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>📊</span>
+                        <span>داشبورد پروکسی</span>
+                    </a>
+                    <a href="#settings" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>⚙️</span>
+                        <span>تنظیمات</span>
+                    </a>
+                    <a href="#legal-db" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>🗄️</span>
+                        <span>پایگاه داده حقوقی</span>
+                    </a>
+                    <a href="#export" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>📤</span>
+                        <span>خروجی</span>
+                    </a>
+                </nav>
+                
+                <!-- Quick Stats -->
+                <div class="mt-8 p-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg text-white">
+                    <h3 class="font-semibold mb-2">آمار سریع</h3>
+                    <div class="space-y-1 text-sm">
+                        <div>پروکسی فعال: <span id="quick-proxy-count">-</span></div>
+                        <div>اسناد کش: <span id="quick-cache-count">-</span></div>
+                        <div>عملیات موفق: <span id="quick-success-count">-</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mr-64 transition-all duration-300" id="main-content">
+            <!-- Home Section -->
+            <section id="home-section" class="section active">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">🎯 داشبورد اصلی</h2>
+                    <p class="text-gray-600">سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی با قابلیت‌های هوش مصنوعی</p>
+                </div>
+
+                <!-- System Overview Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100">کل عملیات</p>
+                                <p id="total-operations" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">📊</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-green-100">عملیات موفق</p>
+                                <p id="successful-operations" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">✅</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-purple-100">پروکسی فعال</p>
+                                <p id="active-proxies" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🌐</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-orange-100">اسناد کش شده</p>
+                                <p id="cache-size" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">💾</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">🚀 عملیات سریع</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="showSection('process')" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg transition-colors">
+                            ⚡ پردازش اسناد
+                        </button>
+                        <button onclick="updateProxies()" class="bg-secondary-500 hover:bg-secondary-600 text-white px-6 py-3 rounded-lg transition-colors">
+                            🔄 بروزرسانی پروکسی
+                        </button>
+                        <button onclick="showSection('dashboard')" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors">
+                            📊 نمایش داشبورد
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">📝 فعالیت‌های اخیر</h3>
+                    <div id="recent-logs" class="space-y-2 max-h-64 overflow-y-auto">
+                        <p class="text-gray-500">در حال بارگذاری...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Process Documents Section -->
+            <section id="process-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">⚡ پردازش اسناد حقوقی</h2>
+                    <p class="text-gray-600">پردازش هوشمند اسناد با قابلیت‌های پیشرفته تحلیل و طبقه‌بندی</p>
+                </div>
+
+                <!-- URL Input Section -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">📝 ورودی آدرس‌ها</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Text Input -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">آدرس‌های اسناد (هر خط یک آدرس)</label>
+                            <textarea 
+                                id="urls-input" 
+                                class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                placeholder="https://rc.majlis.ir/fa/law/show/139030&#10;https://dotic.ir/portal/law/67890&#10;https://www.judiciary.ir/fa/news/12345"
+                                dir="ltr"
+                            ></textarea>
+                            <p class="text-sm text-gray-500 mt-1">حداکثر 100 آدرس در هر بار پردازش</p>
+                        </div>
+                        
+                        <!-- File Upload -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">بارگذاری فایل</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-500 transition-colors">
+                                <input type="file" id="file-input" accept=".txt,.csv" class="hidden">
+                                <button onclick="document.getElementById('file-input').click()" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                    📁 انتخاب فایل
+                                </button>
+                                <p class="text-sm text-gray-500 mt-2">فرمت‌های پشتیبانی شده: .txt, .csv</p>
+                                <div id="file-info" class="mt-2 text-sm text-gray-600 hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Processing Options -->
+                    <div class="mt-6 flex items-center justify-between">
+                        <div class="flex items-center space-x-4 space-x-reverse">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="enable-proxy" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                <span class="mr-2">استفاده از پروکسی</span>
+                            </label>
+                            
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <label class="text-sm text-gray-700">اندازه دسته:</label>
+                                <select id="batch-size" class="border border-gray-300 rounded px-3 py-1">
+                                    <option value="1">1</option>
+                                    <option value="3" selected>3</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3 space-x-reverse">
+                            <button id="clear-urls-btn" onclick="clearUrls()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                🗑️ پاک کردن
+                            </button>
+                            <button id="process-btn" onclick="processDocuments()" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg transition-colors">
+                                ⚡ شروع پردازش
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div id="progress-section" class="bg-white rounded-xl shadow-lg p-6 mb-6 hidden">
+                    <h3 class="text-xl font-semibold mb-4">📈 پیشرفت پردازش</h3>
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span id="progress-text">آماده سازی...</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="progress-bar" class="bg-primary-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div id="current-operation" class="text-sm text-gray-600"></div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Document Results -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">📄 نتایج اسناد</h3>
+                            <button id="search-toggle" onclick="toggleSearch()" class="text-primary-500 hover:text-primary-600">
+                                🔍 جستجو
+                            </button>
+                        </div>
+                        
+                        <!-- Search Bar -->
+                        <div id="search-bar" class="mb-4 hidden">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                placeholder="جستجو در عنوان، آدرس یا محتوا..."
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                            >
+                        </div>
+                        
+                        <div id="documents-list" class="space-y-4 max-h-96 overflow-y-auto">
+                            <p class="text-gray-500 text-center py-8">هنوز سندی پردازش نشده است</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Analysis Results -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🧠 نتایج تحلیل</h3>
+                        <div id="analysis-results" class="space-y-4">
+                            <p class="text-gray-500 text-center py-8">نتایج تحلیل در اینجا نمایش داده می‌شود</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Proxy Dashboard Section -->
+            <section id="dashboard-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">📊 داشبورد پروکسی</h2>
+                    <p class="text-gray-600">نظارت بر عملکرد پروکسی‌ها و آمار سیستم</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Proxy Metrics -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🌐 آمار پروکسی</h3>
+                        <canvas id="proxy-chart" width="400" height="300"></canvas>
+                    </div>
+                    
+                    <!-- Performance Metrics -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">⚡ عملکرد سیستم</h3>
+                        <canvas id="performance-chart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Proxy Control Panel -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">🔧 کنترل پروکسی</h3>
+                        <button id="update-proxies-btn" onclick="updateProxies()" class="bg-secondary-500 hover:bg-secondary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🔄 بروزرسانی پروکسی‌ها
+                        </button>
+                    </div>
+                    
+                    <div id="proxy-list" class="space-y-2 max-h-64 overflow-y-auto">
+                        <p class="text-gray-500">در حال بارگذاری فهرست پروکسی...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">⚙️ تنظیمات سیستم</h2>
+                    <p class="text-gray-600">پیکربندی سیستم و تنظیمات پیشرفته</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- DNS Settings -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🌐 تنظیمات DNS</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">استراتژی DNS</label>
+                                <select id="dns-strategy" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option value="hybrid">ترکیبی (پیشنهادی)</option>
+                                    <option value="doh">DNS over HTTPS</option>
+                                    <option value="standard">استاندارد</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="auto-dns-switch" checked class="rounded border-gray-300 text-primary-600">
+                                    <span class="mr-2">تعویض خودکار DNS</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Model Settings -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🧠 تنظیمات مدل هوش مصنوعی</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">مدل طبقه‌بندی</label>
+                                <select id="classification-model" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option value="primary">اصلی (BERT پارسی)</option>
+                                    <option value="fallback">پشتیبان</option>
+                                    <option value="lightweight">سبک</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="preload-models" checked class="rounded border-gray-300 text-primary-600">
+                                    <span class="mr-2">پیش‌بارگذاری مدل‌ها</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cache Management -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                    <h3 class="text-xl font-semibold mb-4">💾 مدیریت کش</h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600">تعداد اسناد کش شده: <span id="cache-count-settings">-</span></p>
+                            <p class="text-gray-600">آخرین بروزرسانی: <span id="cache-last-update">-</span></p>
+                        </div>
+                        <button onclick="clearCache()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🗑️ پاک کردن کش
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Legal Database Section -->
+            <section id="legal-db-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">🗄️ پایگاه داده حقوقی</h2>
+                    <p class="text-gray-600">مدیریت و جستجو در مجموعه اسناد حقوقی استخراج شده از منابع معتبر</p>
+                </div>
+
+                <!-- Database Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-indigo-100">کل اسناد</p>
+                                <p id="legal-db-total" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">📄</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-teal-100">منابع فعال</p>
+                                <p id="legal-db-sources" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🏛️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-pink-100">دسته‌بندی‌ها</p>
+                                <p id="legal-db-categories" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🏷️</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database Management -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">🔧 مدیریت پایگاه داده</h3>
+                        <div class="flex space-x-3 space-x-reverse">
+                            <button onclick="searchNafaqeDefinition()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                🔍 جستجوی نفقه
+                            </button>
+                            <button onclick="populateLegalDatabase()" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                📚 پر کردن پایگاه داده
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Source Statistics -->
+                        <div>
+                            <h4 class="font-semibold mb-3">📊 آمار منابع</h4>
+                            <div id="legal-sources-stats" class="space-y-2">
+                                <p class="text-gray-500">در حال بارگذاری...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Category Statistics -->
+                        <div>
+                            <h4 class="font-semibold mb-3">🏷️ آمار دسته‌بندی‌ها</h4>
+                            <div id="legal-categories-stats" class="space-y-2">
+                                <p class="text-gray-500">در حال بارگذاری...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Search -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">🔍 جستجوی پیشرفته</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">جستجو در متن</label>
+                            <input 
+                                type="text" 
+                                id="legal-search-input" 
+                                placeholder="نفقه، طلاق، قانون مدنی..."
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                            >
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">منبع</label>
+                            <select id="legal-source-filter" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option value="">همه منابع</option>
+                                <option value="مجلس شورای اسلامی">مجلس شورای اسلامی</option>
+                                <option value="پورتال ملی قوانین">پورتال ملی قوانین</option>
+                                <option value="قوه قضاییه">قوه قضاییه</option>
+                                <option value="کانون وکلای دادگستری">کانون وکلای دادگستری</option>
+                                <option value="روزنامه رسمی">روزنامه رسمی</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">دسته‌بندی</label>
+                            <select id="legal-category-filter" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option value="">همه دسته‌ها</option>
+                                <option value="قانون">قانون</option>
+                                <option value="دادنامه">دادنامه</option>
+                                <option value="رویه_قضایی">رویه قضایی</option>
+                                <option value="نفقه_و_حقوق_خانواده">نفقه و حقوق خانواده</option>
+                                <option value="آگهی_قانونی">آگهی قانونی</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button onclick="searchLegalDocuments()" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg transition-colors">
+                            🔍 جستجو
+                        </button>
+                        <button onclick="clearLegalSearch()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🗑️ پاک کردن
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">📋 نتایج جستجو</h3>
+                        <div class="text-sm text-gray-500">
+                            <span id="legal-search-count">0</span> سند یافت شد
+                        </div>
+                    </div>
+                    
+                    <div id="legal-documents-results" class="space-y-4 max-h-96 overflow-y-auto">
+                        <div class="text-center py-8 text-gray-500">
+                            <div class="text-4xl mb-4">📚</div>
+                            <p>برای مشاهده اسناد، جستجو کنید یا پایگاه داده را پر کنید</p>
+                            <button onclick="loadAllLegalDocuments()" class="mt-4 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                📄 نمایش همه اسناد
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Export Section -->
+            <section id="export-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">📤 خروجی اسناد</h2>
+                    <p class="text-gray-600">دانلود و خروجی‌گیری از اسناد پردازش شده</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">💾 فرمت‌های خروجی</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="exportDocuments('json')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📋</div>
+                            <div class="font-semibold">JSON</div>
+                            <div class="text-sm opacity-90">فرمت ساختاریافته</div>
+                        </button>
+                        
+                        <button onclick="exportDocuments('csv')" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📊</div>
+                            <div class="font-semibold">CSV</div>
+                            <div class="text-sm opacity-90">جدول اکسل</div>
+                        </button>
+                        
+                        <button onclick="exportDocuments('txt')" class="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📝</div>
+                            <div class="font-semibold">TXT</div>
+                            <div class="text-sm opacity-90">متن ساده</div>
+                        </button>
+                    </div>
+                    
+                    <!-- Export History -->
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">📚 تاریخچه خروجی</h4>
+                        <div id="export-history" class="space-y-2 max-h-32 overflow-y-auto">
+                            <p class="text-gray-500">هنوز خروجی‌ای ایجاد نشده است</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-8 text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <p class="text-lg font-semibold">در حال پردازش...</p>
+            <p id="loading-message" class="text-gray-600">لطفاً صبر کنید</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="fixed top-24 left-4 z-50 space-y-2"></div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
