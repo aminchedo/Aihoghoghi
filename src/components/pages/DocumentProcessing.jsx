@@ -14,6 +14,7 @@ import ProcessingProgress from '../document/ProcessingProgress';
 import DocumentResults from '../document/DocumentResults';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ErrorMessage from '../ui/ErrorMessage';
+import AIRankingSection from '../ai/AIRankingSection';
 
 const DocumentProcessing = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,6 +23,13 @@ const DocumentProcessing = () => {
   const queryClient = useQueryClient();
   
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'manual');
+  
+  // Sample processed documents for AI ranking demonstration
+  const [processedDocuments] = useState([
+    'قرارداد خرید و فروش ملک واقع در تهران بین آقای احمد محمدی به عنوان خریدار و خانم زهرا احمدی به عنوان فروشنده منعقد می‌گردد.',
+    'دادگاه عمومی تهران در جلسه مورخ 1402/09/15 با حضور قاضی دکتر رضایی و بررسی پرونده کلاسه 9801234 رای زیر را صادر نمود.',
+    'بخشنامه شماره 1234 وزارت دادگستری در خصوص نحوه رسیدگی به پرونده‌های مدنی به تمامی دادگاه‌های کشور ابلاغ می‌گردد.'
+  ]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingProgress, setProcessingProgress] = useState({
     current: 0,
@@ -384,7 +392,15 @@ const DocumentProcessing = () => {
 
       {/* Results Section */}
       {documentsData?.documents && documentsData.documents.length > 0 && (
-        <div className="mt-8">
+        <div className="mt-8 space-y-6">
+          {/* AI Ranking Section for processed documents */}
+          <AIRankingSection 
+            texts={processedDocuments}
+            title="🧠 رتبه‌بندی اسناد پردازش شده"
+            showDetails={true}
+            autoAnalyze={false}
+          />
+          
           <DocumentResults
             documents={documentsData.documents}
             total={documentsData.total}

@@ -4,6 +4,7 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/Aihoghoghi/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -18,6 +19,17 @@ export default defineConfig({
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
         secure: false,
+        configure: (proxy, options) => {
+          proxy.on('error', (err, req, res) => {
+            console.log('Proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            console.log('Sending Request to the Target:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+          });
+        },
       },
       '/ws': {
         target: 'ws://127.0.0.1:8000',
@@ -26,9 +38,15 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    port: 4173,
+    host: true,
+    cors: true,
+  },
   build: {
     outDir: 'dist',
     sourcemap: true,
+    assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -37,8 +55,16 @@ export default defineConfig({
           query: ['@tanstack/react-query'],
           charts: ['chart.js', 'react-chartjs-2'],
         },
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
       },
     },
+    // Ensure proper asset handling for GitHub Pages
+    assetsInlineLimit: 4096,
+    cssCodeSplit: true,
+    minify: 'esbuild',
+    target: 'es2015',
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query'],

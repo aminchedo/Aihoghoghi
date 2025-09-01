@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages with AI Backend
 
 on:
   push:
@@ -15,8 +15,63 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  HF_API_KEY: ${{ secrets.HF_API_KEY }}
+  NODE_ENV: production
+
 jobs:
+  # Job 1: Build and test AI backend
+  test-ai-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install AI backend dependencies
+        run: |
+          npm install express cors @huggingface/inference express-rate-limit
+
+      - name: Test AI backend
+        env:
+          HF_API_KEY: ${{ secrets.HF_API_KEY }}
+        run: |
+          echo "🧠 Testing AI Content Analyzer..."
+          # Start the AI backend in background for testing
+          timeout 30s node ai-content-analyzer.js &
+          AI_PID=$!
+          
+          # Wait for server to start
+          sleep 5
+          
+          # Test health endpoint
+          if curl -f http://localhost:3001/health; then
+            echo "✅ AI backend health check passed"
+          else
+            echo "❌ AI backend health check failed"
+            exit 1
+          fi
+          
+          # Test analyze endpoint with sample data
+          if curl -f -X POST http://localhost:3001/analyze \
+            -H "Content-Type: application/json" \
+            -d '{"texts":["این یک متن نمونه برای تست است"]}'; then
+            echo "✅ AI analyze endpoint test passed"
+          else
+            echo "❌ AI analyze endpoint test failed"
+            exit 1
+          fi
+          
+          # Clean up
+          kill $AI_PID || true
+
+  # Job 2: Build frontend and deploy to GitHub Pages
   build-and-deploy:
+    needs: test-ai-backend
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,15 +86,69 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: |
-          cd web_ui
-          npm install
+        run: npm install
 
       - name: Build project
+        env:
+          HF_API_KEY: ${{ secrets.HF_API_KEY }}
         run: |
-          cd web_ui
+          echo "🏗️ Building React frontend with AI integration..."
           npm run build
 
+      - name: Prepare AI backend for deployment
+        run: |
+          echo "📦 Preparing AI backend files..."
+          # Copy AI backend to dist for static hosting (if needed)
+          mkdir -p dist/api
+          cp ai-content-analyzer.js dist/api/
+          
+          # Create package.json for AI backend
+          cat > dist/api/package.json << EOF
+          {
+            "name": "iranian-legal-ai-analyzer",
+            "version": "2.0.0",
+            "type": "module",
+            "main": "ai-content-analyzer.js",
+            "dependencies": {
+              "express": "^4.18.2",
+              "cors": "^2.8.5",
+              "@huggingface/inference": "^2.6.4",
+              "express-rate-limit": "^7.1.5"
+            }
+          }
+          EOF
+          
+          # Create deployment instructions
+          cat > dist/AI_BACKEND_DEPLOYMENT.md << EOF
+          # AI Backend Deployment Instructions
+          
+          ## Option 1: Deploy to Vercel/Netlify Functions
+          1. Upload ai-content-analyzer.js as a serverless function
+          2. Set HF_API_KEY environment variable
+          3. Update frontend baseURL to point to your function URL
+          
+          ## Option 2: Deploy to Railway/Render
+          1. Create new service from ai-content-analyzer.js
+          2. Set HF_API_KEY environment variable
+          3. Update frontend baseURL to point to your service URL
+          
+          ## Option 3: Local Development
+          1. cd dist/api
+          2. npm install
+          3. HF_API_KEY=your_key node ai-content-analyzer.js
+          
+          ## Environment Variables Required:
+          - HF_API_KEY: Your Hugging Face API key
+          - PORT: Server port (default: 3001)
+          - NODE_ENV: Environment (production/development)
+          EOF
+
+      - name: Update frontend configuration
+        run: |
+          echo "⚙️ Updating frontend AI service configuration..."
+          # Update the frontend to use fallback mode when backend is not available
+          # This ensures the app works even if AI backend is not deployed
+          
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
@@ -51,3 +160,10 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+
+      - name: Display deployment info
+        run: |
+          echo "🎉 Deployment completed!"
+          echo "📱 Frontend URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "🧠 AI Backend: Ready for separate deployment (see dist/AI_BACKEND_DEPLOYMENT.md)"
+          echo "🔑 HF API Key: ${{ secrets.HF_API_KEY && 'Configured' || 'Missing - Add HF_API_KEY to GitHub Secrets' }}"

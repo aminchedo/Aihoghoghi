@@ -33,10 +33,10 @@
     <meta name="msapplication-TileColor" content="#3b82f6" />
     
     <!-- Manifest for PWA -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href="./manifest.json" />
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="/src/main.jsx" as="script" crossorigin>
+    <link rel="preload" href="./src/main.jsx" as="script" crossorigin>
     
     <style>
       /* Critical CSS for initial load */
@@ -121,22 +121,86 @@
   </head>
   <body>
     <div id="root">
-      <!-- Loading state -->
-      <div class="loading-container">
+      <!-- Initial loading state with timeout fallback -->
+      <div class="loading-container" id="initial-loader">
         <div style="text-align: center;">
           <div class="loading-spinner"></div>
           <div class="loading-text">در حال بارگذاری سیستم آرشیو حقوقی...</div>
+          <div style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;" id="loading-progress">
+            آماده‌سازی اجزا...
+          </div>
         </div>
       </div>
     </div>
     
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="./src/main.jsx"></script>
+    
+    <!-- Loading timeout fallback script -->
+    <script>
+      // Prevent infinite loading by implementing timeout fallback
+      let loadingTimeout;
+      let progressMessages = [
+        'آماده‌سازی اجزا...',
+        'بارگذاری کتابخانه‌ها...',
+        'اتصال به سرویس‌ها...',
+        'نهایی‌سازی رابط کاربری...'
+      ];
+      let messageIndex = 0;
+      
+      // Update loading progress messages
+      const updateProgress = () => {
+        const progressEl = document.getElementById('loading-progress');
+        if (progressEl && messageIndex < progressMessages.length) {
+          progressEl.textContent = progressMessages[messageIndex];
+          messageIndex++;
+          setTimeout(updateProgress, 1000);
+        }
+      };
+      
+      // Start progress updates
+      setTimeout(updateProgress, 1000);
+      
+      // Emergency fallback after 15 seconds
+      loadingTimeout = setTimeout(() => {
+        const loader = document.getElementById('initial-loader');
+        if (loader && loader.style.display !== 'none') {
+          console.warn('⚠️ Loading timeout reached, forcing app display');
+          
+          // Hide loader
+          loader.style.display = 'none';
+          
+          // Show emergency fallback UI
+          const root = document.getElementById('root');
+          root.innerHTML = `
+            <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-family: 'Vazirmatn', sans-serif; direction: rtl;">
+              <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">⚖️</div>
+                <h1 style="font-size: 1.5rem; margin-bottom: 1rem;">سیستم آرشیو اسناد حقوقی ایران</h1>
+                <p style="margin-bottom: 2rem; opacity: 0.9;">در حال بارگذاری...</p>
+                <button onclick="window.location.reload()" style="padding: 1rem 2rem; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; color: white; cursor: pointer; font-weight: 500;">
+                  🔄 رفرش صفحه
+                </button>
+              </div>
+            </div>
+          `;
+        }
+      }, 15000);
+      
+      // Clear timeout when React takes over
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          if (loadingTimeout) {
+            clearTimeout(loadingTimeout);
+          }
+        }, 2000);
+      });
+    </script>
     
     <!-- Service Worker Registration -->
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js')
+          navigator.serviceWorker.register('./sw.js')
             .then(function(registration) {
               console.log('SW registered: ', registration);
             })
