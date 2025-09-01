@@ -202,6 +202,7 @@ async def startup_event():
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="web_ui"), name="static")
+app.mount("/web_ui", StaticFiles(directory="web_ui"), name="web_ui")
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

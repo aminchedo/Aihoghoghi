@@ -1,0 +1,130 @@
+{
+  "timestamp": "2025-09-01T10:15:21.824031",
+  "base_url": "http://localhost:7860",
+  "tests": [
+    {
+      "test_name": "Server Connectivity",
+      "status": "PASS",
+      "message": "Server is accessible and responding",
+      "timestamp": "2025-09-01T10:15:21.827122",
+      "details": {}
+    },
+    {
+      "test_name": "API Endpoint: /status",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:21.828950",
+      "details": {
+        "response_size": 88
+      }
+    },
+    {
+      "test_name": "API Endpoint: /stats",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:21.830497",
+      "details": {
+        "response_size": 134
+      }
+    },
+    {
+      "test_name": "API Endpoint: /legal-db/stats",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:21.833073",
+      "details": {
+        "response_size": 79
+      }
+    },
+    {
+      "test_name": "API Endpoint: /processed-documents",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:21.834868",
+      "details": {
+        "response_size": 55
+      }
+    },
+    {
+      "test_name": "API Endpoint: /logs",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:21.836178",
+      "details": {
+        "response_size": 12
+      }
+    },
+    {
+      "test_name": "API Endpoint: /docs",
+      "status": "FAIL",
+      "message": "HTTP 404",
+      "timestamp": "2025-09-01T10:15:21.837603",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/styles.css",
+      "status": "FAIL",
+      "message": "HTTP 404",
+      "timestamp": "2025-09-01T10:15:21.838916",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/script.js",
+      "status": "FAIL",
+      "message": "HTTP 404",
+      "timestamp": "2025-09-01T10:15:21.840055",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/sw.js",
+      "status": "FAIL",
+      "message": "HTTP 404",
+      "timestamp": "2025-09-01T10:15:21.841154",
+      "details": {}
+    },
+    {
+      "test_name": "Database Stats",
+      "status": "PASS",
+      "message": "Database accessible with 0 documents",
+      "timestamp": "2025-09-01T10:15:21.842673",
+      "details": {}
+    },
+    {
+      "test_name": "Database Search",
+      "status": "SKIP",
+      "message": "No documents in database to search",
+      "timestamp": "2025-09-01T10:15:21.842693",
+      "details": {}
+    },
+    {
+      "test_name": "Response Time",
+      "status": "PASS",
+      "message": "Fast response (1ms)",
+      "timestamp": "2025-09-01T10:15:21.844147",
+      "details": {}
+    }
+  ],
+  "summary": {
+    "total_tests": 13,
+    "passed_tests": 8,
+    "failed_tests": 4,
+    "success_rate": 61.53846153846154,
+    "execution_time": 0.027952194213867188
+  },
+  "system_info": {
+    "api_stats": {
+      "total_operations": 0,
+      "successful_operations": 0,
+      "failed_operations": 0,
+      "active_proxies": 0,
+      "cache_size": 0,
+      "uptime": "0:02:12"
+    },
+    "python_processes": 2,
+    "disk_info": "Filesystem      Size  Used Avail Use% Mounted on\noverlay         126G  5.9G  114G   5% /"
+  },
+  "recommendations": [
+    "⚠️  4 tests failed. Review the detailed results below.",
+    "🔧 System reliability is below 80%. Immediate attention required."
+  ]
+}

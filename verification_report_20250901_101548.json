@@ -1,0 +1,130 @@
+{
+  "timestamp": "2025-09-01T10:15:48.924064",
+  "base_url": "http://localhost:7860",
+  "tests": [
+    {
+      "test_name": "Server Connectivity",
+      "status": "PASS",
+      "message": "Server is accessible and responding",
+      "timestamp": "2025-09-01T10:15:48.928546",
+      "details": {}
+    },
+    {
+      "test_name": "API Endpoint: /status",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:48.930436",
+      "details": {
+        "response_size": 88
+      }
+    },
+    {
+      "test_name": "API Endpoint: /stats",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:48.932118",
+      "details": {
+        "response_size": 134
+      }
+    },
+    {
+      "test_name": "API Endpoint: /legal-db/stats",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:48.933745",
+      "details": {
+        "response_size": 79
+      }
+    },
+    {
+      "test_name": "API Endpoint: /processed-documents",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:48.935457",
+      "details": {
+        "response_size": 55
+      }
+    },
+    {
+      "test_name": "API Endpoint: /logs",
+      "status": "PASS",
+      "message": "Endpoint working correctly",
+      "timestamp": "2025-09-01T10:15:48.936692",
+      "details": {
+        "response_size": 12
+      }
+    },
+    {
+      "test_name": "API Endpoint: /docs",
+      "status": "FAIL",
+      "message": "HTTP 404",
+      "timestamp": "2025-09-01T10:15:48.938015",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/styles.css",
+      "status": "PASS",
+      "message": "Asset loaded successfully (14.1 KB)",
+      "timestamp": "2025-09-01T10:15:48.939959",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/script.js",
+      "status": "PASS",
+      "message": "Asset loaded successfully (45.9 KB)",
+      "timestamp": "2025-09-01T10:15:48.941507",
+      "details": {}
+    },
+    {
+      "test_name": "Frontend Asset: /web_ui/sw.js",
+      "status": "PASS",
+      "message": "Asset loaded successfully (5.4 KB)",
+      "timestamp": "2025-09-01T10:15:48.943703",
+      "details": {}
+    },
+    {
+      "test_name": "Database Stats",
+      "status": "PASS",
+      "message": "Database accessible with 0 documents",
+      "timestamp": "2025-09-01T10:15:48.945345",
+      "details": {}
+    },
+    {
+      "test_name": "Database Search",
+      "status": "SKIP",
+      "message": "No documents in database to search",
+      "timestamp": "2025-09-01T10:15:48.945363",
+      "details": {}
+    },
+    {
+      "test_name": "Response Time",
+      "status": "PASS",
+      "message": "Fast response (2ms)",
+      "timestamp": "2025-09-01T10:15:48.946930",
+      "details": {}
+    }
+  ],
+  "summary": {
+    "total_tests": 13,
+    "passed_tests": 11,
+    "failed_tests": 1,
+    "success_rate": 84.61538461538461,
+    "execution_time": 0.030295610427856445
+  },
+  "system_info": {
+    "api_stats": {
+      "total_operations": 0,
+      "successful_operations": 0,
+      "failed_operations": 0,
+      "active_proxies": 0,
+      "cache_size": 0,
+      "uptime": "0:00:06"
+    },
+    "python_processes": 2,
+    "disk_info": "Filesystem      Size  Used Avail Use% Mounted on\noverlay         126G  5.9G  114G   5% /"
+  },
+  "recommendations": [
+    "⚠️  1 tests failed. Review the detailed results below.",
+    "🔧 System reliability is below 80%. Immediate attention required."
+  ]
+}
