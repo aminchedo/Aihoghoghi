@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 تست UI پیشرفته - سیستم آرشیو حقوقی ایران</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'vazir': ['Vazirmatn', 'Tahoma', 'IRANSans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-vazir" dir="rtl">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
+            <i class="fas fa-flask ml-3 text-blue-500"></i>
+            تست سیستم آرشیو حقوقی ایران - نسخه پیشرفته
+        </h1>
+        
+        <!-- Test Results Container -->
+        <div id="test-results" class="space-y-6">
+            <!-- API Connection Test -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-plug ml-2 text-green-500"></i>
+                    تست اتصال به API
+                </h2>
+                <div id="api-test" class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span>وضعیت سرور:</span>
+                        <span id="server-status" class="px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-spinner fa-spin ml-1"></i>
+                            در حال بررسی...
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span>پاسخ API:</span>
+                        <span id="api-response" class="text-sm text-gray-600">منتظر...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- UI Components Test -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-desktop ml-2 text-purple-500"></i>
+                    تست کامپوننت‌های UI
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Navigation Test -->
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <h3 class="font-medium mb-2">ناوبری و منوها</h3>
+                        <div class="space-y-2">
+                            <button id="test-nav-home" class="w-full bg-blue-500 text-white px-3 py-2 rounded text-sm hover:bg-blue-600">
+                                تست داشبورد اصلی
+                            </button>
+                            <button id="test-nav-process" class="w-full bg-green-500 text-white px-3 py-2 rounded text-sm hover:bg-green-600">
+                                تست پردازش اسناد
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Theme Test -->
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <h3 class="font-medium mb-2">تست تم و ظاهر</h3>
+                        <div class="space-y-2">
+                            <button id="test-theme-toggle" class="w-full bg-gray-500 text-white px-3 py-2 rounded text-sm hover:bg-gray-600">
+                                تغییر به حالت تاریک
+                            </button>
+                            <div id="theme-status" class="text-sm text-gray-600">تم فعلی: روشن</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Visualization Test -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-chart-bar ml-2 text-orange-500"></i>
+                    تست نمودارها و تجسم داده
+                </h2>
+                <div class="h-64 mb-4">
+                    <canvas id="test-chart"></canvas>
+                </div>
+                <button id="test-chart-update" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                    بروزرسانی نمودار تست
+                </button>
+            </div>
+            
+            <!-- Feature Tests -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-cogs ml-2 text-red-500"></i>
+                    تست ویژگی‌های پیشرفته
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <button id="test-websocket" class="w-full bg-red-500 text-white px-3 py-2 rounded text-sm hover:bg-red-600">
+                            تست WebSocket
+                        </button>
+                        <div id="websocket-status" class="text-xs text-gray-500 mt-1">غیرفعال</div>
+                    </div>
+                    <div class="text-center">
+                        <button id="test-file-upload" class="w-full bg-yellow-500 text-white px-3 py-2 rounded text-sm hover:bg-yellow-600">
+                            تست بارگذاری فایل
+                        </button>
+                        <div id="upload-status" class="text-xs text-gray-500 mt-1">آماده</div>
+                    </div>
+                    <div class="text-center">
+                        <button id="test-search" class="w-full bg-indigo-500 text-white px-3 py-2 rounded text-sm hover:bg-indigo-600">
+                            تست جستجو
+                        </button>
+                        <div id="search-status" class="text-xs text-gray-500 mt-1">آماده</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Summary -->
+        <div class="mt-8 bg-gray-100 rounded-xl p-6">
+            <h2 class="text-xl font-semibold mb-4">خلاصه نتایج تست</h2>
+            <div id="test-summary" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <div id="total-tests" class="text-2xl font-bold text-blue-600">0</div>
+                    <div class="text-sm text-gray-600">کل تست‌ها</div>
+                </div>
+                <div class="text-center">
+                    <div id="passed-tests" class="text-2xl font-bold text-green-600">0</div>
+                    <div class="text-sm text-gray-600">موفق</div>
+                </div>
+                <div class="text-center">
+                    <div id="failed-tests" class="text-2xl font-bold text-red-600">0</div>
+                    <div class="text-sm text-gray-600">ناموفق</div>
+                </div>
+                <div class="text-center">
+                    <div id="success-rate" class="text-2xl font-bold text-purple-600">0%</div>
+                    <div class="text-sm text-gray-600">نرخ موفقیت</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 left-4 z-50 space-y-2"></div>
+    
+    <script>
+        // Test Framework
+        class TestFramework {
+            constructor() {
+                this.tests = [];
+                this.results = {
+                    total: 0,
+                    passed: 0,
+                    failed: 0
+                };
+                this.apiBase = 'http://127.0.0.1:7860/api';
+            }
+            
+            async runAllTests() {
+                console.log('🧪 شروع تست‌های سیستم...');
+                
+                await this.testApiConnection();
+                await this.testUIComponents();
+                await this.testDataVisualization();
+                await this.testAdvancedFeatures();
+                
+                this.updateSummary();
+                console.log('✅ تست‌ها تکمیل شد');
+            }
+            
+            async testApiConnection() {
+                console.log('🔌 تست اتصال به API...');
+                
+                try {
+                    const response = await fetch(`${this.apiBase}/status`);
+                    const data = await response.json();
+                    
+                    document.getElementById('server-status').innerHTML = 
+                        '<i class="fas fa-check-circle ml-1 text-green-500"></i>متصل';
+                    document.getElementById('server-status').className = 'px-3 py-1 rounded-full text-sm bg-green-100 text-green-800';
+                    document.getElementById('api-response').textContent = JSON.stringify(data, null, 2);
+                    
+                    this.recordResult(true, 'API Connection');
+                    this.showToast('اتصال به API موفق', 'success');
+                } catch (error) {
+                    document.getElementById('server-status').innerHTML = 
+                        '<i class="fas fa-times-circle ml-1 text-red-500"></i>خطا';
+                    document.getElementById('server-status').className = 'px-3 py-1 rounded-full text-sm bg-red-100 text-red-800';
+                    document.getElementById('api-response').textContent = `خطا: ${error.message}`;
+                    
+                    this.recordResult(false, 'API Connection');
+                    this.showToast('خطا در اتصال به API', 'error');
+                }
+            }
+            
+            async testUIComponents() {
+                console.log('🎨 تست کامپوننت‌های UI...');
+                
+                // Test navigation
+                document.getElementById('test-nav-home').onclick = () => {
+                    this.showToast('ناوبری به داشبورد اصلی', 'info');
+                    this.recordResult(true, 'Navigation - Home');
+                };
+                
+                document.getElementById('test-nav-process').onclick = () => {
+                    this.showToast('ناوبری به پردازش اسناد', 'info');
+                    this.recordResult(true, 'Navigation - Process');
+                };
+                
+                // Test theme toggle
+                let isDark = false;
+                document.getElementById('test-theme-toggle').onclick = () => {
+                    isDark = !isDark;
+                    if (isDark) {
+                        document.documentElement.classList.add('dark');
+                        document.body.className = 'bg-gray-900 font-vazir text-white';
+                        document.getElementById('theme-status').textContent = 'تم فعلی: تاریک';
+                        document.getElementById('test-theme-toggle').textContent = 'تغییر به حالت روشن';
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        document.body.className = 'bg-gray-50 font-vazir';
+                        document.getElementById('theme-status').textContent = 'تم فعلی: روشن';
+                        document.getElementById('test-theme-toggle').textContent = 'تغییر به حالت تاریک';
+                    }
+                    this.showToast(`تم به حالت ${isDark ? 'تاریک' : 'روشن'} تغییر کرد`, 'success');
+                    this.recordResult(true, 'Theme Toggle');
+                };
+            }
+            
+            async testDataVisualization() {
+                console.log('📊 تست نمودارها...');
+                
+                const ctx = document.getElementById('test-chart');
+                const chart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['موفق', 'ناموفق', 'در انتظار'],
+                        datasets: [{
+                            data: [65, 25, 10],
+                            backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { font: { family: 'Vazirmatn' } }
+                            }
+                        }
+                    }
+                });
+                
+                document.getElementById('test-chart-update').onclick = () => {
+                    chart.data.datasets[0].data = [
+                        Math.random() * 100,
+                        Math.random() * 100,
+                        Math.random() * 100
+                    ];
+                    chart.update();
+                    this.showToast('نمودار بروزرسانی شد', 'success');
+                    this.recordResult(true, 'Chart Update');
+                };
+                
+                this.recordResult(true, 'Chart Creation');
+            }
+            
+            async testAdvancedFeatures() {
+                console.log('⚡ تست ویژگی‌های پیشرفته...');
+                
+                // WebSocket test
+                document.getElementById('test-websocket').onclick = () => {
+                    try {
+                        const ws = new WebSocket('ws://127.0.0.1:7860/ws');
+                        ws.onopen = () => {
+                            document.getElementById('websocket-status').textContent = 'متصل';
+                            document.getElementById('websocket-status').className = 'text-xs text-green-500 mt-1';
+                            this.showToast('WebSocket متصل شد', 'success');
+                            this.recordResult(true, 'WebSocket Connection');
+                            ws.close();
+                        };
+                        ws.onerror = () => {
+                            document.getElementById('websocket-status').textContent = 'خطا';
+                            document.getElementById('websocket-status').className = 'text-xs text-red-500 mt-1';
+                            this.recordResult(false, 'WebSocket Connection');
+                        };
+                    } catch (error) {
+                        this.recordResult(false, 'WebSocket Connection');
+                    }
+                };
+                
+                // File upload test
+                document.getElementById('test-file-upload').onclick = () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.txt,.csv';
+                    input.onchange = (e) => {
+                        if (e.target.files.length > 0) {
+                            document.getElementById('upload-status').textContent = 'فایل انتخاب شد';
+                            document.getElementById('upload-status').className = 'text-xs text-green-500 mt-1';
+                            this.showToast('فایل با موفقیت انتخاب شد', 'success');
+                            this.recordResult(true, 'File Upload');
+                        }
+                    };
+                    input.click();
+                };
+                
+                // Search test
+                document.getElementById('test-search').onclick = async () => {
+                    try {
+                        const response = await fetch(`${this.apiBase}/search`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ query: 'تست جستجو' })
+                        });
+                        
+                        document.getElementById('search-status').textContent = response.ok ? 'موفق' : 'خطا';
+                        document.getElementById('search-status').className = response.ok ? 
+                            'text-xs text-green-500 mt-1' : 'text-xs text-red-500 mt-1';
+                        
+                        this.recordResult(response.ok, 'Search Function');
+                        this.showToast(response.ok ? 'جستجو موفق' : 'خطا در جستجو', response.ok ? 'success' : 'error');
+                    } catch (error) {
+                        this.recordResult(false, 'Search Function');
+                        this.showToast('خطا در جستجو', 'error');
+                    }
+                };
+            }
+            
+            recordResult(passed, testName) {
+                this.results.total++;
+                if (passed) {
+                    this.results.passed++;
+                } else {
+                    this.results.failed++;
+                }
+                console.log(`${passed ? '✅' : '❌'} ${testName}: ${passed ? 'موفق' : 'ناموفق'}`);
+            }
+            
+            updateSummary() {
+                document.getElementById('total-tests').textContent = this.results.total;
+                document.getElementById('passed-tests').textContent = this.results.passed;
+                document.getElementById('failed-tests').textContent = this.results.failed;
+                
+                const successRate = this.results.total > 0 ? 
+                    Math.round((this.results.passed / this.results.total) * 100) : 0;
+                document.getElementById('success-rate').textContent = `${successRate}%`;
+            }
+            
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                const colors = {
+                    success: 'bg-green-500',
+                    error: 'bg-red-500',
+                    warning: 'bg-yellow-500',
+                    info: 'bg-blue-500'
+                };
+                
+                toast.className = `${colors[type]} text-white px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
+                toast.textContent = message;
+                
+                document.getElementById('toast-container').appendChild(toast);
+                
+                setTimeout(() => toast.classList.remove('translate-x-full'), 100);
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+        }
+        
+        // Initialize and run tests
+        document.addEventListener('DOMContentLoaded', () => {
+            const testFramework = new TestFramework();
+            
+            // Run initial tests
+            setTimeout(() => {
+                testFramework.runAllTests();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

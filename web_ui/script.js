@@ -1,23 +1,77 @@
 /**
- * Iranian Legal Archive System - Advanced JavaScript
- * Handles all UI interactions, API calls, real-time updates, and data visualization
+ * Iranian Legal Archive System - Enhanced JavaScript v2.0
+ * Advanced UI interactions, API integration, real-time updates, and data visualization
+ * Features: WebSocket support, Chart.js integration, Advanced navigation, Dark mode, RTL support
  */
 
-// Global state management
+// Enhanced Global State Management
 const AppState = {
+    // Core State
     isProcessing: false,
     currentSection: 'home',
+    currentSubsection: null,
     theme: localStorage.getItem('theme') || 'light',
+    
+    // Data State
     searchTerm: '',
     documents: [],
+    processedDocuments: [],
     systemStats: {},
+    proxyStats: {},
+    
+    // UI State
+    sidebarCollapsed: false,
+    activeTab: 'manual',
+    tableFilters: {
+        search: '',
+        status: '',
+        source: ''
+    },
+    tablePagination: {
+        page: 1,
+        pageSize: 20,
+        total: 0
+    },
+    
+    // Charts and Visualization
     charts: {},
+    chartData: {
+        operations: [],
+        performance: [],
+        categories: {}
+    },
+    
+    // Real-time Communication
     websocket: null,
     reconnectAttempts: 0,
     maxReconnectAttempts: 5,
+    reconnectInterval: null,
+    
+    // API Management
     apiRetryAttempts: 0,
     maxApiRetryAttempts: 3,
-    backendStatus: 'unknown'
+    backendStatus: 'unknown',
+    lastApiCall: null,
+    
+    // Processing State
+    processingQueue: [],
+    processingStats: {
+        total: 0,
+        processed: 0,
+        successful: 0,
+        failed: 0,
+        remaining: 0
+    },
+    
+    // Configuration
+    config: {
+        apiBaseUrl: localStorage.getItem('apiBaseUrl') || '',
+        proxyEnabled: true,
+        batchSize: 3,
+        retryCount: 2,
+        autoRefresh: true,
+        refreshInterval: 30000
+    }
 };
 
 // API Base URL - configurable for different environments
@@ -30,7 +84,7 @@ const API_BASE = (() => {
     
     // Default to current origin with /api prefix
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://127.0.0.1:8000/api';
+        return 'http://127.0.0.1:7860/api';
     }
     
     return window.location.origin + '/api';
@@ -262,6 +316,335 @@ class Utils {
     static truncateText(text, maxLength = 200) {
         if (text.length <= maxLength) return text;
         return text.substring(0, maxLength) + '...';
+    }
+
+    static generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    static copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            this.showToast('کپی شد', 'success', 2000);
+        }).catch(() => {
+            this.showToast('خطا در کپی کردن', 'error');
+        });
+    }
+
+    static downloadFile(content, filename, contentType = 'text/plain') {
+        const blob = new Blob([content], { type: contentType });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+
+    static extractDomain(url) {
+        try {
+            return new URL(url).hostname;
+        } catch {
+            return '';
+        }
+    }
+
+    static formatDuration(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+        
+        if (hours > 0) {
+            return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    static formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+}
+
+// Enhanced Navigation Manager
+class NavigationManager {
+    static init() {
+        this.setupSidebarToggle();
+        this.setupNavigation();
+        this.setupSubmenuHandlers();
+        this.setupBreadcrumbs();
+        this.setupKeyboardShortcuts();
+    }
+
+    static setupSidebarToggle() {
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+
+        if (sidebarToggle && sidebar && mainContent) {
+            sidebarToggle.addEventListener('click', () => {
+                AppState.sidebarCollapsed = !AppState.sidebarCollapsed;
+                
+                if (AppState.sidebarCollapsed) {
+                    sidebar.classList.add('-translate-x-full');
+                    mainContent.classList.remove('mr-64');
+                    mainContent.classList.add('mr-0');
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                    mainContent.classList.add('mr-64');
+                    mainContent.classList.remove('mr-0');
+                }
+            });
+        }
+    }
+
+    static setupNavigation() {
+        // Main navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                const sectionName = href.replace('#', '');
+                this.navigateToSection(sectionName);
+            });
+        });
+
+        // Submenu links
+        document.querySelectorAll('.nav-sublink').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                const subsectionName = href.replace('#', '');
+                this.navigateToSubsection(subsectionName);
+            });
+        });
+    }
+
+    static setupSubmenuHandlers() {
+        document.querySelectorAll('.nav-group > .nav-link').forEach(groupLink => {
+            groupLink.addEventListener('click', (e) => {
+                const group = groupLink.parentElement;
+                const submenu = group.querySelector('.nav-submenu');
+                const arrow = groupLink.querySelector('i[id$="-arrow"]');
+                
+                if (submenu && arrow) {
+                    const isOpen = !submenu.classList.contains('hidden');
+                    
+                    // Close all other submenus
+                    document.querySelectorAll('.nav-submenu').forEach(menu => {
+                        if (menu !== submenu) {
+                            menu.classList.add('hidden');
+                        }
+                    });
+                    
+                    document.querySelectorAll('i[id$="-arrow"]').forEach(arr => {
+                        if (arr !== arrow) {
+                            arr.classList.remove('rotate-90');
+                        }
+                    });
+                    
+                    // Toggle current submenu
+                    if (isOpen) {
+                        submenu.classList.add('hidden');
+                        arrow.classList.remove('rotate-90');
+                    } else {
+                        submenu.classList.remove('hidden');
+                        arrow.classList.add('rotate-90');
+                    }
+                }
+            });
+        });
+    }
+
+    static setupBreadcrumbs() {
+        this.updateBreadcrumbs();
+    }
+
+    static setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case '1':
+                        e.preventDefault();
+                        this.navigateToSection('home');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        this.navigateToSection('process');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        this.navigateToSection('proxy');
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        this.navigateToSection('search');
+                        break;
+                    case '5':
+                        e.preventDefault();
+                        this.navigateToSection('settings');
+                        break;
+                }
+            }
+        });
+    }
+
+    static navigateToSection(sectionName) {
+        // Hide all sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.add('hidden');
+            section.classList.remove('active');
+        });
+        
+        // Show target section
+        const targetSection = document.getElementById(`${sectionName}-section`);
+        if (targetSection) {
+            targetSection.classList.remove('hidden');
+            targetSection.classList.add('active');
+            AppState.currentSection = sectionName;
+        }
+        
+        // Update navigation active state
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            link.classList.remove('bg-gradient-to-r', 'from-primary-500', 'to-secondary-500', 'text-white', 'shadow-lg');
+            link.classList.add('text-gray-700', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+        });
+        
+        const activeLink = document.querySelector(`[href="#${sectionName}"]`);
+        if (activeLink && !activeLink.closest('.nav-submenu')) {
+            activeLink.classList.add('active');
+            activeLink.classList.add('bg-gradient-to-r', 'from-primary-500', 'to-secondary-500', 'text-white', 'shadow-lg');
+            activeLink.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+        }
+        
+        this.updateBreadcrumbs();
+        this.onSectionChange(sectionName);
+    }
+
+    static navigateToSubsection(subsectionName) {
+        AppState.currentSubsection = subsectionName;
+        this.updateBreadcrumbs();
+        
+        // Handle specific subsection logic
+        if (subsectionName.startsWith('process-')) {
+            this.navigateToSection('process');
+        } else if (subsectionName.startsWith('proxy-')) {
+            this.navigateToSection('proxy');
+        } else if (subsectionName.startsWith('search-')) {
+            this.navigateToSection('search');
+        } else if (subsectionName.startsWith('settings-')) {
+            this.navigateToSection('settings');
+        }
+    }
+
+    static updateBreadcrumbs() {
+        const breadcrumb = document.getElementById('breadcrumb');
+        const breadcrumbPath = document.getElementById('breadcrumb-path');
+        
+        if (!breadcrumb || !breadcrumbPath) return;
+        
+        const sectionNames = {
+            'home': 'داشبورد اصلی',
+            'process': 'پردازش اسناد',
+            'proxy': 'داشبورد پروکسی',
+            'search': 'پایگاه داده حقوقی',
+            'settings': 'تنظیمات',
+            'logs': 'گزارش‌ها'
+        };
+        
+        let pathText = sectionNames[AppState.currentSection] || 'خانه';
+        breadcrumbPath.textContent = pathText;
+        
+        if (AppState.currentSection !== 'home') {
+            breadcrumb.classList.remove('hidden');
+        } else {
+            breadcrumb.classList.add('hidden');
+        }
+    }
+
+    static onSectionChange(sectionName) {
+        // Initialize section-specific functionality
+        switch (sectionName) {
+            case 'home':
+                if (typeof DashboardManager !== 'undefined') DashboardManager.init();
+                break;
+            case 'process':
+                if (typeof DocumentProcessor !== 'undefined') DocumentProcessor.init();
+                break;
+        }
+    }
+}
+
+// Tab Management System
+class TabManager {
+    static init() {
+        this.setupTabHandlers();
+    }
+
+    static setupTabHandlers() {
+        // Document processing tabs
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = button.id;
+                
+                if (tabId === 'manual-tab') {
+                    this.switchTab('manual');
+                } else if (tabId === 'file-tab') {
+                    this.switchTab('file');
+                } else if (tabId === 'bulk-tab') {
+                    this.switchTab('bulk');
+                }
+            });
+        });
+    }
+
+    static switchTab(tabName) {
+        AppState.activeTab = tabName;
+        
+        // Update tab buttons
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active', 'border-primary-500', 'text-primary-600');
+            button.classList.add('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+        });
+        
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        
+        // Show active tab
+        const activeButton = document.getElementById(`${tabName}-tab`);
+        const activeContent = document.getElementById(`${tabName}-input`) || document.getElementById(`${tabName}-input-tab`);
+        
+        if (activeButton) {
+            activeButton.classList.add('active', 'border-primary-500', 'text-primary-600');
+            activeButton.classList.remove('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400', 'dark:hover:text-gray-300');
+        }
+        
+        if (activeContent) {
+            activeContent.classList.remove('hidden');
+        }
+        
+        // Handle specific tab logic
+        switch (tabName) {
+            case 'manual':
+                document.getElementById('manual-input')?.classList.remove('hidden');
+                break;
+            case 'file':
+                document.getElementById('file-input-tab')?.classList.remove('hidden');
+                break;
+            case 'bulk':
+                document.getElementById('bulk-input-tab')?.classList.remove('hidden');
+                break;
+        }
     }
 }
 
@@ -1355,16 +1738,488 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Dashboard Management System
+class DashboardManager {
+    static init() {
+        this.setupRefreshButton();
+        this.setupQuickActions();
+        this.startAutoRefresh();
+        this.loadDashboardData();
+    }
+
+    static setupRefreshButton() {
+        const refreshBtn = document.getElementById('refresh-dashboard');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                this.refreshDashboard();
+            });
+        }
+    }
+
+    static setupQuickActions() {
+        // Setup quick action buttons
+        const refreshProxiesBtn = document.querySelector('button[onclick="refreshProxies()"]');
+        if (refreshProxiesBtn) {
+            refreshProxiesBtn.onclick = () => this.refreshProxies();
+        }
+
+        const clearCacheBtn = document.querySelector('button[onclick="clearCache()"]');
+        if (clearCacheBtn) {
+            clearCacheBtn.onclick = () => this.clearCache();
+        }
+    }
+
+    static async refreshDashboard() {
+        try {
+            Utils.showToast('در حال بروزرسانی داشبورد...', 'info', 2000);
+            
+            // Update all dashboard data
+            await Promise.all([
+                this.updateSystemStats(),
+                this.updateCharts(),
+                this.updateActivityFeed(),
+                this.updateSystemHealth()
+            ]);
+            
+            // Update last refresh time
+            const now = new Date();
+            const lastRefreshEl = document.getElementById('last-refresh');
+            if (lastRefreshEl) {
+                lastRefreshEl.textContent = Utils.formatTime(now);
+            }
+            
+            Utils.showToast('داشبورد بروزرسانی شد', 'success', 3000);
+        } catch (error) {
+            console.error('Dashboard refresh failed:', error);
+            Utils.showToast('خطا در بروزرسانی داشبورد', 'error');
+        }
+    }
+
+    static async updateSystemStats() {
+        try {
+            const stats = await Utils.fetchAPI('/status');
+            
+            // Update stat cards
+            this.updateStatCard('total-operations', stats.total_operations || 0, '+' + (stats.operations_today || 0));
+            this.updateStatCard('successful-operations', stats.successful_operations || 0);
+            this.updateStatCard('active-proxies', stats.active_proxies || 0);
+            this.updateStatCard('cache-size', stats.cache_size || 0);
+            
+            // Update progress bars
+            this.updateProgressBar('total-operations-progress', (stats.operations_today || 0) / 100 * 100);
+            this.updateProgressBar('success-rate-progress', stats.success_rate || 0);
+            this.updateProgressBar('proxy-health-progress', stats.proxy_health || 100);
+            this.updateProgressBar('cache-usage-progress', stats.cache_usage || 0);
+            
+            // Update success rate
+            const successRate = stats.success_rate || 0;
+            const successRateEl = document.getElementById('success-rate');
+            if (successRateEl) {
+                successRateEl.textContent = `${Math.round(successRate)}%`;
+            }
+            
+        } catch (error) {
+            console.error('Failed to update system stats:', error);
+        }
+    }
+
+    static updateStatCard(elementId, value, change = null) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = value.toLocaleString('fa-IR');
+            
+            if (change) {
+                const changeElement = document.getElementById(`${elementId}-change`);
+                if (changeElement) {
+                    changeElement.textContent = change;
+                }
+            }
+        }
+    }
+
+    static updateProgressBar(elementId, percentage) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.style.width = `${Math.min(percentage, 100)}%`;
+        }
+    }
+
+    static async updateCharts() {
+        if (typeof ChartManager !== 'undefined') {
+            await ChartManager.updateAllCharts();
+        }
+    }
+
+    static async updateActivityFeed() {
+        try {
+            const logs = await Utils.fetchAPI('/logs?limit=10');
+            const feedElement = document.getElementById('recent-logs');
+            
+            if (feedElement && logs && logs.length > 0) {
+                feedElement.innerHTML = logs.map(log => `
+                    <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="w-2 h-2 ${this.getStatusColor(log.level)} rounded-full ml-3"></div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">${Utils.sanitizeHtml(log.message)}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${Utils.formatTime(new Date(log.timestamp))}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Failed to update activity feed:', error);
+        }
+    }
+
+    static async updateSystemHealth() {
+        try {
+            // API Status
+            const apiStatus = await this.checkApiHealth();
+            this.updateHealthStatus('api-status', apiStatus);
+            
+            // Database Status
+            const dbStatus = await this.checkDatabaseHealth();
+            this.updateHealthStatus('db-status', dbStatus);
+            
+            // Proxy Network Status
+            const proxyStatus = await this.checkProxyHealth();
+            this.updateHealthStatus('proxy-network-status', proxyStatus);
+            
+            // WebSocket Status
+            const wsStatus = AppState.websocket && AppState.websocket.readyState === WebSocket.OPEN ? 'healthy' : 'error';
+            this.updateHealthStatus('websocket-status', wsStatus);
+            
+        } catch (error) {
+            console.error('Failed to update system health:', error);
+        }
+    }
+
+    static async checkApiHealth() {
+        try {
+            const response = await Utils.fetchAPI('/status');
+            return 'healthy';
+        } catch {
+            return 'error';
+        }
+    }
+
+    static async checkDatabaseHealth() {
+        try {
+            const response = await Utils.fetchAPI('/legal-db/stats');
+            return 'healthy';
+        } catch {
+            return 'error';
+        }
+    }
+
+    static async checkProxyHealth() {
+        try {
+            const response = await Utils.fetchAPI('/network');
+            return response.healthy_proxies > 0 ? 'healthy' : 'warning';
+        } catch {
+            return 'error';
+        }
+    }
+
+    static updateHealthStatus(elementId, status) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        const statusDot = element.querySelector('.w-2.h-2');
+        const statusText = element.querySelector('span');
+        
+        if (statusDot && statusText) {
+            switch (status) {
+                case 'healthy':
+                    statusDot.className = 'w-2 h-2 bg-green-500 rounded-full ml-2';
+                    statusText.textContent = 'سالم';
+                    break;
+                case 'warning':
+                    statusDot.className = 'w-2 h-2 bg-yellow-500 rounded-full ml-2';
+                    statusText.textContent = 'هشدار';
+                    break;
+                case 'error':
+                    statusDot.className = 'w-2 h-2 bg-red-500 rounded-full ml-2';
+                    statusText.textContent = 'خطا';
+                    break;
+            }
+        }
+    }
+
+    static getStatusColor(level) {
+        switch (level) {
+            case 'error': return 'bg-red-500';
+            case 'warning': return 'bg-yellow-500';
+            case 'info': return 'bg-blue-500';
+            case 'success': return 'bg-green-500';
+            default: return 'bg-gray-500';
+        }
+    }
+
+    static async refreshProxies() {
+        try {
+            Utils.showToast('در حال بروزرسانی پروکسی‌ها...', 'info');
+            const result = await Utils.fetchAPI('/network/update-proxies', { method: 'POST' });
+            Utils.showToast('پروکسی‌ها بروزرسانی شدند', 'success');
+            this.updateSystemStats();
+        } catch (error) {
+            Utils.showToast('خطا در بروزرسانی پروکسی‌ها', 'error');
+        }
+    }
+
+    static async clearCache() {
+        try {
+            Utils.showToast('در حال پاک‌سازی کش...', 'info');
+            const result = await Utils.fetchAPI('/cache', { method: 'DELETE' });
+            Utils.showToast('کش پاک‌سازی شد', 'success');
+            this.updateSystemStats();
+        } catch (error) {
+            Utils.showToast('خطا در پاک‌سازی کش', 'error');
+        }
+    }
+
+    static startAutoRefresh() {
+        if (AppState.config.autoRefresh) {
+            setInterval(() => {
+                this.updateSystemStats();
+                this.updateActivityFeed();
+                this.updateSystemHealth();
+            }, AppState.config.refreshInterval);
+        }
+    }
+
+    static async loadDashboardData() {
+        await this.refreshDashboard();
+    }
+}
+
+// Chart Management System
+class ChartManager {
+    static init() {
+        this.initializeCharts();
+        this.setupChartControls();
+    }
+
+    static initializeCharts() {
+        // Operations Chart
+        this.createOperationsChart();
+        
+        // Performance Chart
+        this.createPerformanceChart();
+        
+        // Category Chart
+        this.createCategoryChart();
+    }
+
+    static createOperationsChart() {
+        const ctx = document.getElementById('operations-chart');
+        if (!ctx) return;
+
+        AppState.charts.operations = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: this.generateTimeLabels(24),
+                datasets: [{
+                    label: 'کل عملیات',
+                    data: this.generateSampleData(24, 0, 100),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'عملیات موفق',
+                    data: this.generateSampleData(24, 0, 80),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            font: { family: 'Vazirmatn' }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(156, 163, 175, 0.1)' }
+                    },
+                    x: {
+                        grid: { color: 'rgba(156, 163, 175, 0.1)' }
+                    }
+                }
+            }
+        });
+    }
+
+    static createPerformanceChart() {
+        const ctx = document.getElementById('performance-chart');
+        if (!ctx) return;
+
+        AppState.charts.performance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['موفق', 'ناموفق', 'در انتظار'],
+                datasets: [{
+                    data: [75, 15, 10],
+                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            font: { family: 'Vazirmatn' }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    static createCategoryChart() {
+        const ctx = document.getElementById('category-chart');
+        if (!ctx) return;
+
+        AppState.charts.category = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['قوانین', 'مقررات', 'آراء', 'بخشنامه‌ها', 'سایر'],
+                datasets: [{
+                    label: 'تعداد اسناد',
+                    data: [45, 32, 28, 15, 8],
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#8b5cf6',
+                        '#10b981',
+                        '#f59e0b',
+                        '#ef4444'
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(156, 163, 175, 0.1)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    static setupChartControls() {
+        const timeframeSelect = document.getElementById('performance-timeframe');
+        if (timeframeSelect) {
+            timeframeSelect.addEventListener('change', (e) => {
+                this.updatePerformanceChart(e.target.value);
+            });
+        }
+    }
+
+    static generateTimeLabels(hours) {
+        const labels = [];
+        const now = new Date();
+        
+        for (let i = hours - 1; i >= 0; i--) {
+            const time = new Date(now.getTime() - (i * 60 * 60 * 1000));
+            labels.push(time.getHours().toString().padStart(2, '0') + ':00');
+        }
+        
+        return labels;
+    }
+
+    static generateSampleData(points, min, max) {
+        return Array.from({ length: points }, () => 
+            Math.floor(Math.random() * (max - min + 1)) + min
+        );
+    }
+
+    static async updateAllCharts() {
+        try {
+            // Update operations chart with real data
+            if (AppState.charts.operations) {
+                const operationsData = await Utils.fetchAPI('/stats/operations');
+                if (operationsData) {
+                    AppState.charts.operations.data.datasets[0].data = operationsData.total || [];
+                    AppState.charts.operations.data.datasets[1].data = operationsData.successful || [];
+                    AppState.charts.operations.update();
+                }
+            }
+
+            // Update performance chart
+            if (AppState.charts.performance) {
+                const performanceData = await Utils.fetchAPI('/stats/performance');
+                if (performanceData) {
+                    AppState.charts.performance.data.datasets[0].data = [
+                        performanceData.successful || 0,
+                        performanceData.failed || 0,
+                        performanceData.pending || 0
+                    ];
+                    AppState.charts.performance.update();
+                }
+            }
+
+            // Update category chart
+            if (AppState.charts.category) {
+                const categoryData = await Utils.fetchAPI('/stats/categories');
+                if (categoryData) {
+                    AppState.charts.category.data.datasets[0].data = Object.values(categoryData);
+                    AppState.charts.category.update();
+                }
+            }
+        } catch (error) {
+            console.error('Failed to update charts:', error);
+        }
+    }
+
+    static updatePerformanceChart(timeframe) {
+        // Update chart based on selected timeframe
+        console.log('Updating performance chart for timeframe:', timeframe);
+    }
+}
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Iranian Legal Archive System - Web UI Initialized');
+    console.log('🚀 Iranian Legal Archive System v2.0 - Enhanced Web UI Initialized');
     
-    // Initialize all managers
+    // Initialize core managers first
     ThemeManager.init();
     NavigationManager.init();
+    TabManager.init();
+    
+    // Initialize system managers
     SystemMonitor.init();
-    DocumentProcessor.init();
     WebSocketManager.init();
+    
+    // Initialize feature managers
+    DocumentProcessor.init();
+    
+    // Initialize UI enhancement managers
+    if (typeof DashboardManager !== 'undefined') DashboardManager.init();
+    if (typeof ChartManager !== 'undefined') ChartManager.init();
     
     // Load initial data
     SystemMonitor.updateStats();
