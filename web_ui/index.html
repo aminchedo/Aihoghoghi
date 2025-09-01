@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iranian Legal Archive System</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Persian/Farsi fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="/static/styles.css">
+    
+    <!-- Configure Tailwind for RTL -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'vazir': ['Vazirmatn', 'Tahoma', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        secondary: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-vazir" dir="rtl">
+    <!-- Fixed Header -->
+    <header class="bg-white shadow-lg border-b-4 border-primary-500 fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="text-2xl">⚖️</div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">سیستم آرشیو اسناد حقوقی ایران</h1>
+                        <p class="text-sm text-gray-600">پلتفرم هوشمند تحلیل اسناد حقوقی</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <!-- Real-time clock -->
+                    <div class="text-left" dir="ltr">
+                        <div id="current-time" class="text-lg font-semibold text-primary-600"></div>
+                        <div id="current-date" class="text-sm text-gray-500"></div>
+                    </div>
+                    
+                    <!-- System status indicator -->
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <div id="status-indicator" class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <span id="status-text" class="text-sm text-gray-600">آماده</span>
+                    </div>
+                    
+                    <!-- Theme toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                        <span id="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-20 min-h-screen">
+        <!-- Collapsible Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white shadow-lg transform transition-transform duration-300 fixed right-0 h-full z-40">
+            <div class="p-4">
+                <!-- Sidebar Toggle -->
+                <button id="sidebar-toggle" class="lg:hidden mb-4 p-2 rounded-lg bg-primary-500 text-white">
+                    ☰
+                </button>
+                
+                <nav class="space-y-2">
+                    <a href="#home" class="nav-link active flex items-center space-x-3 space-x-reverse p-3 rounded-lg bg-primary-500 text-white">
+                        <span>🏠</span>
+                        <span>خانه</span>
+                    </a>
+                    <a href="#process" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>⚡</span>
+                        <span>پردازش اسناد</span>
+                    </a>
+                    <a href="#dashboard" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>📊</span>
+                        <span>داشبورد پروکسی</span>
+                    </a>
+                    <a href="#settings" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>⚙️</span>
+                        <span>تنظیمات</span>
+                    </a>
+                    <a href="#export" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 hover:bg-gray-100">
+                        <span>📤</span>
+                        <span>خروجی</span>
+                    </a>
+                </nav>
+                
+                <!-- Quick Stats -->
+                <div class="mt-8 p-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg text-white">
+                    <h3 class="font-semibold mb-2">آمار سریع</h3>
+                    <div class="space-y-1 text-sm">
+                        <div>پروکسی فعال: <span id="quick-proxy-count">-</span></div>
+                        <div>اسناد کش: <span id="quick-cache-count">-</span></div>
+                        <div>عملیات موفق: <span id="quick-success-count">-</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mr-64 transition-all duration-300" id="main-content">
+            <!-- Home Section -->
+            <section id="home-section" class="section active">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">🎯 داشبورد اصلی</h2>
+                    <p class="text-gray-600">سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی با قابلیت‌های هوش مصنوعی</p>
+                </div>
+
+                <!-- System Overview Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100">کل عملیات</p>
+                                <p id="total-operations" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">📊</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-green-100">عملیات موفق</p>
+                                <p id="successful-operations" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">✅</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-purple-100">پروکسی فعال</p>
+                                <p id="active-proxies" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🌐</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-orange-100">اسناد کش شده</p>
+                                <p id="cache-size" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">💾</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                    <h3 class="text-xl font-semibold mb-4">🚀 عملیات سریع</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="showSection('process')" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg transition-colors">
+                            ⚡ پردازش اسناد
+                        </button>
+                        <button onclick="updateProxies()" class="bg-secondary-500 hover:bg-secondary-600 text-white px-6 py-3 rounded-lg transition-colors">
+                            🔄 بروزرسانی پروکسی
+                        </button>
+                        <button onclick="showSection('dashboard')" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors">
+                            📊 نمایش داشبورد
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">📝 فعالیت‌های اخیر</h3>
+                    <div id="recent-logs" class="space-y-2 max-h-64 overflow-y-auto">
+                        <p class="text-gray-500">در حال بارگذاری...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Process Documents Section -->
+            <section id="process-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">⚡ پردازش اسناد حقوقی</h2>
+                    <p class="text-gray-600">پردازش هوشمند اسناد با قابلیت‌های پیشرفته تحلیل و طبقه‌بندی</p>
+                </div>
+
+                <!-- URL Input Section -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">📝 ورودی آدرس‌ها</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Text Input -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">آدرس‌های اسناد (هر خط یک آدرس)</label>
+                            <textarea 
+                                id="urls-input" 
+                                class="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                placeholder="https://rc.majlis.ir/fa/law/show/139030&#10;https://dotic.ir/portal/law/67890&#10;https://www.judiciary.ir/fa/news/12345"
+                                dir="ltr"
+                            ></textarea>
+                            <p class="text-sm text-gray-500 mt-1">حداکثر 100 آدرس در هر بار پردازش</p>
+                        </div>
+                        
+                        <!-- File Upload -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">بارگذاری فایل</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-500 transition-colors">
+                                <input type="file" id="file-input" accept=".txt,.csv" class="hidden">
+                                <button onclick="document.getElementById('file-input').click()" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                    📁 انتخاب فایل
+                                </button>
+                                <p class="text-sm text-gray-500 mt-2">فرمت‌های پشتیبانی شده: .txt, .csv</p>
+                                <div id="file-info" class="mt-2 text-sm text-gray-600 hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Processing Options -->
+                    <div class="mt-6 flex items-center justify-between">
+                        <div class="flex items-center space-x-4 space-x-reverse">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="enable-proxy" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                <span class="mr-2">استفاده از پروکسی</span>
+                            </label>
+                            
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <label class="text-sm text-gray-700">اندازه دسته:</label>
+                                <select id="batch-size" class="border border-gray-300 rounded px-3 py-1">
+                                    <option value="1">1</option>
+                                    <option value="3" selected>3</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3 space-x-reverse">
+                            <button id="clear-urls-btn" onclick="clearUrls()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                🗑️ پاک کردن
+                            </button>
+                            <button id="process-btn" onclick="processDocuments()" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg transition-colors">
+                                ⚡ شروع پردازش
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Section -->
+                <div id="progress-section" class="bg-white rounded-xl shadow-lg p-6 mb-6 hidden">
+                    <h3 class="text-xl font-semibold mb-4">📈 پیشرفت پردازش</h3>
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span id="progress-text">آماده سازی...</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="progress-bar" class="bg-primary-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div id="current-operation" class="text-sm text-gray-600"></div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Document Results -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">📄 نتایج اسناد</h3>
+                            <button id="search-toggle" onclick="toggleSearch()" class="text-primary-500 hover:text-primary-600">
+                                🔍 جستجو
+                            </button>
+                        </div>
+                        
+                        <!-- Search Bar -->
+                        <div id="search-bar" class="mb-4 hidden">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                placeholder="جستجو در عنوان، آدرس یا محتوا..."
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                            >
+                        </div>
+                        
+                        <div id="documents-list" class="space-y-4 max-h-96 overflow-y-auto">
+                            <p class="text-gray-500 text-center py-8">هنوز سندی پردازش نشده است</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Analysis Results -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🧠 نتایج تحلیل</h3>
+                        <div id="analysis-results" class="space-y-4">
+                            <p class="text-gray-500 text-center py-8">نتایج تحلیل در اینجا نمایش داده می‌شود</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Proxy Dashboard Section -->
+            <section id="dashboard-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">📊 داشبورد پروکسی</h2>
+                    <p class="text-gray-600">نظارت بر عملکرد پروکسی‌ها و آمار سیستم</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Proxy Metrics -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🌐 آمار پروکسی</h3>
+                        <canvas id="proxy-chart" width="400" height="300"></canvas>
+                    </div>
+                    
+                    <!-- Performance Metrics -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">⚡ عملکرد سیستم</h3>
+                        <canvas id="performance-chart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Proxy Control Panel -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">🔧 کنترل پروکسی</h3>
+                        <button id="update-proxies-btn" onclick="updateProxies()" class="bg-secondary-500 hover:bg-secondary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🔄 بروزرسانی پروکسی‌ها
+                        </button>
+                    </div>
+                    
+                    <div id="proxy-list" class="space-y-2 max-h-64 overflow-y-auto">
+                        <p class="text-gray-500">در حال بارگذاری فهرست پروکسی...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">⚙️ تنظیمات سیستم</h2>
+                    <p class="text-gray-600">پیکربندی سیستم و تنظیمات پیشرفته</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- DNS Settings -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🌐 تنظیمات DNS</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">استراتژی DNS</label>
+                                <select id="dns-strategy" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option value="hybrid">ترکیبی (پیشنهادی)</option>
+                                    <option value="doh">DNS over HTTPS</option>
+                                    <option value="standard">استاندارد</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="auto-dns-switch" checked class="rounded border-gray-300 text-primary-600">
+                                    <span class="mr-2">تعویض خودکار DNS</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Model Settings -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🧠 تنظیمات مدل هوش مصنوعی</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">مدل طبقه‌بندی</label>
+                                <select id="classification-model" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option value="primary">اصلی (BERT پارسی)</option>
+                                    <option value="fallback">پشتیبان</option>
+                                    <option value="lightweight">سبک</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="preload-models" checked class="rounded border-gray-300 text-primary-600">
+                                    <span class="mr-2">پیش‌بارگذاری مدل‌ها</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cache Management -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                    <h3 class="text-xl font-semibold mb-4">💾 مدیریت کش</h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600">تعداد اسناد کش شده: <span id="cache-count-settings">-</span></p>
+                            <p class="text-gray-600">آخرین بروزرسانی: <span id="cache-last-update">-</span></p>
+                        </div>
+                        <button onclick="clearCache()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🗑️ پاک کردن کش
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Export Section -->
+            <section id="export-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">📤 خروجی اسناد</h2>
+                    <p class="text-gray-600">دانلود و خروجی‌گیری از اسناد پردازش شده</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">💾 فرمت‌های خروجی</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="exportDocuments('json')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📋</div>
+                            <div class="font-semibold">JSON</div>
+                            <div class="text-sm opacity-90">فرمت ساختاریافته</div>
+                        </button>
+                        
+                        <button onclick="exportDocuments('csv')" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📊</div>
+                            <div class="font-semibold">CSV</div>
+                            <div class="text-sm opacity-90">جدول اکسل</div>
+                        </button>
+                        
+                        <button onclick="exportDocuments('txt')" class="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📝</div>
+                            <div class="font-semibold">TXT</div>
+                            <div class="text-sm opacity-90">متن ساده</div>
+                        </button>
+                    </div>
+                    
+                    <!-- Export History -->
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">📚 تاریخچه خروجی</h4>
+                        <div id="export-history" class="space-y-2 max-h-32 overflow-y-auto">
+                            <p class="text-gray-500">هنوز خروجی‌ای ایجاد نشده است</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-8 text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <p class="text-lg font-semibold">در حال پردازش...</p>
+            <p id="loading-message" class="text-gray-600">لطفاً صبر کنید</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="fixed top-24 left-4 z-50 space-y-2"></div>
+
+    <!-- JavaScript -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
