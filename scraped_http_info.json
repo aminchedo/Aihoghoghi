@@ -1,0 +1,17 @@
+{
+  "IP Address": {
+    "origin": "54.209.114.76"
+  },
+  "User Agent": {
+    "user-agent": "Mozilla/5.0 (Linux; x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+  },
+  "Headers": {
+    "headers": {
+      "Accept": "*/*",
+      "Accept-Encoding": "gzip, deflate",
+      "Host": "httpbin.org",
+      "User-Agent": "Mozilla/5.0 (Linux; x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      "X-Amzn-Trace-Id": "Root=1-68b60ef7-2c0357cc1cd34c894bbf2c1d"
+    }
+  }
+}
