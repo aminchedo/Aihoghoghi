@@ -1,0 +1,247 @@
+{
+  "summary": {
+    "total_sites_analyzed": 2,
+    "average_legal_score": 0.0,
+    "average_confidence": 0.024999999999999998,
+    "categories_found": [
+      "عمومی"
+    ],
+    "analysis_timestamp": "2025-09-01T21:24:37.672445"
+  },
+  "analyzed_results": [
+    {
+      "site_name": "خبرگزاری ایرنا",
+      "url": "https://www.irna.ir",
+      "original_data": {
+        "id": 3,
+        "site_name": "خبرگزاری ایرنا",
+        "url": "https://www.irna.ir",
+        "description": "خبرگزاری جمهوری اسلامی",
+        "status_code": 200,
+        "response_time": 2439.03,
+        "content_length": 4399,
+        "timestamp": "2025-09-01T21:23:14.593163",
+        "success": true,
+        "page_title": "",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "Transferring to the website..."
+          },
+          {
+            "tag": "h2",
+            "text": "Ø¯Ø± ïº£ïºÙ Ø§ï»§ïºï»ïºÙ ïºï»ª ïº³ïºï¯¾ïº ï»£ï»®Ø±Ø¯ ï»§ï»ïº® ï»«ïº´ïºï¯¿ïºª..."
+          }
+        ],
+        "links": [],
+        "extraction_successful": true
+      },
+      "title_analysis": null,
+      "meta_analysis": null,
+      "headings_analysis": {
+        "title": "",
+        "content_length": 121,
+        "word_count": 12,
+        "categories": [],
+        "legal_score": 0,
+        "importance_score": 0,
+        "extracted_entities": [],
+        "sentiment": "neutral",
+        "confidence": 0.0,
+        "analysis_timestamp": "2025-09-01T21:24:37.672012"
+      },
+      "overall_legal_score": 0.0,
+      "overall_confidence": 0.0,
+      "recommended_category": "عمومی"
+    },
+    {
+      "site_name": "خبرگزاری فارس",
+      "url": "https://www.farsnews.ir",
+      "original_data": {
+        "id": 4,
+        "site_name": "خبرگزاری فارس",
+        "url": "https://www.farsnews.ir",
+        "description": "خبرگزاری فارس",
+        "status_code": 200,
+        "response_time": 2537.36,
+        "content_length": 341703,
+        "timestamp": "2025-09-01T21:23:19.132379",
+        "success": true,
+        "page_title": "پیشخوان | فارس",
+        "meta_description": "آخرین و مهمترین اخبار ایران و جهان را در خبرگزاری فارس بخوانید. خبرگزاری فارس، پربازدیدترین خبرگزاری کشور و معتبرترین مرجع خبری رسانه‌های ایران و جهان.",
+        "headings": [
+          {
+            "tag": "h1",
+            "text": "پیشخوان"
+          },
+          {
+            "tag": "h2",
+            "text": "عضوی از فارس هستید؟"
+          },
+          {
+            "tag": "h2",
+            "text": "شانگهای؛ آلترناتیو شرقی در برابر تحریم‌ها و سلطه دلار"
+          }
+        ],
+        "links": [
+          {
+            "url": "/showcase",
+            "text": "پیشخوان"
+          },
+          {
+            "url": "/campaigns",
+            "text": "فارس من"
+          },
+          {
+            "url": "/tv",
+            "text": "فارس TV"
+          },
+          {
+            "url": "/search",
+            "text": "جستجو"
+          }
+        ],
+        "extraction_successful": true
+      },
+      "title_analysis": {
+        "title": "پیشخوان | فارس",
+        "content_length": 14,
+        "word_count": 3,
+        "categories": [],
+        "legal_score": 0,
+        "importance_score": 0,
+        "extracted_entities": [],
+        "sentiment": "neutral",
+        "confidence": 0.0,
+        "analysis_timestamp": "2025-09-01T21:24:37.672281"
+      },
+      "meta_analysis": {
+        "title": "",
+        "content_length": 151,
+        "word_count": 25,
+        "categories": [],
+        "legal_score": 0,
+        "importance_score": 20,
+        "extracted_entities": [],
+        "sentiment": "neutral",
+        "confidence": 0.15,
+        "analysis_timestamp": "2025-09-01T21:24:37.672304"
+      },
+      "headings_analysis": {
+        "title": "",
+        "content_length": 81,
+        "word_count": 14,
+        "categories": [],
+        "legal_score": 0,
+        "importance_score": 0,
+        "extracted_entities": [],
+        "sentiment": "neutral",
+        "confidence": 0.0,
+        "analysis_timestamp": "2025-09-01T21:24:37.672394"
+      },
+      "overall_legal_score": 0.0,
+      "overall_confidence": 0.049999999999999996,
+      "recommended_category": "عمومی"
+    }
+  ],
+  "original_data": {
+    "timestamp": "2025-09-01T21:23:21.147252",
+    "total_sites_tested": 4,
+    "successful_extractions": 2,
+    "failed_extractions": 2,
+    "results": [
+      {
+        "id": 1,
+        "site_name": "قوه قضائیه",
+        "url": "https://www.judiciary.ir",
+        "error": "Connection Error",
+        "success": false,
+        "extraction_successful": false,
+        "timestamp": "2025-09-01T21:23:07.610020"
+      },
+      {
+        "id": 2,
+        "site_name": "دولت الکترونیک",
+        "url": "https://www.dolat.ir",
+        "description": "پورتال دولت الکترونیک",
+        "status_code": 403,
+        "response_time": 543.8,
+        "content_length": 10854,
+        "timestamp": "2025-09-01T21:23:10.153974",
+        "success": false,
+        "extraction_successful": false,
+        "error": "HTTP 403"
+      },
+      {
+        "id": 3,
+        "site_name": "خبرگزاری ایرنا",
+        "url": "https://www.irna.ir",
+        "description": "خبرگزاری جمهوری اسلامی",
+        "status_code": 200,
+        "response_time": 2439.03,
+        "content_length": 4399,
+        "timestamp": "2025-09-01T21:23:14.593163",
+        "success": true,
+        "page_title": "",
+        "headings": [
+          {
+            "tag": "h2",
+            "text": "Transferring to the website..."
+          },
+          {
+            "tag": "h2",
+            "text": "Ø¯Ø± ïº£ïºÙ Ø§ï»§ïºï»ïºÙ ïºï»ª ïº³ïºï¯¾ïº ï»£ï»®Ø±Ø¯ ï»§ï»ïº® ï»«ïº´ïºï¯¿ïºª..."
+          }
+        ],
+        "links": [],
+        "extraction_successful": true
+      },
+      {
+        "id": 4,
+        "site_name": "خبرگزاری فارس",
+        "url": "https://www.farsnews.ir",
+        "description": "خبرگزاری فارس",
+        "status_code": 200,
+        "response_time": 2537.36,
+        "content_length": 341703,
+        "timestamp": "2025-09-01T21:23:19.132379",
+        "success": true,
+        "page_title": "پیشخوان | فارس",
+        "meta_description": "آخرین و مهمترین اخبار ایران و جهان را در خبرگزاری فارس بخوانید. خبرگزاری فارس، پربازدیدترین خبرگزاری کشور و معتبرترین مرجع خبری رسانه‌های ایران و جهان.",
+        "headings": [
+          {
+            "tag": "h1",
+            "text": "پیشخوان"
+          },
+          {
+            "tag": "h2",
+            "text": "عضوی از فارس هستید؟"
+          },
+          {
+            "tag": "h2",
+            "text": "شانگهای؛ آلترناتیو شرقی در برابر تحریم‌ها و سلطه دلار"
+          }
+        ],
+        "links": [
+          {
+            "url": "/showcase",
+            "text": "پیشخوان"
+          },
+          {
+            "url": "/campaigns",
+            "text": "فارس من"
+          },
+          {
+            "url": "/tv",
+            "text": "فارس TV"
+          },
+          {
+            "url": "/search",
+            "text": "جستجو"
+          }
+        ],
+        "extraction_successful": true
+      }
+    ]
+  }
+}
