@@ -1,268 +1,229 @@
-# 🏛️ Iranian Legal Archive System - Advanced Web UI
+# 🏛️ سیستم آرشیو اسناد حقوقی ایران - Iranian Legal Archive System
 
-A powerful, modern web interface for the Iranian Legal Document Archive System, featuring AI-powered document analysis, intelligent proxy management, and real-time processing capabilities.
+سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی با قابلیت‌های هوش مصنوعی، مدیریت پروکسی و پردازش بلادرنگ
 
-## ✨ Features
+## ✨ ویژگی‌ها
 
-### 🎯 Core Functionality
-- **AI-Powered Document Analysis**: Persian BERT classification and similarity analysis
-- **Legal Database System**: Dedicated SQLite database for structured legal documents
-- **Authoritative Source Integration**: Based on 5 major Iranian legal sources
-- **Advanced Search**: Full-text search with legal entity and key term extraction
-- **Intelligent DNS Management**: Hybrid DNS with DoH support and automatic failover
-- **Advanced Proxy System**: Smart proxy rotation with health monitoring
-- **Real-time Processing**: WebSocket-based live updates and progress tracking
-- **Comprehensive Caching**: SQLite-based intelligent caching system
+### 🔧 ویژگی‌های اصلی
+- **پردازش خودکار اسناد**: استخراج و تحلیل اسناد از URL‌های مختلف
+- **مدیریت پروکسی**: سیستم پیشرفته مدیریت و تست پروکسی‌ها
+- **جستجوی هوشمند**: جستجوی پیشرفته در محتوای اسناد
+- **داشبورد بلادرنگ**: نمایش آمار و وضعیت سیستم به صورت زنده
+- **رابط کاربری فارسی**: طراحی مدرن با پشتیبانی کامل از RTL
 
-### 🌐 Web Interface Features
-- **Modern Responsive Design**: Mobile-first design with Tailwind CSS
-- **Persian RTL Support**: Full right-to-left layout with proper typography
-- **Dark/Light Theme**: Automatic theme switching with user preference storage
-- **Legal Database Tab**: Dedicated interface for legal document management
-- **Real-time Dashboard**: Live charts and metrics visualization
-- **File Upload Support**: Bulk URL processing from CSV/TXT files
-- **Advanced Search**: Real-time document filtering and legal text search
-- **Export Capabilities**: JSON, CSV, and TXT export formats
-- **Offline Support**: Service Worker for offline functionality
+### 📊 قابلیت‌های تحلیلی
+- **نمودارهای تعاملی**: نمایش روند عملیات و عملکرد سیستم
+- **ارزیابی کیفیت**: امتیازدهی خودکار به اسناد پردازش شده
+- **دسته‌بندی هوشمند**: تشخیص خودکار موضوع اسناد حقوقی
+- **گزارش‌گیری پیشرفته**: لاگ‌ها و گزارش‌های جامع سیستم
 
-## 🚀 Quick Start
+### 🔒 امنیت و کارایی
+- **مدیریت پروکسی**: تست خودکار و مدیریت سلامت پروکسی‌ها
+- **کش هوشمند**: ذخیره‌سازی بهینه برای افزایش سرعت
+- **API RESTful**: رابط برنامه‌نویسی کامل و مستندسازی شده
+- **پشتیبانی از تم تاریک**: رابط کاربری قابل تنظیم
 
-### Prerequisites
-- Python 3.8+
-- pip package manager
+## 🚀 نصب و راه‌اندازی
 
-### Installation
+### پیش‌نیازها
+- Python 3.8 یا بالاتر
+- pip (مدیر بسته‌های Python)
 
-1. **Clone or download the repository**
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### مراحل نصب
 
-3. **Create demo legal database** (optional):
-   ```bash
-   python demo_legal_db.py
-   ```
+1. **کلون کردن پروژه**
+```bash
+git clone <repository-url>
+cd iranian-legal-archive
+```
 
-4. **Run the enhanced system**:
-   ```bash
-   python run_legal_archive.py --mode web --create-demo
-   ```
+2. **ایجاد محیط مجازی (اختیاری ولی توصیه شده)**
+```bash
+python -m venv venv
 
-5. **Access the application**:
-   Open your browser and navigate to `http://localhost:7860`
+# در ویندوز:
+venv\Scripts\activate
 
-## 📁 Project Structure
+# در لینوکس/macOS:
+source venv/bin/activate
+```
+
+3. **نصب وابستگی‌ها**
+```bash
+pip install -r requirements.txt
+```
+
+4. **اجرای سیستم**
+```bash
+python iranian_legal_archive.py
+```
+
+5. **دسترسی به سیستم**
+   - مرورگر خود را باز کنید
+   - به آدرس `http://localhost:7860` بروید
+   - از سیستم استفاده کنید!
+
+## 📖 راهنمای استفاده
+
+### داشبورد اصلی
+- **نمای کلی**: مشاهده آمار کلی سیستم
+- **نمودارها**: بررسی روند عملیات در 24 ساعت اخیر
+- **عملیات سریع**: دسترسی سریع به عملکردهای اصلی
+
+### پردازش اسناد
+1. به بخش "پردازش اسناد" بروید
+2. URL‌های مورد نظر را وارد کنید (هر خط یک URL)
+3. روی "شروع پردازش" کلیک کنید
+4. پیشرفت پردازش را مشاهده کنید
+
+### مدیریت پروکسی
+- **تست پروکسی‌ها**: بررسی وضعیت همه پروکسی‌ها
+- **بروزرسانی لیست**: اضافه کردن پروکسی‌های جدید
+- **نمایش جزئیات**: مشاهده اطلاعات کامل هر پروکسی
+
+### جستجو در اسناد
+- **جستجوی متنی**: جستجو در محتوای اسناد
+- **فیلتر دسته‌بندی**: محدود کردن جستجو به دسته خاص
+- **نمایش نتایج**: مشاهده اسناد مرتبط با امتیاز کیفیت
+
+## 🛠️ API Documentation
+
+### نقاط پایانی اصلی
+
+#### وضعیت سیستم
+```
+GET /api/status
+```
+دریافت وضعیت فعلی سیستم شامل آمار عملیات و پروکسی‌ها
+
+#### پردازش URL‌ها
+```
+POST /api/process-urls
+Content-Type: application/json
+
+{
+  "urls": ["url1", "url2", "..."]
+}
+```
+
+#### جستجو در اسناد
+```
+GET /api/search?q=نفقه&category=حقوق خانواده&limit=20
+```
+
+#### مدیریت پروکسی
+```
+GET /api/network          # دریافت لیست پروکسی‌ها
+POST /api/network/test-all # تست همه پروکسی‌ها
+POST /api/network/update-proxies # بروزرسانی لیست
+```
+
+#### مدیریت کش
+```
+DELETE /api/cache         # پاک کردن کش
+```
+
+#### لاگ‌ها
+```
+GET /api/logs?level=INFO&limit=50  # دریافت لاگ‌ها
+DELETE /api/logs                   # پاک کردن لاگ‌ها
+```
+
+## 🏗️ معماری سیستم
+
+### Backend (Python/FastAPI)
+- **FastAPI**: فریمورک وب مدرن و سریع
+- **Uvicorn**: سرور ASGI با کارایی بالا
+- **Pydantic**: اعتبارسنجی داده‌ها
+- **Asyncio**: پردازش ناهمزمان
+
+### Frontend (HTML/CSS/JavaScript)
+- **Tailwind CSS**: فریمورک CSS مدرن
+- **Chart.js**: نمودارهای تعاملی
+- **Font Awesome**: آیکون‌های زیبا
+- **Vazir Font**: فونت فارسی مناسب
+
+### ویژگی‌های فنی
+- **RTL Support**: پشتیبانی کامل از راست‌چین
+- **Dark Mode**: تم تاریک
+- **Responsive Design**: سازگار با موبایل
+- **Real-time Updates**: بروزرسانی زنده
+
+## 📁 ساختار پروژه
 
 ```
 iranian-legal-archive/
-├── enhanced_legal_scraper (3).py  # Main backend system (5000+ lines)
-├── web_server.py                  # FastAPI web server with API endpoints
-├── legal_database.py              # Legal database system with AI analysis
-├── test_legal_db.py              # Comprehensive test suite
-├── demo_legal_db.py              # Demo script with sample نفقه data
-├── run_legal_archive.py          # Main launcher script
-├── deploy.py                     # Automated deployment script
-├── requirements.txt              # Python dependencies
-├── init_legal_database.sql       # Database schema and queries
-├── LEGAL_DATABASE_GUIDE.md       # Legal database documentation
-├── web_ui/                       # Advanced web interface
-│   ├── index.html               # Responsive HTML with legal DB tab
-│   ├── styles.css               # Advanced CSS with themes
-│   ├── script.js                # JavaScript with WebSocket support
-│   ├── sw.js                    # Service Worker for offline support
-│   └── package.json             # Web dependencies
-└── README.md                    # This comprehensive guide
+├── iranian_legal_archive.py  # فایل اصلی سرور
+├── index.html               # رابط کاربری
+├── app.js                   # جاوااسکریپت frontend
+├── requirements.txt         # وابستگی‌های Python
+├── README.md               # مستندات
+└── legal_archive.log       # فایل لاگ
 ```
 
-## 🎛️ Usage Guide
+## 🔧 تنظیمات پیشرفته
 
-### 1. Document Processing
-- Navigate to the "پردازش اسناد" (Process Documents) section
-- Enter URLs manually or upload a CSV/TXT file
-- Configure proxy settings and batch size
-- Click "شروع پردازش" to begin processing
-- Monitor real-time progress and results
-
-### 2. Proxy Dashboard
-- View proxy statistics and performance metrics
-- Monitor active proxy count and success rates
-- Update proxy list with the refresh button
-- Visualize data with interactive charts
-
-### 3. Settings Configuration
-- Configure DNS strategies (Hybrid, DoH, Standard)
-- Select AI model preferences
-- Manage cache settings and cleanup
-
-### 4. Legal Database Management
-- Access the "پایگاه داده حقوقی" (Legal Database) section
-- Search for legal terms like "نفقه" (alimony)
-- Populate database from authoritative sources
-- View structured legal document analysis
-- Filter by source and legal category
-
-### 5. Export and Analysis
-- Export processed documents in multiple formats
-- Search and filter through processed documents
-- View detailed analysis results and quality scores
-
-## 🔧 API Endpoints
-
-The FastAPI server exposes the following endpoints:
-
-- `GET /` - Main web interface
-- `GET /api/status` - Current processing status
-- `GET /api/stats` - System statistics
-- `POST /api/process-urls` - Start document processing
-- `POST /api/update-proxies` - Update proxy list
-- `POST /api/upload-urls` - Upload URL file
-- `GET /api/processed-documents` - Get processed documents
-- `GET /api/export/{format}` - Export documents
-- `DELETE /api/cache` - Clear system cache
-- `GET /api/logs` - Get operation logs
-- `WebSocket /ws` - Real-time updates
-
-### Legal Database Endpoints
-- `GET /api/legal-db/stats` - Legal database statistics
-- `GET /api/legal-db/documents` - Get legal documents (with filtering)
-- `GET /api/legal-db/search` - Search legal documents by query
-- `POST /api/legal-db/populate` - Populate database from sources
-- `POST /api/legal-db/search-nafaqe` - Search نفقه definition
-
-## 🌟 Advanced Features
-
-### Real-time Updates
-The system uses WebSocket connections to provide live updates during document processing, including:
-- Progress tracking
-- Status messages
-- Error notifications
-- Completion alerts
-
-### Intelligent Caching
-- SQLite-based document caching
-- Automatic cache invalidation
-- Memory-efficient storage
-- Cache statistics and management
-
-### Proxy Management
-- Automatic proxy discovery and testing
-- Health monitoring and rotation
-- Performance metrics tracking
-- Fallback to direct connections
-
-### AI Integration
-- Persian BERT for document classification
-- Sentence transformers for similarity analysis
-- Optimized for CPU-only environments
-- Graceful fallback for missing models
-
-## 🛠️ Configuration
-
-### Environment Variables
-- `TRANSFORMERS_CACHE`: Cache directory for AI models
-- `HF_HOME`: Hugging Face cache directory
-- `TORCH_HOME`: PyTorch cache directory
-- `CUDA_VISIBLE_DEVICES`: GPU configuration (empty for CPU-only)
-
-### DNS Configuration
-- Hybrid mode (recommended): Combines multiple DNS strategies
-- DoH mode: DNS over HTTPS for enhanced privacy
-- Standard mode: Traditional DNS resolution
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-1. **"Limited Mode" Error**
-   - Ensure all dependencies are installed: `pip install -r requirements.txt`
-   - Check internet connectivity
-   - Verify Python version (3.8+)
-
-2. **WebSocket Connection Issues**
-   - Check firewall settings
-   - Ensure port 7860 is available
-   - Try refreshing the browser
-
-3. **Proxy Problems**
-   - Update proxy list from the dashboard
-   - Disable proxy mode if needed
-   - Check network connectivity
-
-4. **AI Model Loading Issues**
-   - Ensure sufficient disk space for model cache
-   - Check internet connection for model downloads
-   - Try lightweight model options in settings
-
-## 🔒 Security Considerations
-
-- All external requests use secure HTTP adapters
-- Proxy validation and testing before use
-- Input validation for all user data
-- CORS protection for API endpoints
-- Secure file upload handling
-
-## 📱 Mobile Support
-
-The interface is fully responsive and optimized for:
-- Desktop computers (1024px+)
-- Tablets (768px - 1024px)
-- Mobile phones (< 768px)
-- Portrait and landscape orientations
-
-## 🌍 Internationalization
-
-- Full Persian/Farsi language support
-- RTL (Right-to-Left) layout
-- Persian date and time formatting
-- Cultural adaptations for Iranian users
-
-## 🚀 Deployment Options
-
-### Local Development
-```bash
-python web_server.py
+### تغییر پورت سرور
+```python
+# در فایل iranian_legal_archive.py
+system.run(host="0.0.0.0", port=8080)  # پورت دلخواه
 ```
 
-### Production Deployment
-```bash
-uvicorn web_server:app --host 0.0.0.0 --port 7860 --workers 4
-```
+### تنظیمات پروکسی
+پروکسی‌های خود را در کد اضافه کنید یا از API استفاده کنید
 
-### Hugging Face Spaces
-The system is optimized for Hugging Face Spaces deployment with:
-- CPU-only mode enforcement
-- Memory usage optimization
-- Graceful dependency handling
-- Automatic fallback modes
+### تنظیمات لاگ
+سطح لاگ‌ها و مسیر فایل لاگ قابل تنظیم است
 
-## 📊 Performance
+## 🤝 مشارکت
 
-- **Startup Time**: < 30 seconds (including model loading)
-- **Processing Speed**: 3-10 documents per minute (depending on proxy performance)
-- **Memory Usage**: ~2-4GB (with AI models loaded)
-- **Concurrent Users**: Supports multiple simultaneous users
-- **Cache Hit Rate**: Typically 60-80% for repeated URLs
+برای مشارکت در پروژه:
+1. پروژه را Fork کنید
+2. شاخه جدید ایجاد کنید (`git checkout -b feature/amazing-feature`)
+3. تغییرات را Commit کنید (`git commit -m 'Add some amazing feature'`)
+4. به شاخه Push کنید (`git push origin feature/amazing-feature`)
+5. Pull Request ایجاد کنید
 
-## 🤝 Contributing
+## 📝 مجوز
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+این پروژه تحت مجوز MIT منتشر شده است. برای جزئیات بیشتر فایل `LICENSE` را مطالعه کنید.
 
-## 📄 License
+## 🆘 پشتیبانی
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+در صورت مواجهه با مشکل یا سوال:
+- Issue جدید در GitHub ایجاد کنید
+- مستندات API را بررسی کنید
+- فایل‌های لاگ را بررسی کنید
 
-## 🙏 Acknowledgments
+## 🔄 تغییرات اخیر
 
-- HooshvareLab for Persian BERT models
-- Sentence Transformers team
-- FastAPI and Gradio communities
-- Iranian legal data sources
+### نسخه 2.0.0
+- ✅ رابط کاربری کاملاً بازنویسی شده
+- ✅ پشتیبانی از تم تاریک
+- ✅ نمودارهای بلادرنگ
+- ✅ API بهبود یافته
+- ✅ مدیریت پروکسی پیشرفته
+
+### نسخه 1.0.0
+- ✅ راه‌اندازی اولیه سیستم
+- ✅ پردازش اسناد
+- ✅ جستجوی ساده
+
+## 🎯 برنامه‌های آتی
+
+- [ ] یکپارچه‌سازی با AI برای تحلیل بهتر
+- [ ] پشتیبانی از فرمت‌های بیشتر
+- [ ] سیستم احراز هویت
+- [ ] API GraphQL
+- [ ] پشتیبانی چندزبانه
 
 ---
 
-**Made with ❤️ for the Iranian legal community**
+**ساخته شده با ❤️ برای جامعه حقوقی ایران**
+
+🔗 **لینک‌های مفید:**
+- [مستندات FastAPI](https://fastapi.tiangolo.com/)
+- [راهنمای Tailwind CSS](https://tailwindcss.com/docs)
+- [Chart.js Documentation](https://www.chartjs.org/docs/)
+
+💡 **نکته**: این سیستم برای اهداف آموزشی و تحقیقاتی طراحی شده است. برای استفاده تجاری، لطفاً مجوزهای لازم را بررسی کنید.
