@@ -163,14 +163,16 @@
                 const search = window.location.search;
                 const hash = window.location.hash;
                 
-                // Construct the target URL
-                const targetUrl = basePath + '/' + '#' + routePath + search + hash;
+                // GitHub Pages SPA redirect technique
+                const redirect = basePath + '/?/' + routePath.slice(1) + 
+                    (search ? '&' + search.slice(1).replace(/&/g, '~and~') : '') + 
+                    (hash || '');
                 
-                console.log('🎯 Redirecting to:', targetUrl);
+                console.log('🎯 Redirecting to:', redirect);
                 
                 // Redirect after a short delay to show loading animation
                 setTimeout(() => {
-                    window.location.href = targetUrl;
+                    window.location.href = redirect;
                 }, 1500);
                 
             } else if (currentPath === '/404.html' || currentPath.endsWith('/404.html')) {

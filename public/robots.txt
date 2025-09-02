@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aminchedo.github.io/Aihoghoghi/sitemap.xml

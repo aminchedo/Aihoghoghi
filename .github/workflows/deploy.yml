@@ -193,6 +193,26 @@ jobs:
           touch dist/.nojekyll
           echo "✅ Created .nojekyll file for GitHub Pages"
           
+          # Copy additional GitHub Pages files
+          if [ -f "public/_headers" ]; then
+            cp public/_headers dist/
+            echo "✅ Copied _headers file"
+          fi
+          
+          # Ensure all public files are copied
+          if [ -d "public" ]; then
+            cp -r public/* dist/ 2>/dev/null || true
+            echo "✅ Copied all public files"
+          fi
+          
+          # Verify critical files exist
+          echo "📋 Verifying build output:"
+          ls -la dist/
+          echo "📋 Critical files check:"
+          [ -f "dist/index.html" ] && echo "✅ index.html exists" || echo "❌ index.html missing"
+          [ -f "dist/404.html" ] && echo "✅ 404.html exists" || echo "❌ 404.html missing"
+          [ -f "dist/.nojekyll" ] && echo "✅ .nojekyll exists" || echo "❌ .nojekyll missing"
+          
       - name: Setup Pages
         uses: actions/configure-pages@v3
 

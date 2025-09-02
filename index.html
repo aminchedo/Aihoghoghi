@@ -23,6 +23,13 @@
   <meta property="twitter:title" content="سیستم آرشیو اسناد حقوقی ایران" />
   <meta property="twitter:description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی" />
   
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="آرشیو حقوقی">
+
   <!-- Preload fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,6 +101,37 @@
     </div>
   </div>
   
+  <!-- GitHub Pages SPA routing support -->
+  <script>
+    // Handle GitHub Pages SPA routing
+    (function(l) {
+      if (l.search[1] === '/' ) {
+        var decoded = l.search.slice(1).split('&').map(function(s) { 
+          return s.replace(/~and~/g, '&')
+        }).join('?');
+        window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location));
+  </script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((registration) => {
+            console.log('✅ Service Worker registered successfully');
+          })
+          .catch((error) => {
+            console.log('❌ Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+
   <!-- Remove loading screen when app loads -->
   <script>
     window.addEventListener('load', () => {
