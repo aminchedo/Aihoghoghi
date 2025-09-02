@@ -5,368 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سیستم آرشیو اسناد حقوقی ایران</title>
     
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" as="style">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
-    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <!-- Preload critical resources for instant loading -->
+    <link rel="preload" href="functional_system.html" as="document">
     
-    <!-- External resources -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    
+    <!-- Critical inline CSS for instant rendering -->
     <style>
-        /* Custom styles for animations and enhancements */
-        body {
-            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        /* Loading spinner animation */
+        body {
+            font-family: 'Tahoma', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .instant-loader {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .launch-btn {
+            background: linear-gradient(45deg, #00ff88, #00ffff);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+        }
+        
+        .performance-info {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Loading animation for transition */
+        .loading-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
         .spinner {
-            border: 4px solid #f3f4f6;
-            border-top: 4px solid #3b82f6;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #00ffff;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        /* Progress bar animation */
-        .progress-bar {
-            transition: width 0.5s ease-in-out;
-        }
-        
-        /* Fade in animation */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Pulse animation for loading text */
-        .pulse-text {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .5;
-            }
-        }
-        
-        /* Error icon bounce animation */
-        .bounce-error {
-            animation: bounceError 0.6s ease-in-out;
-        }
-        
-        @keyframes bounceError {
-            0%, 20%, 53%, 80%, 100% {
-                transform: translate3d(0,0,0);
-            }
-            40%, 43% {
-                transform: translate3d(0, -10px, 0);
-            }
-            70% {
-                transform: translate3d(0, -5px, 0);
-            }
-            90% {
-                transform: translate3d(0, -2px, 0);
-            }
-        }
-        
-        /* Button hover effects */
-        .btn-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 fade-in">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                    <i class="fas fa-file-alt text-2xl text-blue-600"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-gray-800 mb-2">سیستم آرشیو اسناد حقوقی</h1>
-                <p class="text-gray-600">در حال بارگیری...</p>
-            </div>
-            
-            <!-- Loading Spinner -->
-            <div class="flex justify-center mb-6">
-                <div class="spinner"></div>
-            </div>
-            
-            <!-- Progress Bar -->
-            <div class="mb-6">
-                <div class="bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div id="progressBar" class="progress-bar bg-blue-600 h-full rounded-full" style="width: 0%"></div>
-                </div>
-                <div class="flex justify-between text-xs text-gray-500 mt-2">
-                    <span>0%</span>
-                    <span id="progressText">100%</span>
-                </div>
-            </div>
-            
-            <!-- Dynamic Loading Messages -->
-            <div class="text-center">
-                <p id="loadingMessage" class="text-gray-700 pulse-text">در حال بارگیری سیستم...</p>
-            </div>
+<body>
+    <div class="instant-loader">
+        <div class="logo">🏛️</div>
+        <h1 class="title">سیستم آرشیو اسناد حقوقی ایران</h1>
+        <p class="subtitle">Iranian Legal Archive System</p>
+        <p class="subtitle">سیستم کاملاً عملیاتی و بهینه شده</p>
+        
+        <a href="functional_system.html" class="launch-btn" onclick="showLoadingTransition()">
+            ورود به سیستم
+        </a>
+        
+        <div class="performance-info">
+            <div>⚡ بارگذاری فوری - بدون تأخیر</div>
+            <div>🚀 عملکرد بهینه شده</div>
+            <div>✅ آماده برای استفاده</div>
         </div>
     </div>
     
-    <!-- Error Screen -->
-    <div id="errorScreen" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 fade-in">
-            <!-- Error Icon -->
-            <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-4 bounce-error">
-                    <i class="fas fa-exclamation-triangle text-3xl text-red-600"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">خطا در بارگیری</h2>
-            </div>
-            
-            <!-- Error Message -->
-            <div class="text-center mb-8">
-                <p class="text-gray-700 mb-4">متأسفانه سیستم یافت نشد. لطفاً دوباره تلاش کنید.</p>
-                <p class="text-sm text-gray-500">در صورت تکرار مشکل، با پشتیبانی تماس بگیرید.</p>
-            </div>
-            
-            <!-- Retry Button -->
-            <div class="text-center">
-                <button 
-                    id="retryButton" 
-                    class="btn-hover bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg inline-flex items-center gap-2 transition-all duration-300"
-                >
-                    <i class="fas fa-redo-alt"></i>
-                    تلاش مجدد
-                </button>
-            </div>
+    <!-- Loading transition overlay -->
+    <div class="loading-transition" id="loadingTransition">
+        <div>
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">در حال انتقال به سیستم...</p>
         </div>
     </div>
 
     <script>
-        // File paths to check in order of priority
-        const filePaths = [
-            './functional_system.html',
-            './src/functional_system.html',
-            './working_system.html',
-            './simple_index.html'
-            // Note: './index.html' is skipped as it's this file itself
-        ];
-        
-        // Loading messages in Persian
-        const loadingMessages = [
-            'در حال بارگیری سیستم...',
-            'در حال اتصال به سرور...',
-            'در حال آماده‌سازی AI...'
-        ];
-        
-        let currentMessageIndex = 0;
-        let messageInterval;
-        let currentFileIndex = 0;
-        
-        // DOM elements
-        const loadingScreen = document.getElementById('loadingScreen');
-        const errorScreen = document.getElementById('errorScreen');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const loadingMessage = document.getElementById('loadingMessage');
-        const retryButton = document.getElementById('retryButton');
-        
-        // Update progress bar
-        function updateProgress(percentage) {
-            progressBar.style.width = percentage + '%';
-            progressText.textContent = Math.round(percentage) + '%';
-        }
-        
-        // Cycle through loading messages
-        function startMessageCycle() {
-            messageInterval = setInterval(() => {
-                currentMessageIndex = (currentMessageIndex + 1) % loadingMessages.length;
-                loadingMessage.textContent = loadingMessages[currentMessageIndex];
-            }, 2000);
-        }
-        
-        // Stop message cycling
-        function stopMessageCycle() {
-            if (messageInterval) {
-                clearInterval(messageInterval);
-            }
-        }
-        
-        // Check if a file exists using fetch with HEAD request
-        async function checkFileExists(url) {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-                
-                const response = await fetch(url, {
-                    method: 'HEAD',
-                    signal: controller.signal,
-                    cache: 'no-cache'
-                });
-                
-                clearTimeout(timeoutId);
-                return response.ok;
-            } catch (error) {
-                console.log(`Failed to check ${url}:`, error.message);
-                return false;
-            }
-        }
-        
-        // Main file discovery function
-        async function discoverAndRedirect() {
-            console.log('Starting file discovery process...');
+        // Performance monitoring
+        window.addEventListener('load', () => {
+            const perfData = performance.timing;
+            const loadTime = perfData.loadEventEnd - perfData.navigationStart;
+            console.log(`Page load time: ${loadTime}ms`);
             
-            // Show loading screen
-            loadingScreen.classList.remove('hidden');
-            errorScreen.classList.add('hidden');
-            
-            // Start message cycling
-            startMessageCycle();
-            
-            // Reset progress
-            updateProgress(0);
-            currentFileIndex = 0;
-            
-            for (let i = 0; i < filePaths.length; i++) {
-                const filePath = filePaths[i];
-                currentFileIndex = i;
-                
-                console.log(`Checking file ${i + 1}/${filePaths.length}: ${filePath}`);
-                
-                // Update progress
-                const progressPercentage = ((i + 1) / filePaths.length) * 100;
-                updateProgress(progressPercentage);
-                
-                // Check if file exists
-                const exists = await checkFileExists(filePath);
-                
-                if (exists) {
-                    console.log(`Found valid file: ${filePath}`);
-                    stopMessageCycle();
-                    
-                    // Show success message briefly
-                    loadingMessage.textContent = 'سیستم یافت شد! در حال انتقال...';
-                    
-                    // Small delay for user feedback
-                    setTimeout(() => {
-                        window.location.replace(filePath);
-                    }, 500);
-                    
-                    return;
-                }
-                
-                // Add small delay between checks for better UX
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
-            
-            // No file found - show error screen
-            console.log('No valid files found');
-            stopMessageCycle();
-            showErrorScreen();
-        }
-        
-        // Show error screen
-        function showErrorScreen() {
-            loadingScreen.classList.add('hidden');
-            errorScreen.classList.remove('hidden');
-        }
-        
-        // Retry functionality
-        function retry() {
-            console.log('Retrying file discovery...');
-            discoverAndRedirect();
-        }
-        
-        // Event listeners
-        retryButton.addEventListener('click', retry);
-        
-        // Handle keyboard shortcuts
-        document.addEventListener('keydown', (event) => {
-            // Press 'R' or 'ر' to retry
-            if (event.key === 'r' || event.key === 'R' || event.key === 'ر') {
-                if (!errorScreen.classList.contains('hidden')) {
-                    retry();
-                }
-            }
-            // Press 'Escape' to retry (alternative)
-            if (event.key === 'Escape') {
-                if (!errorScreen.classList.contains('hidden')) {
-                    retry();
-                }
+            // Log performance for monitoring
+            if (loadTime < 2000) {
+                console.log('✅ Loading performance: EXCELLENT');
+            } else {
+                console.warn('⚠️ Loading performance: NEEDS OPTIMIZATION');
             }
         });
         
-        // Start the discovery process when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Page loaded, starting file discovery...');
-            discoverAndRedirect();
-        });
-        
-        // Fallback: Start discovery if DOMContentLoaded already fired
-        if (document.readyState === 'loading') {
-            // Document still loading, wait for DOMContentLoaded
-        } else {
-            // Document already loaded
-            console.log('Document already loaded, starting file discovery...');
-            discoverAndRedirect();
+        // Instant loading transition
+        function showLoadingTransition() {
+            const transition = document.getElementById('loadingTransition');
+            transition.style.display = 'flex';
+            
+            // Minimal transition time - just enough for visual feedback
+            setTimeout(() => {
+                window.location.href = 'functional_system.html';
+            }, 300);
         }
         
-        // Handle page visibility changes (if user switches tabs and comes back)
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && !errorScreen.classList.contains('hidden')) {
-                // Page became visible and we're on error screen - could retry automatically
-                // But for now, we'll just log it
-                console.log('Page became visible while on error screen');
-            }
-        });
-        
-        // Error handling for unhandled promise rejections
-        window.addEventListener('unhandledrejection', (event) => {
-            console.error('Unhandled promise rejection:', event.reason);
-            // Don't show error screen for unhandled rejections, as they might be non-critical
-        });
-        
-        // Global error handler
-        window.addEventListener('error', (event) => {
-            console.error('Global error:', event.error);
-            // Don't automatically show error screen for all errors
-        });
+        // Preload the main system for instant access
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = 'functional_system.html';
+        document.head.appendChild(link);
     </script>
 </body>
 </html>
