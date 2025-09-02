@@ -5,9 +5,9 @@
 
 const CACHE_NAME = 'legal-archive-v1';
 const urlsToCache = [
-    '/',
-    '/static/styles.css',
-    '/static/app.js',
+    '/Aihoghoghi/',
+    '/Aihoghoghi/static/styles.css',
+    '/Aihoghoghi/static/app.js',
     'https://cdn.tailwindcss.com',
     'https://cdn.jsdelivr.net/npm/chart.js',
     'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap'
