@@ -5,7 +5,7 @@ import { HfInference } from "@huggingface/inference";
 import rateLimit from "express-rate-limit";
 
 const app = express();
-const hf = new HfInference(process.env.HF_API_KEY || 'your_api_key_here');
+const hf = new HfInference(process.env.HF_API_KEY || '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');
 
 // Middleware
 app.use(cors({

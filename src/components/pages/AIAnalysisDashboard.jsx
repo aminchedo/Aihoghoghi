@@ -22,7 +22,7 @@ import {
   PieChart,
   Activity
 } from 'lucide-react';
-import aiContentAnalyzer from '../../services/aiContentAnalyzer';
+import aiService from '../../services/aiService';
 
 const AIAnalysisDashboard = () => {
   const [activeTab, setActiveTab] = useState('analyzer');
@@ -55,9 +55,9 @@ const AIAnalysisDashboard = () => {
 
     setIsAnalyzing(true);
     try {
-      const result = await aiContentAnalyzer.analyzeLegalDocument(inputText);
-      setAnalysisResults([result]);
-      setStats(aiContentAnalyzer.getStats());
+      const result = await aiService.analyzeTexts([inputText]);
+      setAnalysisResults(result.ranked);
+      setStats(aiService.getStats());
     } catch (error) {
       console.error('Analysis failed:', error);
       alert('خطا در تحلیل متن: ' + error.message);
@@ -75,9 +75,9 @@ const AIAnalysisDashboard = () => {
 
     setIsAnalyzing(true);
     try {
-      const results = await aiContentAnalyzer.analyzeBatch(validTexts);
+      const results = await aiService.analyzeTexts(validTexts);
       setAnalysisResults(results.ranked);
-      setStats(aiContentAnalyzer.getStats());
+      setStats(aiService.getStats());
     } catch (error) {
       console.error('Batch analysis failed:', error);
       alert('خطا در تحلیل دسته‌ای: ' + error.message);
@@ -89,9 +89,9 @@ const AIAnalysisDashboard = () => {
   const handleSampleAnalysis = async () => {
     setIsAnalyzing(true);
     try {
-      const results = await aiContentAnalyzer.analyzeBatch(sampleTexts);
+      const results = await aiService.analyzeTexts(sampleTexts);
       setAnalysisResults(results.ranked);
-      setStats(aiContentAnalyzer.getStats());
+      setStats(aiService.getStats());
     } catch (error) {
       console.error('Sample analysis failed:', error);
       alert('خطا در تحلیل نمونه‌ها: ' + error.message);

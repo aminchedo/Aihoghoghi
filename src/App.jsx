@@ -17,6 +17,7 @@ import AIAnalysisDashboard from './components/pages/AIAnalysisDashboard';
 import Settings from './components/pages/Settings';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import AITestComponent from './components/test/AITestComponent';
 
 // Contexts
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -221,6 +222,7 @@ function App() {
                         <Route path="/search" element={<EnhancedSearchDatabase />} />
                         <Route path="/scraping" element={<ScrapingDashboard />} />
                         <Route path="/ai-analysis" element={<AIAnalysisDashboard />} />
+                        <Route path="/ai-test" element={<AITestComponent />} />
                         <Route path="/database" element={<EnhancedSearchDatabase />} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />

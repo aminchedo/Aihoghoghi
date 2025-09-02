@@ -116,6 +116,7 @@ const EnhancedSidebar = ({ open, onClose }) => {
       submenu: [
         { title: 'تحلیل تک متن', path: '/ai-analysis', icon: Zap, description: 'تحلیل یک متن با هوش مصنوعی' },
         { title: 'تحلیل دسته‌ای', path: '/ai-analysis?mode=batch', icon: Layers, description: 'تحلیل چندین متن همزمان' },
+        { title: 'تست واقعی AI', path: '/ai-test', icon: Cpu, description: 'تست عملکرد واقعی سیستم هوش مصنوعی' },
         { title: 'نتایج تحلیل', path: '/ai-analysis?tab=results', icon: TrendingUp, description: 'مشاهده نتایج تحلیل‌ها' },
         { title: 'آمار و گزارش', path: '/ai-analysis?tab=statistics', icon: BarChart3, description: 'آمار عملکرد تحلیلگر' }
       ]
