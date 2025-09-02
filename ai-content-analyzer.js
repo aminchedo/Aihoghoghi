@@ -11,11 +11,16 @@ const hf = new HfInference(process.env.HF_API_KEY || 'your_api_key_here');
 app.use(cors({
   origin: [
     'http://localhost:3000',
+    'http://localhost:4173',
     'https://aminchedo.github.io',
-    'https://aminchedo.github.io/Aihoghoghi'
+    'https://aminchedo.github.io/Aihoghoghi',
+    /^https:\/\/.*\.github\.io$/,
+    /^https:\/\/.*\.vercel\.app$/,
+    /^https:\/\/.*\.netlify\.app$/
   ],
-  methods: ['GET', 'POST'],
-  credentials: true
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
 
 app.use(express.json({ limit: '10mb' }));

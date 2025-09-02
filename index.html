@@ -1,176 +1,114 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم آرشیو اسناد حقوقی ایران</title>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سیستم آرشیو اسناد حقوقی ایران</title>
+  
+  <!-- Meta tags for SEO and social sharing -->
+  <meta name="description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی" />
+  <meta name="keywords" content="اسناد حقوقی, آرشیو, تحلیل متن, هوش مصنوعی, ایران" />
+  <meta name="author" content="Iranian Legal Archive Team" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aminchedo.github.io/Aihoghoghi/" />
+  <meta property="og:title" content="سیستم آرشیو اسناد حقوقی ایران" />
+  <meta property="og:description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://aminchedo.github.io/Aihoghoghi/" />
+  <meta property="twitter:title" content="سیستم آرشیو اسناد حقوقی ایران" />
+  <meta property="twitter:description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی" />
+  
+  <!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+  
+  <!-- Critical CSS for loading -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     
-    <!-- Preload critical resources for instant loading -->
-    <link rel="preload" href="functional_system.html" as="document">
+    body {
+      font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+      direction: rtl;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
     
-    <!-- Critical inline CSS for instant rendering -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Tahoma', 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .instant-loader {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 3rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
-            width: 90%;
-        }
-        
-        .logo {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            animation: pulse 2s infinite;
-        }
-        
-        .title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: bold;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-        
-        .launch-btn {
-            background: linear-gradient(45deg, #00ff88, #00ffff);
-            color: #000;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .launch-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
-        }
-        
-        .performance-info {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        /* Loading animation for transition */
-        .loading-transition {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid #00ffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    #root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Loading screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      color: white;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <div class="instant-loader">
-        <div class="logo">🏛️</div>
-        <h1 class="title">سیستم آرشیو اسناد حقوقی ایران</h1>
-        <p class="subtitle">Iranian Legal Archive System</p>
-        <p class="subtitle">سیستم کاملاً عملیاتی و بهینه شده</p>
-        
-        <a href="functional_system.html" class="launch-btn" onclick="showLoadingTransition()">
-            ورود به سیستم
-        </a>
-        
-        <div class="performance-info">
-            <div>⚡ بارگذاری فوری - بدون تأخیر</div>
-            <div>🚀 عملکرد بهینه شده</div>
-            <div>✅ آماده برای استفاده</div>
-        </div>
+  <div id="root">
+    <!-- Initial loading screen -->
+    <div class="loading-screen" id="loading-screen">
+      <div>
+        <div class="loading-spinner"></div>
+        <div>⚖️ سیستم آرشیو اسناد حقوقی ایران</div>
+        <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">در حال بارگذاری...</div>
+      </div>
     </div>
-    
-    <!-- Loading transition overlay -->
-    <div class="loading-transition" id="loadingTransition">
-        <div>
-            <div class="spinner"></div>
-            <p style="margin-top: 1rem;">در حال انتقال به سیستم...</p>
-        </div>
-    </div>
-
-    <script>
-        // Performance monitoring
-        window.addEventListener('load', () => {
-            const perfData = performance.timing;
-            const loadTime = perfData.loadEventEnd - perfData.navigationStart;
-            console.log(`Page load time: ${loadTime}ms`);
-            
-            // Log performance for monitoring
-            if (loadTime < 2000) {
-                console.log('✅ Loading performance: EXCELLENT');
-            } else {
-                console.warn('⚠️ Loading performance: NEEDS OPTIMIZATION');
-            }
-        });
-        
-        // Instant loading transition
-        function showLoadingTransition() {
-            const transition = document.getElementById('loadingTransition');
-            transition.style.display = 'flex';
-            
-            // Minimal transition time - just enough for visual feedback
-            setTimeout(() => {
-                window.location.href = 'functional_system.html';
-            }, 300);
+  </div>
+  
+  <!-- Remove loading screen when app loads -->
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          loadingScreen.style.opacity = '0';
+          setTimeout(() => {
+            loadingScreen.remove();
+          }, 300);
         }
-        
-        // Preload the main system for instant access
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.href = 'functional_system.html';
-        document.head.appendChild(link);
-    </script>
+      }, 1000);
+    });
+  </script>
+  
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

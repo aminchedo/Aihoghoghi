@@ -18,6 +18,7 @@ concurrency:
 env:
   HF_API_KEY: ${{ secrets.HF_API_KEY }}
   NODE_ENV: production
+  GITHUB_PAGES: true
 
 jobs:
   # Job 1: Build and test AI backend
@@ -34,7 +35,20 @@ jobs:
 
       - name: Install AI backend dependencies
         run: |
-          npm install express cors @huggingface/inference express-rate-limit
+          # Create a temporary package.json for AI backend dependencies
+          cat > ai-package.json << EOF
+          {
+            "type": "module",
+            "dependencies": {
+              "express": "^4.18.2",
+              "cors": "^2.8.5",
+              "@huggingface/inference": "^2.6.4",
+              "express-rate-limit": "^7.1.5"
+            }
+          }
+          EOF
+          # Install AI backend dependencies separately
+          npm install --package-lock-only=false express cors @huggingface/inference express-rate-limit
 
       - name: Test AI backend
         env:
@@ -91,9 +105,22 @@ jobs:
       - name: Build project
         env:
           HF_API_KEY: ${{ secrets.HF_API_KEY }}
+          GITHUB_PAGES: true
+          NODE_ENV: production
         run: |
           echo "🏗️ Building React frontend with AI integration..."
+          # Ensure clean build
+          rm -rf dist/
           npm run build
+          
+          # Verify build output
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ Build failed - index.html not found"
+            exit 1
+          fi
+          
+          echo "✅ Build completed successfully"
+          ls -la dist/
 
       - name: Prepare AI backend for deployment
         run: |
@@ -146,8 +173,25 @@ jobs:
       - name: Update frontend configuration
         run: |
           echo "⚙️ Updating frontend AI service configuration..."
-          # Update the frontend to use fallback mode when backend is not available
-          # This ensures the app works even if AI backend is not deployed
+          # Create a configuration file for GitHub Pages deployment
+          cat > dist/config.js << EOF
+          window.deploymentConfig = {
+            isGitHubPages: true,
+            aiBackendUrl: null, // Will fallback to demo mode
+            enableOfflineMode: true,
+            showDeploymentInstructions: true
+          };
+          EOF
+          
+          # Add the config script to index.html
+          if [ -f "dist/index.html" ]; then
+            sed -i 's|<head>|<head>\n    <script src="./config.js"></script>|' dist/index.html
+            echo "✅ Configuration injected into index.html"
+          fi
+          
+          # Create .nojekyll file for GitHub Pages
+          touch dist/.nojekyll
+          echo "✅ Created .nojekyll file for GitHub Pages"
           
       - name: Setup Pages
         uses: actions/configure-pages@v3
