@@ -299,7 +299,7 @@ function App() {
       <ThemeProvider>
         <ConfigProvider>
           <NotificationProvider>
-            <Router basename={import.meta.env.BASE_URL}>
+            <Router basename="/Aihoghoghi">
               <ErrorBoundary>
                 <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-vazir" dir="rtl">
                   {/* Service initialization warning banner */}
