@@ -2,42 +2,43 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/main.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "functional_system.html", 
-      "use": "@vercel/static"
+      "src": "main.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "api/main.py"
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
     },
     {
-      "src": "/functional_system.html",
-      "dest": "/functional_system.html"
+      "src": "/",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/home",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/pages",
+      "dest": "/main.py"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/main.py"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/main.py"
     }
   ],
-  "env": {
-    "PYTHONPATH": "/var/task",
-    "PYTHON_VERSION": "3.12"
-  },
   "functions": {
-    "api/main.py": {
-      "maxDuration": 30
+    "main.py": {
+      "maxDuration": 60
     }
+  },
+  "regions": ["iad1"],
+  "env": {
+    "PYTHONPATH": "/var/task"
   }
 }
