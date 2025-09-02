@@ -5,6 +5,7 @@
 
 import SmartProxyService from './smartProxyService.js';
 import AdvancedScrapingService from './advancedScrapingService.js';
+import diagnostics from '../utils/diagnostics.js';
 
 class AutoStartupService {
   constructor() {
@@ -25,13 +26,43 @@ class AutoStartupService {
   }
 
   /**
-   * Log startup activities
+   * Enhanced logging with diagnostics integration
    */
-  log(message) {
+  log(message, level = 'info') {
     const timestamp = new Date().toISOString();
-    const logEntry = { timestamp, message };
+    const logEntry = { timestamp, message, level };
     this.startupLog.push(logEntry);
-    console.log(`[AutoStartup] ${message}`);
+    
+    // Enhanced console logging with colors and emojis
+    const prefix = `[AutoStartup ${timestamp.split('T')[1].split('.')[0]}]`;
+    
+    switch (level) {
+      case 'error':
+        console.error(`❌ ${prefix} ${message}`);
+        break;
+      case 'warn':
+        console.warn(`⚠️ ${prefix} ${message}`);
+        break;
+      case 'success':
+        console.log(`✅ ${prefix} ${message}`);
+        break;
+      case 'debug':
+        console.debug(`🔍 ${prefix} ${message}`);
+        break;
+      default:
+        console.log(`ℹ️ ${prefix} ${message}`);
+    }
+    
+    // Store in global diagnostic logs
+    if (!window.diagnosticConsoleLogs) {
+      window.diagnosticConsoleLogs = [];
+    }
+    window.diagnosticConsoleLogs.push(logEntry);
+    
+    // Keep only last 100 logs
+    if (window.diagnosticConsoleLogs.length > 100) {
+      window.diagnosticConsoleLogs = window.diagnosticConsoleLogs.slice(-100);
+    }
     
     // Persist logs
     this.saveState();
@@ -91,39 +122,173 @@ class AutoStartupService {
   async autoInitialize() {
     if (this.isInitialized) {
       this.log('✅ System already initialized');
+      this.setGlobalReadyState();
       return this.getSystemStatus();
     }
 
     this.log('🔄 Starting auto-initialization...');
     
     try {
+      // Run initial diagnostics
+      this.log('🔍 Running pre-initialization diagnostics...', 'debug');
+      const preDiagnostics = await diagnostics.runDiagnostics();
+      this.log(`📊 Environment: ${preDiagnostics.systemState.environment}`, 'info');
+      
       // Step 1: Initialize Smart Proxy Service
+      this.log('🌐 Step 1/5: Initializing Smart Proxy Service...', 'info');
       await this.initializeProxyService();
       
-      // Step 2: Initialize Scraping Service
+      // Step 2: Initialize Scraping Service  
+      this.log('🔍 Step 2/5: Initializing Scraping Service...', 'info');
       await this.initializeScrapingService();
       
       // Step 3: Setup Background Tasks
+      this.log('⚙️ Step 3/5: Setting up Background Tasks...', 'info');
       await this.setupBackgroundTasks();
       
       // Step 4: Initialize Data Persistence
+      this.log('💾 Step 4/5: Initializing Data Persistence...', 'info');
       await this.initializeDataPersistence();
       
       // Step 5: Setup Auto-Update
+      this.log('🔄 Step 5/5: Setting up Auto-Update...', 'info');
       await this.setupAutoUpdate();
       
       this.isInitialized = true;
-      this.log('✅ Auto-initialization completed successfully');
+      this.log('🎉 Auto-initialization completed successfully!', 'success');
+      
+      // Set global ready state for React app
+      this.setGlobalReadyState();
+      
+      // Dispatch ready event for Promise-based waiting
+      this.dispatchReadyEvent();
       
       // Show startup notification
       this.showStartupNotification();
       
+      // Run post-initialization diagnostics
+      this.log('🔍 Running post-initialization diagnostics...', 'debug');
+      const postDiagnostics = await diagnostics.runDiagnostics();
+      this.log(`📊 Final status: ${postDiagnostics.serviceTests.autoStartupService.initialized ? 'Ready' : 'Partial'}`, 'info');
+      
       return this.getSystemStatus();
       
     } catch (error) {
-      this.log(`❌ Auto-initialization failed: ${error.message}`);
+      this.log(`💥 Auto-initialization failed: ${error.message}`, 'error');
+      console.error('Full error details:', error);
+      
+      // Export diagnostics on failure
+      try {
+        const errorDiagnostics = await diagnostics.runDiagnostics();
+        console.error('🔍 Error diagnostics:', errorDiagnostics);
+      } catch (diagError) {
+        console.error('Failed to run error diagnostics:', diagError);
+      }
+      
+      this.dispatchErrorEvent(error);
       throw error;
     }
+  }
+
+  /**
+   * Set global ready state for backwards compatibility
+   */
+  setGlobalReadyState() {
+    // Create the global object that React components expect
+    window.iranianLegalArchive = {
+      servicesReady: true,
+      features: {
+        autoScraping: true,
+        smartProxy: !!this.services.proxyService,
+        advancedSearch: !!this.services.scrapingService,
+        dataSync: !!this.services.database
+      },
+      sessionId: this.getSessionId(),
+      isGitHubPages: window.location.hostname.includes('github.io'),
+      version: '2.0.0',
+      services: this.services,
+      getStatus: () => this.getSystemStatus()
+    };
+    
+    this.log('🌐 Global iranianLegalArchive object created and ready', 'success');
+  }
+
+  /**
+   * Dispatch custom event when services are ready
+   */
+  dispatchReadyEvent() {
+    const readyEvent = new CustomEvent('servicesReady', {
+      detail: {
+        services: this.services,
+        status: this.getSystemStatus(),
+        timestamp: new Date().toISOString()
+      }
+    });
+    
+    window.dispatchEvent(readyEvent);
+    this.log('📡 servicesReady event dispatched');
+  }
+
+  /**
+   * Dispatch error event when initialization fails
+   */
+  dispatchErrorEvent(error) {
+    const errorEvent = new CustomEvent('servicesError', {
+      detail: {
+        error: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+        logs: this.startupLog.slice(-10)
+      }
+    });
+    
+    window.dispatchEvent(errorEvent);
+    this.log(`📡 servicesError event dispatched: ${error.message}`);
+  }
+
+  /**
+   * Get initialization promise for modern async/await usage
+   */
+  getInitializationPromise() {
+    if (this.initializationPromise) {
+      return this.initializationPromise;
+    }
+
+    this.initializationPromise = new Promise((resolve, reject) => {
+      // If already initialized, resolve immediately
+      if (this.isInitialized) {
+        resolve(this.getSystemStatus());
+        return;
+      }
+
+      // Listen for ready or error events
+      const handleReady = (event) => {
+        cleanup();
+        resolve(event.detail);
+      };
+
+      const handleError = (event) => {
+        cleanup();
+        reject(new Error(event.detail.error));
+      };
+
+      const cleanup = () => {
+        window.removeEventListener('servicesReady', handleReady);
+        window.removeEventListener('servicesError', handleError);
+      };
+
+      window.addEventListener('servicesReady', handleReady, { once: true });
+      window.addEventListener('servicesError', handleError, { once: true });
+
+      // Timeout fallback (should not be needed with proper implementation)
+      setTimeout(() => {
+        cleanup();
+        this.log('⚠️ Initialization timeout reached');
+        reject(new Error('Services initialization timeout'));
+      }, 10000);
+    });
+
+    return this.initializationPromise;
   }
 
   /**
@@ -135,13 +300,20 @@ class AutoStartupService {
     try {
       this.services.proxyService = new SmartProxyService();
       
-      // Test proxy health
-      const workingProxies = await this.services.proxyService.discoverProxies();
+      // Test proxy health with timeout
+      const proxyPromise = this.services.proxyService.discoverProxies();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Proxy service timeout')), 5000)
+      );
+      
+      const workingProxies = await Promise.race([proxyPromise, timeoutPromise]);
       this.log(`✅ Proxy Service ready: ${workingProxies.length} proxies available`);
       
       return true;
     } catch (error) {
-      this.log(`❌ Proxy Service failed: ${error.message}`);
+      this.log(`❌ Proxy Service failed: ${error.message}`, 'error');
+      console.error('Proxy Service initialization error:', error);
+      // Don't fail the entire startup for proxy issues
       return false;
     }
   }
@@ -161,7 +333,9 @@ class AutoStartupService {
       
       return true;
     } catch (error) {
-      this.log(`❌ Scraping Service failed: ${error.message}`);
+      this.log(`❌ Scraping Service failed: ${error.message}`, 'error');
+      console.error('Scraping Service initialization error:', error);
+      // Don't fail the entire startup for scraping issues
       return false;
     }
   }
@@ -652,22 +826,88 @@ class AutoStartupService {
     this.log('🔄 System reset completed');
     window.location.reload();
   }
+
+  /**
+   * Export comprehensive diagnostics for debugging
+   */
+  async exportDiagnostics() {
+    try {
+      this.log('📊 Exporting comprehensive diagnostics...', 'debug');
+      
+      const fullDiagnostics = {
+        autoStartupService: {
+          status: this.getSystemStatus(),
+          logs: this.startupLog,
+          services: this.services,
+          isInitialized: this.isInitialized
+        },
+        systemDiagnostics: await diagnostics.runDiagnostics(),
+        exportTime: new Date().toISOString()
+      };
+      
+      const blob = new Blob([JSON.stringify(fullDiagnostics, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `startup_diagnostics_${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      this.log('📤 Diagnostics exported successfully', 'success');
+      return fullDiagnostics;
+    } catch (error) {
+      this.log(`❌ Failed to export diagnostics: ${error.message}`, 'error');
+      throw error;
+    }
+  }
 }
 
 // Global instance
 const autoStartup = new AutoStartupService();
 
+// Enhanced startup with Promise-based API
+const initializeServices = async () => {
+  try {
+    console.log('🚀 Starting Iranian Legal Archive initialization...');
+    await autoStartup.autoInitialize();
+    console.log('✅ All services initialized successfully');
+  } catch (error) {
+    console.error('❌ Critical initialization failure:', error);
+    // Even on failure, make service available for debugging
+    autoStartup.setGlobalReadyState();
+  }
+};
+
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    autoStartup.autoInitialize();
-  });
+  document.addEventListener('DOMContentLoaded', initializeServices);
 } else {
   // DOM already loaded
-  autoStartup.autoInitialize();
+  initializeServices();
 }
 
 // Make available globally for React components
 window.autoStartupService = autoStartup;
 
+// Global debugging helpers
+window.debugStartup = {
+  exportDiagnostics: () => autoStartup.exportDiagnostics(),
+  getSystemStatus: () => autoStartup.getSystemStatus(),
+  getInitializationPromise: () => autoStartup.getInitializationPromise(),
+  resetSystem: () => autoStartup.resetSystem(),
+  runDiagnostics: () => diagnostics.runDiagnostics(),
+  logs: () => autoStartup.startupLog,
+  services: () => autoStartup.services
+};
+
+console.log('🛠️ Debug helpers available: window.debugStartup');
+console.log('   - exportDiagnostics(): Export full diagnostic report');
+console.log('   - getSystemStatus(): Get current system status');
+console.log('   - resetSystem(): Reset and reload system');
+console.log('   - runDiagnostics(): Run system diagnostics');
+console.log('   - logs(): View startup logs');
+console.log('   - services(): View loaded services');
+
+// Export both the service instance and the initialization promise
 export default autoStartup;
+export { initializeServices };

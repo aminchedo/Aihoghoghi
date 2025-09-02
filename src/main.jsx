@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './App.css';
 
-// Auto-startup services will be loaded dynamically
+// Import autoStartupService to ensure it's loaded
+import './services/autoStartupService.js';
 
 // Enhanced initialization for GitHub Pages
 console.log('🚀 Iranian Legal Archive - Enhanced Startup');
-console.log('📍 Environment:', window.iranianLegalArchive?.isGitHubPages ? 'GitHub Pages' : 'Local Development');
+console.log('📍 Environment:', window.location.hostname.includes('github.io') ? 'GitHub Pages' : 'Local Development');
 
 // Create root element
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -65,22 +66,44 @@ const renderApp = () => {
   }
 };
 
-// Wait for auto-startup services to be ready, then render
-const waitForServices = async () => {
-  let attempts = 0;
-  const maxAttempts = 20;
-  
-  while (attempts < maxAttempts) {
-    if (window.iranianLegalArchive?.servicesReady || attempts > 10) {
-      break;
+// Modern Promise-based initialization
+const initializeAndRender = async () => {
+  try {
+    console.log('⏳ Waiting for services to initialize...');
+    
+    // Wait for autoStartupService to be available
+    let serviceWaitAttempts = 0;
+    while (!window.autoStartupService && serviceWaitAttempts < 50) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      serviceWaitAttempts++;
     }
-    await new Promise(resolve => setTimeout(resolve, 250));
-    attempts++;
+    
+    if (!window.autoStartupService) {
+      console.warn('⚠️ AutoStartupService not available, rendering app anyway');
+      renderApp();
+      return;
+    }
+    
+    // Use the Promise-based initialization API
+    const startTime = Date.now();
+    await window.autoStartupService.getInitializationPromise();
+    const initTime = Date.now() - startTime;
+    
+    console.log(`✅ Services initialized successfully in ${initTime}ms`);
+    renderApp();
+    
+  } catch (error) {
+    console.error('❌ Service initialization failed:', error);
+    
+    // Render app anyway with error state
+    renderApp();
+    
+    // Dispatch error event for React components to handle
+    window.dispatchEvent(new CustomEvent('servicesInitializationError', {
+      detail: { error: error.message, timestamp: new Date().toISOString() }
+    }));
   }
-  
-  console.log(`⏳ Waited ${attempts * 250}ms for services`);
-  renderApp();
 };
 
 // Start the enhanced initialization
-waitForServices();
+initializeAndRender();
