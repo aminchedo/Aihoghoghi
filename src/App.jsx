@@ -335,6 +335,7 @@ function App() {
                       <Routes>
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/documents" element={<DocumentProcessing />} />
                         <Route path="/process" element={<DocumentProcessing />} />
                         <Route path="/proxy" element={<ProxyDashboard />} />
                         <Route path="/search" element={<EnhancedSearchDatabase />} />
@@ -343,6 +344,7 @@ function App() {
                         <Route path="/ai-test" element={<AITestComponent />} />
                         <Route path="/database" element={<EnhancedSearchDatabase />} />
                         <Route path="/settings" element={<Settings />} />
+                        <Route path="/debug" element={<StartupDiagnostics />} />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />
                       </Routes>
                     </div>

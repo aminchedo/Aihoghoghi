@@ -1,7 +1,7 @@
 // Real AI Service with HuggingFace Integration
 class AIService {
   constructor() {
-    this.apiKey = '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';
+    this.apiKey = process.env.HUGGINGFACE_API_TOKEN || 'your_huggingface_token_here';
     this.baseUrl = 'https://api-inference.huggingface.co/models';
     this.model = 'HooshvareLab/bert-fa-base-uncased-clf-persiannews';
     this.fallbackModel = 'microsoft/DialoGPT-medium';

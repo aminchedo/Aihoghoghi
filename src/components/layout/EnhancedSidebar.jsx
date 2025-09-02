@@ -165,6 +165,21 @@ const EnhancedSidebar = ({ open, onClose }) => {
         { title: 'تنظیمات پروکسی', path: '/settings?tab=proxy', icon: Shield, description: 'پیکربندی پروکسی' },
         { title: 'واردات/صادرات', path: '/settings?tab=import-export', icon: RefreshCw, description: 'مدیریت تنظیمات' }
       ]
+    },
+    {
+      id: 'debug',
+      title: 'عیب‌یابی سیستم',
+      path: '/debug',
+      icon: Activity,
+      description: 'تشخیص و رفع مشکلات سیستم',
+      color: 'text-red-500',
+      bgColor: 'bg-red-50 dark:bg-red-900/20',
+      submenu: [
+        { title: 'تشخیص مشکلات', path: '/debug', icon: Activity, description: 'بررسی وضعیت سرویس‌ها' },
+        { title: 'لاگ‌های سیستم', path: '/debug?tab=logs', icon: FileText, description: 'مشاهده لاگ‌های سیستم' },
+        { title: 'تست اتصالات', path: '/debug?tab=connectivity', icon: Network, description: 'آزمایش اتصالات شبکه' },
+        { title: 'عملکرد سیستم', path: '/debug?tab=performance', icon: Cpu, description: 'بررسی عملکرد سیستم' }
+      ]
     }
   ];
 
