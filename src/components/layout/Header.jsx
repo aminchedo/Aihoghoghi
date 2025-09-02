@@ -1,197 +1,384 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useConfig } from '../../contexts/ConfigContext';
-import { useNotification } from '../../contexts/NotificationContext';
+import { motion } from 'framer-motion';
+import { 
+  Menu, 
+  Search, 
+  Bell, 
+  User, 
+  Sun, 
+  Moon, 
+  Monitor,
+  Settings,
+  LogOut,
+  Shield,
+  Activity,
+  Zap,
+  RefreshCw
+} from 'lucide-react';
+
+// Services
+import { realTimeMetricsService } from '../../services/realTimeMetricsService';
 
 const Header = ({ onMenuClick }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { theme, toggleTheme, isDark } = useTheme();
-  const { config, backendStatus, testConnection } = useConfig();
-  const { showConnectionStatus } = useNotification();
+  const [theme, setTheme] = useState('system');
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [metrics, setMetrics] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [isConnectionTesting, setIsConnectionTesting] = useState(false);
+
+  // Subscribe to metrics
+  useEffect(() => {
+    const unsubscribe = realTimeMetricsService.subscribe((newMetrics) => {
+      setMetrics(newMetrics);
+    });
+    
+    setMetrics(realTimeMetricsService.getMetrics());
+    return unsubscribe;
+  }, []);
 
   // Update time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
+    
     return () => clearInterval(timer);
   }, []);
 
-  // Test backend connection on mount
+  // Load theme preference
   useEffect(() => {
-    const checkConnection = async () => {
-      setIsConnectionTesting(true);
-      try {
-        await testConnection();
-      } catch (error) {
-        console.error('Connection test failed:', error);
-      } finally {
-        setIsConnectionTesting(false);
-      }
-    };
+    const savedTheme = localStorage.getItem('theme') || 'system';
+    setTheme(savedTheme);
+    applyTheme(savedTheme);
+  }, []);
 
-    checkConnection();
-  }, [testConnection]);
-
-  const handleConnectionTest = async () => {
-    setIsConnectionTesting(true);
-    try {
-      const result = await testConnection();
-      if (result.success) {
-        showConnectionStatus('connected');
-      } else {
-        showConnectionStatus('error');
-      }
-    } catch (error) {
-      showConnectionStatus('error');
-    } finally {
-      setIsConnectionTesting(false);
-    }
-  };
-
-  const getPageTitle = () => {
-    const pathMap = {
-      '/dashboard': 'داشبورد اصلی',
-      '/process': 'پردازش اسناد',
-      '/proxy': 'مدیریت پروکسی',
-      '/search': 'جستجو در پایگاه داده',
-      '/settings': 'تنظیمات',
-    };
-    return pathMap[location.pathname] || 'سیستم آرشیو حقوقی';
-  };
-
-  const getStatusIcon = () => {
-    if (isConnectionTesting) {
-      return (
-        <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-      );
-    }
-
-    switch (backendStatus) {
-      case 'connected':
-        return <div className="w-3 h-3 bg-green-500 rounded-full"></div>;
-      case 'error':
-        return <div className="w-3 h-3 bg-red-500 rounded-full"></div>;
-      default:
-        return <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>;
-    }
-  };
-
-  const getStatusText = () => {
-    if (isConnectionTesting) return 'در حال بررسی...';
+  // Apply theme to document
+  const applyTheme = (newTheme) => {
+    const root = window.document.documentElement;
     
-    switch (backendStatus) {
-      case 'connected':
-        return 'متصل';
-      case 'error':
-        return 'قطع شده';
-      default:
-        return 'نامشخص';
+    if (newTheme === 'dark' || (newTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
     }
+  };
+
+  // Change theme
+  const changeTheme = (newTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    applyTheme(newTheme);
+  };
+
+  // Mock notifications for demonstration
+  useEffect(() => {
+    const mockNotifications = [
+      {
+        id: 1,
+        title: 'استخراج موفق',
+        message: '5 سند جدید از مجلس شورای اسلامی استخراج شد',
+        type: 'success',
+        time: '2 دقیقه پیش'
+      },
+      {
+        id: 2,
+        title: 'تحلیل کامل شد',
+        message: 'تحلیل هوش مصنوعی 3 سند با دقت 94% انجام شد',
+        type: 'info',
+        time: '5 دقیقه پیش'
+      },
+      {
+        id: 3,
+        title: 'هشدار پروکسی',
+        message: '2 پروکسی از دسترس خارج شده‌اند',
+        type: 'warning',
+        time: '10 دقیقه پیش'
+      }
+    ];
+    
+    setNotifications(mockNotifications);
+  }, []);
+
+  const themeOptions = [
+    { value: 'light', label: 'روشن', icon: Sun },
+    { value: 'dark', label: 'تیره', icon: Moon },
+    { value: 'system', label: 'سیستم', icon: Monitor }
+  ];
+
+  const getSystemHealthTextColor = () => {
+    const health = realTimeMetricsService.calculateOverallHealth();
+    if (health > 80) return 'text-green-500';
+    if (health > 60) return 'text-yellow-500';
+    return 'text-red-500';
+  };
+
+  const getSystemHealthBgColor = () => {
+    const health = realTimeMetricsService.calculateOverallHealth();
+    if (health > 80) return 'bg-green-500';
+    if (health > 60) return 'bg-yellow-500';
+    return 'bg-red-500';
   };
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 fixed top-0 left-0 right-0 z-50 h-16">
-      <div className="h-full px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-full">
-          {/* Right side - Menu button and title */}
-          <div className="flex items-center space-x-4 space-x-reverse">
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="fixed top-0 left-0 right-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700"
+    >
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Left Side */}
+          <div className="flex items-center gap-4">
             <button
               onClick={onMenuClick}
-              className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden"
-              aria-label="Toggle menu"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <Menu className="w-5 h-5" />
             </button>
-
-            <div className="flex items-center space-x-3 space-x-reverse">
-              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
-                <span className="text-white text-lg font-bold">⚖️</span>
+            
+            {/* System Status */}
+            <div className="hidden sm:flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${getSystemHealthTextColor()} animate-pulse`} />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  سیستم سالم
+                </span>
               </div>
-              <div>
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-                  {getPageTitle()}
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  سیستم آرشیو اسناد حقوقی ایران
-                </p>
+              
+              {metrics && (
+                <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+                  <span className="flex items-center gap-1">
+                    <Activity className="w-3 h-3" />
+                    {metrics.database?.totalRecords || 0} سند
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Zap className="w-3 h-3" />
+                    {metrics.scraping?.successRate || 0}% موفقیت
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Center - Time */}
+          <div className="hidden md:flex items-center">
+            <div className="text-center">
+              <div className="text-sm font-medium text-gray-900 dark:text-white">
+                {currentTime.toLocaleTimeString('fa-IR')}
+              </div>
+              <div className="text-xs text-gray-600 dark:text-gray-400">
+                {currentTime.toLocaleDateString('fa-IR', { 
+                  weekday: 'long',
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
               </div>
             </div>
           </div>
 
-          {/* Left side - Status, time, and controls */}
-          <div className="flex items-center space-x-4 space-x-reverse">
-            {/* Connection status */}
-            <div className="flex items-center space-x-2 space-x-reverse">
+          {/* Right Side */}
+          <div className="flex items-center gap-3">
+            {/* Quick Search */}
+            <div className="hidden lg:flex items-center">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="جستجوی سریع..."
+                  className="w-64 px-3 py-2 pr-10 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                  dir="rtl"
+                />
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              </div>
+            </div>
+
+            {/* Notifications */}
+            <div className="relative">
               <button
-                onClick={handleConnectionTest}
-                className="flex items-center space-x-2 space-x-reverse px-3 py-1.5 rounded-md text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-                disabled={isConnectionTesting}
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors relative"
               >
-                {getStatusIcon()}
-                <span className="text-gray-700 dark:text-gray-300">
-                  {getStatusText()}
-                </span>
+                <Bell className="w-5 h-5" />
+                {notifications.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+              
+              {/* Notifications Dropdown */}
+              {showNotifications && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute left-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50"
+                >
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="font-semibold text-gray-900 dark:text-white">اعلان‌ها</h3>
+                  </div>
+                  
+                  <div className="max-h-64 overflow-y-auto">
+                    {notifications.length > 0 ? (
+                      notifications.map((notification) => (
+                        <div
+                          key={notification.id}
+                          className="p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`w-2 h-2 rounded-full mt-2 ${
+                              notification.type === 'success' ? 'bg-green-500' :
+                              notification.type === 'warning' ? 'bg-yellow-500' :
+                              notification.type === 'error' ? 'bg-red-500' :
+                              'bg-blue-500'
+                            }`} />
+                            <div className="flex-1">
+                              <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                                {notification.title}
+                              </h4>
+                              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                                {notification.time}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                        <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">اعلانی موجود نیست</p>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* Theme Selector */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  const themes = ['light', 'dark', 'system'];
+                  const currentIndex = themes.indexOf(theme);
+                  const nextTheme = themes[(currentIndex + 1) % themes.length];
+                  changeTheme(nextTheme);
+                }}
+                className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                title="تغییر تم"
+              >
+                {theme === 'light' && <Sun className="w-5 h-5" />}
+                {theme === 'dark' && <Moon className="w-5 h-5" />}
+                {theme === 'system' && <Monitor className="w-5 h-5" />}
               </button>
             </div>
 
-            {/* Current time */}
-            <div className="hidden sm:flex flex-col items-end text-sm">
-              <span className="font-medium text-gray-900 dark:text-white">
-                {currentTime.toLocaleTimeString('fa-IR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })}
-              </span>
-              <span className="text-gray-500 dark:text-gray-400">
-                {currentTime.toLocaleDateString('fa-IR', {
-                  weekday: 'short',
-                  day: 'numeric',
-                  month: 'short',
-                })}
-              </span>
-            </div>
-
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {isDark ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
+            {/* User Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center gap-2 p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <User className="w-4 h-4 text-white" />
+                </div>
+                <span className="hidden sm:block text-sm font-medium">کاربر سیستم</span>
+              </button>
+              
+              {/* User Dropdown */}
+              {showUserMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50"
+                >
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <p className="font-medium text-gray-900 dark:text-white">کاربر سیستم</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">مدیر آرشیو حقوقی</p>
+                  </div>
+                  
+                  <div className="p-2">
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                      <Settings className="w-4 h-4" />
+                      تنظیمات حساب
+                    </button>
+                    
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                      <Activity className="w-4 h-4" />
+                      گزارش فعالیت
+                    </button>
+                    
+                    <hr className="my-2 border-gray-200 dark:border-gray-700" />
+                    
+                    <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                      <LogOut className="w-4 h-4" />
+                      خروج از سیستم
+                    </button>
+                  </div>
+                </motion.div>
               )}
-            </button>
-
-            {/* Settings button */}
-            <button
-              onClick={() => navigate('/settings')}
-              className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              aria-label="Settings"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </button>
+            </div>
           </div>
         </div>
       </div>
-    </header>
+
+      {/* System Status Bar */}
+      {metrics && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700"
+        >
+          <div className="px-4 sm:px-6 lg:px-8 py-2">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${getSystemHealthBgColor()}`} />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    سلامت سیستم: {realTimeMetricsService.calculateOverallHealth()}%
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Activity className="w-3 h-3 text-blue-500" />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {metrics.database?.totalRecords || 0} سند
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Zap className="w-3 h-3 text-green-500" />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {metrics.scraping?.successRate || 0}% موفقیت
+                  </span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <span className="text-gray-500 dark:text-gray-400">
+                  آپ‌تایم: {metrics.system?.uptime ? Math.round(metrics.system.uptime / (60 * 1000)) + ' دقیقه' : '0 دقیقه'}
+                </span>
+                
+                <button
+                  onClick={() => {
+                    // Trigger system refresh
+                    window.dispatchEvent(new CustomEvent('systemRefresh'));
+                  }}
+                  className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  بروزرسانی
+                </button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </motion.header>
   );
 };
 

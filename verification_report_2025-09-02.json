@@ -1,0 +1,166 @@
+{
+  "timestamp": "2025-09-02T07:43:32.488Z",
+  "version": "2.0.0",
+  "environment": "production",
+  "tests": {
+    "fileStructure": {
+      "name": "File Structure",
+      "passed": 31,
+      "failed": 0,
+      "files": {
+        "public/index.html": true,
+        "public/manifest.json": true,
+        "public/sw.js": true,
+        "public/404.html": true,
+        "public/sitemap.xml": true,
+        "public/robots.txt": true,
+        "public/_headers": true,
+        "src/App.jsx": true,
+        "src/main.jsx": true,
+        "src/services/realTimeMetricsService.js": true,
+        "src/services/legalDocumentService.js": true,
+        "src/services/smartScrapingService.js": true,
+        "src/services/enhancedAIService.js": true,
+        "src/services/systemIntegration.js": true,
+        "src/components/pages/Dashboard.jsx": true,
+        "src/components/pages/Settings.jsx": true,
+        "src/components/pages/ScrapingDashboard.jsx": true,
+        "src/components/pages/AIAnalysisDashboard.jsx": true,
+        "src/components/pages/EnhancedSearchDatabase.jsx": true,
+        "src/components/layout/Header.jsx": true,
+        "src/components/layout/EnhancedSidebar.jsx": true,
+        "src/components/ui/StatsCard.jsx": true,
+        "src/components/ui/Chart.jsx": true,
+        "src/components/ui/LoadingSpinner.jsx": true,
+        "src/components/ui/ErrorMessage.jsx": true,
+        "src/components/ui/ErrorBoundary.jsx": true,
+        "src/contexts/ThemeContext.jsx": true,
+        "src/contexts/ConfigContext.jsx": true,
+        "src/contexts/NotificationContext.jsx": true,
+        "package.json": true,
+        "vite.config.js": true
+      },
+      "success": true
+    },
+    "buildArtifacts": {
+      "name": "Build Artifacts",
+      "checks": {
+        "distExists": true,
+        "publicHasAssets": true,
+        "indexExists": true,
+        "cssExists": true,
+        "jsExists": true
+      },
+      "success": true
+    },
+    "githubPages": {
+      "name": "GitHub Pages Config",
+      "checks": {
+        "viteBaseConfig": true,
+        "viteOutputConfig": true,
+        "homepageConfig": true,
+        "has404Page": true,
+        "hasRobotsTxt": true,
+        "hasSitemap": true
+      },
+      "success": true
+    },
+    "pwa": {
+      "name": "PWA Features",
+      "checks": {
+        "manifestExists": true,
+        "manifestHasName": true,
+        "manifestHasIcons": true,
+        "manifestHasStartUrl": true,
+        "manifestHasDisplay": true,
+        "serviceWorkerExists": true,
+        "swHasCaching": true,
+        "swHasOffline": true,
+        "swHasSync": true
+      },
+      "success": true
+    },
+    "serviceIntegration": {
+      "name": "Service Integration",
+      "checks": {
+        "realTimeMetricsService": true,
+        "realTimeMetricsServiceExport": true,
+        "legalDocumentService": true,
+        "legalDocumentServiceExport": true,
+        "smartScrapingService": true,
+        "smartScrapingServiceExport": true,
+        "enhancedAIService": true,
+        "enhancedAIServiceExport": true,
+        "systemIntegration": true,
+        "systemIntegrationExport": true,
+        "systemIntegrationClass": true
+      },
+      "success": true
+    },
+    "uiComponents": {
+      "name": "UI Components",
+      "checks": {
+        "Dashboard": true,
+        "DashboardExport": true,
+        "DashboardReact": true,
+        "Settings": true,
+        "SettingsExport": true,
+        "SettingsReact": true,
+        "ScrapingDashboard": true,
+        "ScrapingDashboardExport": true,
+        "ScrapingDashboardReact": true,
+        "AIAnalysisDashboard": true,
+        "AIAnalysisDashboardExport": true,
+        "AIAnalysisDashboardReact": true,
+        "EnhancedSearchDatabase": true,
+        "EnhancedSearchDatabaseExport": true,
+        "EnhancedSearchDatabaseReact": true,
+        "Header": true,
+        "HeaderExport": true,
+        "HeaderReact": true,
+        "EnhancedSidebar": true,
+        "EnhancedSidebarExport": true,
+        "EnhancedSidebarReact": true,
+        "StatsCard": true,
+        "StatsCardExport": true,
+        "StatsCardReact": true,
+        "Chart": true,
+        "ChartExport": true,
+        "ChartReact": true,
+        "LoadingSpinner": true,
+        "LoadingSpinnerExport": true,
+        "LoadingSpinnerReact": true,
+        "ErrorMessage": true,
+        "ErrorMessageExport": true,
+        "ErrorMessageReact": true,
+        "ErrorBoundary": true,
+        "ErrorBoundaryExport": true,
+        "ErrorBoundaryReact": true,
+        "ThemeContext": true,
+        "ConfigContext": true,
+        "NotificationContext": true
+      },
+      "success": true
+    },
+    "performance": {
+      "name": "Performance",
+      "checks": {
+        "jsBundleReasonable": true,
+        "cssBundleReasonable": true,
+        "hasCodeSplitting": true,
+        "hasCompression": true
+      },
+      "metrics": {
+        "jsBundleSize": 944,
+        "cssBundleSize": 63
+      },
+      "success": true
+    }
+  },
+  "summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "warnings": 0
+  }
+}

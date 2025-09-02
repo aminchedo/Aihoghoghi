@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './App.css';
 
-// Import autoStartupService to ensure it's loaded
-import './services/autoStartupService.js';
+// Import system integration service to ensure it's loaded
+import './services/systemIntegration.js';
 
 // Enhanced initialization for GitHub Pages
 console.log('🚀 Iranian Legal Archive - Enhanced Startup');
@@ -24,9 +24,9 @@ const renderApp = () => {
     
     console.log('✅ React app rendered successfully');
     
-    // Notify auto-startup service that React is ready
-    if (window.autoStartupService) {
-      window.autoStartupService.log('✅ React application loaded and rendered');
+    // Notify system integration that React is ready
+    if (window.iranianLegalArchive?.systemIntegration) {
+      console.log('✅ React application loaded and rendered');
     }
     
   } catch (error) {
@@ -71,25 +71,25 @@ const initializeAndRender = async () => {
   try {
     console.log('⏳ Waiting for services to initialize...');
     
-    // Wait for autoStartupService to be available
+    // Wait for system integration service to be available
     let serviceWaitAttempts = 0;
-    while (!window.autoStartupService && serviceWaitAttempts < 50) {
+    while (!window.iranianLegalArchive?.systemIntegration && serviceWaitAttempts < 50) {
       await new Promise(resolve => setTimeout(resolve, 100));
       serviceWaitAttempts++;
     }
     
-    if (!window.autoStartupService) {
-      console.warn('⚠️ AutoStartupService not available, rendering app anyway');
+    if (!window.iranianLegalArchive?.systemIntegration) {
+      console.warn('⚠️ System integration service not available, rendering app anyway');
       renderApp();
       return;
     }
     
-    // Use the Promise-based initialization API
+    // Use the system integration initialization
     const startTime = Date.now();
-    await window.autoStartupService.getInitializationPromise();
+    await window.iranianLegalArchive.systemIntegration.initialize();
     const initTime = Date.now() - startTime;
     
-    console.log(`✅ Services initialized successfully in ${initTime}ms`);
+    console.log(`✅ System integrated successfully in ${initTime}ms`);
     renderApp();
     
   } catch (error) {

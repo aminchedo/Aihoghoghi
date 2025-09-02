@@ -1,215 +1,267 @@
 /**
  * GitHub Pages Configuration for Iranian Legal Archive
- * Automatic detection and configuration for GitHub Pages deployment
+ * Handles client-side API simulation and routing for GitHub Pages deployment
  */
 
 class GitHubPagesConfig {
   constructor() {
     this.isGitHubPages = window.location.hostname.includes('github.io');
-    this.basePath = this.isGitHubPages ? '/Aihoghoghi/' : '/';
-    this.apiBaseUrl = this.getApiBaseUrl();
-    
-    this.config = {
-      environment: this.isGitHubPages ? 'github_pages' : 'local',
-      basePath: this.basePath,
-      apiBaseUrl: this.apiBaseUrl,
-      features: {
-        clientSideOnly: this.isGitHubPages,
-        mockAPI: this.isGitHubPages,
-        realScraping: !this.isGitHubPages,
-        backgroundServices: true,
-        persistence: true
-      }
-    };
-    
-    console.log('🔧 GitHub Pages Config:', this.config);
-  }
-
-  getApiBaseUrl() {
-    if (this.isGitHubPages) {
-      // For GitHub Pages, use client-side mock API
-      return `${window.location.origin}${this.basePath}api`;
-    } else {
-      // For local development, use real backend
-      return 'http://127.0.0.1:8000/api';
-    }
-  }
-
-  /**
-   * Setup client-side API for GitHub Pages
-   */
-  setupClientSideAPI() {
-    if (!this.isGitHubPages) return;
-
-    console.log('🔧 Setting up client-side API for GitHub Pages...');
-
-    // Create mock API endpoints
-    window.mockAPI = {
-      async get(endpoint) {
-        console.log(`📡 Mock API GET: ${endpoint}`);
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 300));
-        
-        switch (endpoint) {
-          case '/health':
-            return {
-              status: 'healthy',
-              version: '3.0.0-github-pages',
-              environment: 'client_side',
-              timestamp: new Date().toISOString()
-            };
-            
-          case '/status':
-            return {
-              status: 'operational',
-              proxy_manager: 'client_side',
-              dns_resolver: 'browser_based',
-              services: {
-                scraper: { status: 'ready', mode: 'client_side' },
-                analyzer: { status: 'ready', mode: 'browser_based' },
-                database: { status: 'ready', mode: 'indexeddb' }
-              },
-              timestamp: new Date().toISOString()
-            };
-            
-          case '/stats':
-            return {
-              total_documents: window.latestScrapingResults?.length || 0,
-              processed_today: Math.floor(Math.random() * 50) + 10,
-              active_scrapers: 1,
-              success_rate: 75 + Math.random() * 20,
-              total_sources: 5,
-              database_size: '2.3 MB',
-              last_update: new Date().toISOString()
-            };
-            
-          case '/scraping/results':
-            return {
-              results: window.latestScrapingResults || [],
-              total_count: window.latestScrapingResults?.length || 0,
-              timestamp: new Date().toISOString()
-            };
-            
-          default:
-            throw new Error(`Mock API endpoint not found: ${endpoint}`);
-        }
-      },
-      
-      async post(endpoint, data) {
-        console.log(`📡 Mock API POST: ${endpoint}`, data);
-        
-        await new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 500));
-        
-        switch (endpoint) {
-          case '/scraping/start':
-            // Start client-side scraping
-            if (window.autoStartupService) {
-              setTimeout(() => {
-                window.autoStartupService.startBackgroundScraping();
-              }, 1000);
-            }
-            
-            return {
-              message: 'Client-side scraping started',
-              timestamp: new Date().toISOString(),
-              mode: 'github_pages'
-            };
-            
-          default:
-            return { success: true, timestamp: new Date().toISOString() };
-        }
-      }
-    };
-
-    // Override fetch for API calls
-    const originalFetch = window.fetch;
-    window.fetch = async (url, options) => {
-      if (typeof url === 'string' && url.includes('/api/')) {
-        const endpoint = url.split('/api')[1];
-        const method = options?.method || 'GET';
-        
-        try {
-          let result;
-          if (method === 'GET') {
-            result = await window.mockAPI.get(endpoint);
-          } else if (method === 'POST') {
-            const body = options?.body ? JSON.parse(options.body) : {};
-            result = await window.mockAPI.post(endpoint, body);
-          }
-          
-          return new Response(JSON.stringify(result), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-          });
-        } catch (error) {
-          return new Response(JSON.stringify({ error: error.message }), {
-            status: 404,
-            headers: { 'Content-Type': 'application/json' }
-          });
-        }
-      }
-      
-      // For non-API calls, use original fetch
-      return originalFetch(url, options);
-    };
-
-    console.log('✅ Client-side API configured for GitHub Pages');
-  }
-
-  /**
-   * Setup automatic features for GitHub Pages
-   */
-  setupAutomaticFeatures() {
-    console.log('⚙️ Setting up automatic features...');
-
-    // Auto-start scraping after page load
-    setTimeout(() => {
-      if (window.autoStartupService) {
-        console.log('🔄 Auto-starting background scraping...');
-        window.autoStartupService.startBackgroundScraping();
-      }
-    }, 5000);
-
-    // Setup periodic health checks
-    setInterval(() => {
-      if (window.autoStartupService) {
-        window.autoStartupService.performHealthCheck();
-      }
-    }, 10 * 60 * 1000); // Every 10 minutes
-
-    // Setup data persistence
-    setInterval(() => {
-      if (window.autoStartupService) {
-        window.autoStartupService.saveState();
-      }
-    }, 5 * 60 * 1000); // Every 5 minutes
-
-    console.log('✅ Automatic features configured');
-  }
-
-  /**
-   * Initialize everything for GitHub Pages
-   */
-  initialize() {
-    console.log('🚀 Initializing GitHub Pages configuration...');
+    this.basePath = '/Aihoghoghi';
+    this.apiEndpoints = new Map();
     
     if (this.isGitHubPages) {
       this.setupClientSideAPI();
     }
+  }
+
+  /**
+   * Setup client-side API simulation for GitHub Pages
+   */
+  setupClientSideAPI() {
+    console.log('🌐 Setting up client-side API for GitHub Pages');
     
-    this.setupAutomaticFeatures();
+    // Mock API responses
+    this.apiEndpoints.set('/status', () => ({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      services: {
+        scraping: 'active',
+        ai: 'ready',
+        database: 'connected'
+      },
+      version: '2.0.0'
+    }));
     
-    // Make config available globally
-    window.githubPagesConfig = this.config;
+    this.apiEndpoints.set('/stats', () => ({
+      documents: {
+        total: Math.floor(Math.random() * 1000) + 500,
+        today: Math.floor(Math.random() * 50) + 10,
+        categories: {
+          'قانون': Math.floor(Math.random() * 200) + 100,
+          'آیین‌نامه': Math.floor(Math.random() * 150) + 75,
+          'رأی': Math.floor(Math.random() * 300) + 150,
+          'بخشنامه': Math.floor(Math.random() * 100) + 50
+        }
+      },
+      scraping: {
+        successRate: Math.floor(Math.random() * 20) + 80,
+        totalAttempts: Math.floor(Math.random() * 500) + 200,
+        activeProxies: Math.floor(Math.random() * 10) + 5
+      },
+      ai: {
+        analysisCount: Math.floor(Math.random() * 200) + 100,
+        averageConfidence: Math.floor(Math.random() * 20) + 80,
+        processingSpeed: Math.floor(Math.random() * 10) + 5
+      }
+    }));
     
-    console.log('✅ GitHub Pages configuration complete');
-    return this.config;
+    this.apiEndpoints.set('/network', () => ({
+      connectivity: 'online',
+      proxies: {
+        total: 15,
+        active: Math.floor(Math.random() * 10) + 10,
+        failed: Math.floor(Math.random() * 5)
+      },
+      dns: {
+        servers: 22,
+        working: Math.floor(Math.random() * 5) + 17
+      },
+      latency: Math.floor(Math.random() * 100) + 50
+    }));
+    
+    this.apiEndpoints.set('/logs', () => ({
+      logs: [
+        {
+          id: 1,
+          level: 'info',
+          message: 'سیستم با موفقیت راه‌اندازی شد',
+          timestamp: new Date(Date.now() - 60000).toISOString(),
+          source: 'system'
+        },
+        {
+          id: 2,
+          level: 'success',
+          message: '5 سند جدید استخراج شد',
+          timestamp: new Date(Date.now() - 120000).toISOString(),
+          source: 'scraper'
+        },
+        {
+          id: 3,
+          level: 'info',
+          message: 'تحلیل هوش مصنوعی 3 سند کامل شد',
+          timestamp: new Date(Date.now() - 180000).toISOString(),
+          source: 'ai'
+        }
+      ]
+    }));
+    
+    // Intercept fetch requests and provide mock responses
+    this.interceptFetchRequests();
+  }
+
+  /**
+   * Intercept fetch requests for API simulation
+   */
+  interceptFetchRequests() {
+    const originalFetch = window.fetch;
+    
+    window.fetch = async (url, options = {}) => {
+      // Check if it's an API request
+      if (typeof url === 'string' && (url.startsWith('/api') || url.startsWith(this.basePath + '/api'))) {
+        const endpoint = url.replace(this.basePath, '').replace('/api', '');
+        
+        if (this.apiEndpoints.has(endpoint)) {
+          console.log(`🔄 Simulating API call: ${endpoint}`);
+          
+          // Simulate network delay
+          await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 400));
+          
+          const mockData = this.apiEndpoints.get(endpoint)();
+          
+          return new Response(JSON.stringify(mockData), {
+            status: 200,
+            statusText: 'OK',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+        }
+      }
+      
+      // For non-API requests, use original fetch
+      return originalFetch(url, options);
+    };
+  }
+
+  /**
+   * Get base URL for assets
+   */
+  getAssetUrl(path) {
+    if (this.isGitHubPages) {
+      return `${this.basePath}${path}`;
+    }
+    return path;
+  }
+
+  /**
+   * Get router basename
+   */
+  getBasename() {
+    return this.isGitHubPages ? this.basePath : '/';
+  }
+
+  /**
+   * Register service worker
+   */
+  async registerServiceWorker() {
+    if ('serviceWorker' in navigator && this.isGitHubPages) {
+      try {
+        const registration = await navigator.serviceWorker.register(`${this.basePath}/sw.js`);
+        console.log('✅ Service Worker registered:', registration);
+        
+        // Listen for updates
+        registration.addEventListener('updatefound', () => {
+          console.log('🔄 Service Worker update found');
+        });
+        
+        return registration;
+      } catch (error) {
+        console.error('❌ Service Worker registration failed:', error);
+      }
+    }
+  }
+
+  /**
+   * Setup PWA features
+   */
+  setupPWA() {
+    if (this.isGitHubPages) {
+      // Register service worker
+      this.registerServiceWorker();
+      
+      // Handle install prompt
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        console.log('📱 PWA install prompt available');
+        
+        // Store the event for later use
+        window.deferredPrompt = e;
+        
+        // Dispatch custom event
+        window.dispatchEvent(new CustomEvent('pwa-install-available'));
+      });
+      
+      // Handle app installed
+      window.addEventListener('appinstalled', () => {
+        console.log('✅ PWA installed successfully');
+        window.deferredPrompt = null;
+      });
+    }
+  }
+
+  /**
+   * Initialize GitHub Pages features
+   */
+  initialize() {
+    if (this.isGitHubPages) {
+      console.log('🏠 GitHub Pages environment detected');
+      
+      // Setup PWA
+      this.setupPWA();
+      
+      // Setup routing for SPA
+      this.setupSPARouting();
+      
+      // Setup error handling
+      this.setupErrorHandling();
+    }
+  }
+
+  /**
+   * Setup SPA routing for GitHub Pages
+   */
+  setupSPARouting() {
+    // Handle 404 redirects for SPA routing
+    if (window.location.pathname !== this.basePath + '/' && 
+        window.location.pathname.startsWith(this.basePath)) {
+      console.log('🔄 Handling SPA route:', window.location.pathname);
+    }
+  }
+
+  /**
+   * Setup error handling
+   */
+  setupErrorHandling() {
+    window.addEventListener('error', (event) => {
+      console.error('💥 Global error:', event.error);
+      
+      // Send error to analytics (if available)
+      if (window.gtag) {
+        window.gtag('event', 'exception', {
+          description: event.error.message,
+          fatal: false
+        });
+      }
+    });
+    
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('💥 Unhandled promise rejection:', event.reason);
+      
+      // Send error to analytics (if available)
+      if (window.gtag) {
+        window.gtag('event', 'exception', {
+          description: event.reason.message || event.reason,
+          fatal: false
+        });
+      }
+    });
   }
 }
 
-// Auto-initialize
-const githubConfig = new GitHubPagesConfig();
-githubConfig.initialize();
+// Create singleton instance
+const githubPagesConfig = new GitHubPagesConfig();
 
-export default githubConfig;
+// Auto-initialize
+githubPagesConfig.initialize();
+
+export default githubPagesConfig;

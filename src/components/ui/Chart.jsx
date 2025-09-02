@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,10 +10,19 @@ import {
   Tooltip,
   Legend,
   ArcElement,
+  RadialLinearScale,
+  Filler
 } from 'chart.js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
-import { useTheme } from '../../contexts/ThemeContext';
+import { 
+  Line, 
+  Bar, 
+  Doughnut, 
+  Pie, 
+  Radar,
+  PolarArea 
+} from 'react-chartjs-2';
 
+// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,152 +32,135 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
+  RadialLinearScale,
+  Filler
 );
 
-const Chart = ({ type = 'line', data, options = {}, height = 300, loading = false }) => {
-  const { isDark } = useTheme();
-  const chartRef = useRef();
+const Chart = ({ 
+  type, 
+  data, 
+  options = {}, 
+  height = 300,
+  className = ''
+}) => {
+  const chartRef = useRef(null);
 
-  // Default options with RTL and dark mode support
+  // Default options with Persian support
   const defaultOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    locale: 'fa-IR',
     plugins: {
       legend: {
-        position: 'top',
-        align: 'end',
-        rtl: true,
         labels: {
-          usePointStyle: true,
-          padding: 20,
           font: {
             family: 'Vazirmatn, sans-serif',
-            size: 12,
+            size: 12
           },
-          color: isDark ? '#f3f4f6' : '#374151',
-        },
+          usePointStyle: true,
+          padding: 20
+        }
       },
       tooltip: {
-        rtl: true,
-        titleAlign: 'right',
-        bodyAlign: 'right',
-        backgroundColor: isDark ? '#1f2937' : '#ffffff',
-        titleColor: isDark ? '#f3f4f6' : '#111827',
-        bodyColor: isDark ? '#d1d5db' : '#374151',
-        borderColor: isDark ? '#374151' : '#e5e7eb',
-        borderWidth: 1,
         titleFont: {
           family: 'Vazirmatn, sans-serif',
-          size: 14,
-          weight: 'bold',
+          size: 14
         },
         bodyFont: {
           family: 'Vazirmatn, sans-serif',
-          size: 12,
+          size: 12
         },
-        callbacks: {
-          label: function(context) {
-            let label = context.dataset.label || '';
-            if (label) {
-              label += ': ';
-            }
-            label += context.parsed.y.toLocaleString('fa-IR');
-            return label;
-          },
-        },
-      },
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1,
+        cornerRadius: 8,
+        padding: 12
+      }
     },
-    scales: type !== 'doughnut' ? {
+    scales: type === 'line' || type === 'bar' ? {
       x: {
-        grid: {
-          color: isDark ? '#374151' : '#f3f4f6',
-          drawBorder: false,
-        },
         ticks: {
-          color: isDark ? '#9ca3af' : '#6b7280',
           font: {
             family: 'Vazirmatn, sans-serif',
-            size: 11,
-          },
+            size: 11
+          }
         },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)'
+        }
       },
       y: {
-        grid: {
-          color: isDark ? '#374151' : '#f3f4f6',
-          drawBorder: false,
-        },
         ticks: {
-          color: isDark ? '#9ca3af' : '#6b7280',
           font: {
             family: 'Vazirmatn, sans-serif',
-            size: 11,
-          },
-          callback: function(value) {
-            return value.toLocaleString('fa-IR');
-          },
+            size: 11
+          }
         },
-      },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)'
+        }
+      }
     } : undefined,
-    ...options,
-  };
-
-  // Chart component based on type
-  const renderChart = () => {
-    const commonProps = {
-      ref: chartRef,
-      data,
-      options: defaultOptions,
-      height,
-    };
-
-    switch (type) {
-      case 'bar':
-        return <Bar {...commonProps} />;
-      case 'doughnut':
-        return <Doughnut {...commonProps} />;
-      case 'line':
-      default:
-        return <Line {...commonProps} />;
+    animation: {
+      duration: 1000,
+      easing: 'easeOutQuart'
     }
   };
 
-  if (loading) {
+  // Merge with custom options
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+    plugins: {
+      ...defaultOptions.plugins,
+      ...options.plugins
+    }
+  };
+
+  // Chart components mapping
+  const chartComponents = {
+    line: Line,
+    bar: Bar,
+    doughnut: Doughnut,
+    pie: Pie,
+    radar: Radar,
+    polarArea: PolarArea
+  };
+
+  const ChartComponent = chartComponents[type];
+
+  if (!ChartComponent) {
     return (
-      <div 
-        className="flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg animate-pulse"
-        style={{ height }}
-      >
-        <div className="text-center">
-          <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full mb-4 animate-spin">
-            <div className="w-3 h-3 bg-blue-600 rounded-full mt-1 mr-1"></div>
-          </div>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">در حال بارگذاری نمودار...</p>
-        </div>
+      <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+        <p>نوع نمودار پشتیبانی نمی‌شود: {type}</p>
       </div>
     );
   }
 
   if (!data || !data.datasets || data.datasets.length === 0) {
     return (
-      <div 
-        className="flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600"
-        style={{ height }}
-      >
+      <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
-            <span className="text-2xl">📊</span>
+          <div className="w-16 h-16 mx-auto mb-4 opacity-50">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+            </svg>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">داده‌ای برای نمایش وجود ندارد</p>
+          <p>داده‌ای برای نمایش وجود ندارد</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ height }} className="relative">
-      {renderChart()}
+    <div className={`relative ${className}`} style={{ height }}>
+      <ChartComponent
+        ref={chartRef}
+        data={data}
+        options={mergedOptions}
+      />
     </div>
   );
 };

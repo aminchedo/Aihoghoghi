@@ -9,16 +9,12 @@ import './App.css';
 import Header from './components/layout/Header';
 import EnhancedSidebar from './components/layout/EnhancedSidebar';
 import Dashboard from './components/pages/Dashboard';
-import DocumentProcessing from './components/pages/DocumentProcessing';
-import ProxyDashboard from './components/pages/ProxyDashboard';
 import EnhancedSearchDatabase from './components/pages/EnhancedSearchDatabase';
 import ScrapingDashboard from './components/pages/ScrapingDashboard';
 import AIAnalysisDashboard from './components/pages/AIAnalysisDashboard';
 import Settings from './components/pages/Settings';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import ErrorBoundary from './components/ui/ErrorBoundary';
-import AITestComponent from './components/test/AITestComponent';
-import StartupDiagnostics from './components/debug/StartupDiagnostics';
 
 // Contexts
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -335,16 +331,14 @@ function App() {
                       <Routes>
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/documents" element={<DocumentProcessing />} />
-                        <Route path="/process" element={<DocumentProcessing />} />
-                        <Route path="/proxy" element={<ProxyDashboard />} />
+                        <Route path="/documents" element={<EnhancedSearchDatabase />} />
+                        <Route path="/process" element={<EnhancedSearchDatabase />} />
+                        <Route path="/proxy" element={<ScrapingDashboard />} />
                         <Route path="/search" element={<EnhancedSearchDatabase />} />
                         <Route path="/scraping" element={<ScrapingDashboard />} />
                         <Route path="/ai-analysis" element={<AIAnalysisDashboard />} />
-                        <Route path="/ai-test" element={<AITestComponent />} />
                         <Route path="/database" element={<EnhancedSearchDatabase />} />
                         <Route path="/settings" element={<Settings />} />
-                        <Route path="/debug" element={<StartupDiagnostics />} />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />
                       </Routes>
                     </div>
@@ -372,9 +366,7 @@ function App() {
                       },
                     }}
                   />
-                  
-                  {/* Development diagnostics component */}
-                  {import.meta.env.DEV && <StartupDiagnostics />}
+
                 </div>
               </ErrorBoundary>
             </Router>

@@ -1,178 +1,298 @@
-// Service Worker for Iranian Legal Archive System
-const CACHE_NAME = 'iranian-legal-archive-v2.0.0';
-const BASE_PATH = '/Aihoghoghi/';
+/**
+ * Service Worker for Iranian Legal Archive System
+ * Provides offline functionality and performance optimization
+ */
 
-// Files to cache for offline functionality
-const STATIC_CACHE_FILES = [
-  BASE_PATH,
-  BASE_PATH + 'index.html',
-  BASE_PATH + 'manifest.json',
-  // Add other static assets as needed
+const CACHE_NAME = 'iranian-legal-archive-v2.0.0';
+const STATIC_CACHE = 'static-cache-v2.0.0';
+const DYNAMIC_CACHE = 'dynamic-cache-v2.0.0';
+
+// Assets to cache immediately
+const STATIC_ASSETS = [
+  '/Aihoghoghi/',
+  '/Aihoghoghi/index.html',
+  '/Aihoghoghi/manifest.json',
+  '/Aihoghoghi/assets/index.css',
+  '/Aihoghoghi/assets/index.js',
+  'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
-// Install event - cache static files
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
+  console.log('🔧 Service Worker installing...');
   
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(STATIC_CACHE)
       .then((cache) => {
-        console.log('Service Worker: Caching static files');
-        return cache.addAll(STATIC_CACHE_FILES.map(url => {
-          return new Request(url, { credentials: 'same-origin' });
-        }));
-      })
-      .then(() => {
-        console.log('Service Worker: Installation complete');
-        return self.skipWaiting();
+        console.log('📦 Caching static assets');
+        return cache.addAll(STATIC_ASSETS.map(url => new Request(url, { mode: 'no-cors' })));
       })
       .catch((error) => {
-        console.error('Service Worker: Installation failed', error);
+        console.error('❌ Failed to cache static assets:', error);
+        // Don't fail installation if caching fails
+        return Promise.resolve();
       })
   );
+  
+  // Force activation of new service worker
+  self.skipWaiting();
 });
 
-// Activate event - clean up old caches
+// Activate event - clean old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
+  console.log('✅ Service Worker activated');
   
   event.waitUntil(
     caches.keys()
       .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            if (cacheName !== CACHE_NAME) {
-              console.log('Service Worker: Deleting old cache', cacheName);
+            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+              console.log('🗑️ Deleting old cache:', cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
       .then(() => {
-        console.log('Service Worker: Activation complete');
+        // Take control of all clients immediately
         return self.clients.claim();
       })
   );
 });
 
-// Fetch event - serve cached files when offline
+// Fetch event - serve from cache with network fallback
 self.addEventListener('fetch', (event) => {
-  // Only handle requests within our scope
-  if (!event.request.url.includes(BASE_PATH)) {
+  const { request } = event;
+  const url = new URL(request.url);
+  
+  // Skip non-GET requests
+  if (request.method !== 'GET') {
     return;
   }
-
+  
+  // Skip cross-origin requests that aren't from our domain
+  if (url.origin !== location.origin && !url.href.includes('fonts.googleapis.com') && !url.href.includes('cdnjs.cloudflare.com')) {
+    return;
+  }
+  
   event.respondWith(
-    caches.match(event.request)
-      .then((cachedResponse) => {
-        // Return cached version if available
-        if (cachedResponse) {
-          return cachedResponse;
+    cacheFirst(request)
+      .catch(() => networkFirst(request))
+      .catch(() => {
+        // Fallback for offline scenarios
+        if (request.destination === 'document') {
+          return caches.match('/Aihoghoghi/index.html');
         }
-
-        // Otherwise, fetch from network
-        return fetch(event.request)
-          .then((response) => {
-            // Don't cache non-successful responses
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Clone the response as it can only be consumed once
-            const responseToCache = response.clone();
-
-            // Cache the new response
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          })
-          .catch(() => {
-            // If network fails and no cache, return offline page
-            if (event.request.destination === 'document') {
-              return caches.match(BASE_PATH + 'index.html');
-            }
-          });
+        
+        // Return a basic offline response for other requests
+        return new Response(
+          JSON.stringify({
+            error: 'Offline',
+            message: 'این درخواست در حالت آفلاین قابل دسترسی نیست',
+            timestamp: new Date().toISOString()
+          }),
+          {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache'
+            })
+          }
+        );
       })
   );
 });
 
-// Background sync for when connection is restored
-self.addEventListener('sync', (event) => {
-  console.log('Service Worker: Background sync triggered', event.tag);
+/**
+ * Cache-first strategy for static assets
+ */
+async function cacheFirst(request) {
+  const cachedResponse = await caches.match(request);
   
-  if (event.tag === 'background-sync') {
+  if (cachedResponse) {
+    console.log('📋 Serving from cache:', request.url);
+    return cachedResponse;
+  }
+  
+  throw new Error('Not in cache');
+}
+
+/**
+ * Network-first strategy with cache fallback
+ */
+async function networkFirst(request) {
+  try {
+    console.log('🌐 Fetching from network:', request.url);
+    
+    const networkResponse = await fetch(request);
+    
+    // Cache successful responses
+    if (networkResponse.ok) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      
+      // Clone the response before caching
+      const responseClone = networkResponse.clone();
+      
+      // Cache the response (don't await to avoid blocking)
+      cache.put(request, responseClone).catch((error) => {
+        console.warn('⚠️ Failed to cache response:', error);
+      });
+    }
+    
+    return networkResponse;
+    
+  } catch (error) {
+    console.log('🔍 Network failed, trying cache:', request.url);
+    
+    // Try to serve from cache
+    const cachedResponse = await caches.match(request);
+    
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+    
+    throw error;
+  }
+}
+
+// Handle background sync for offline actions
+self.addEventListener('sync', (event) => {
+  console.log('🔄 Background sync triggered:', event.tag);
+  
+  if (event.tag === 'legal-document-sync') {
     event.waitUntil(
-      // Perform background sync tasks here
-      Promise.resolve()
+      syncLegalDocuments()
         .then(() => {
-          console.log('Service Worker: Background sync completed');
+          console.log('✅ Legal documents synced successfully');
+        })
+        .catch((error) => {
+          console.error('❌ Failed to sync legal documents:', error);
         })
     );
   }
 });
 
-// Push notification handling
+// Handle push notifications
 self.addEventListener('push', (event) => {
-  console.log('Service Worker: Push notification received', event);
+  console.log('📬 Push notification received');
   
   const options = {
-    body: 'سیستم آرشیو حقوقی ایران',
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>",
-    badge: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>",
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: '1'
-    },
+    body: event.data ? event.data.text() : 'سیستم آرشیو حقوقی بروزرسانی شد',
+    icon: '/Aihoghoghi/manifest.json',
+    badge: '/Aihoghoghi/manifest.json',
+    vibrate: [200, 100, 200],
+    dir: 'rtl',
+    lang: 'fa',
+    tag: 'legal-archive-notification',
+    renotify: true,
+    requireInteraction: false,
     actions: [
       {
-        action: 'explore',
-        title: 'مشاهده سیستم',
-        icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁️</text></svg>"
+        action: 'view',
+        title: 'مشاهده',
+        icon: '/Aihoghoghi/manifest.json'
       },
       {
-        action: 'close',
-        title: 'بستن',
-        icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✕</text></svg>"
+        action: 'dismiss',
+        title: 'نادیده گرفتن',
+        icon: '/Aihoghoghi/manifest.json'
       }
     ]
   };
-
+  
   event.waitUntil(
-    self.registration.showNotification('سیستم آرشیو حقوقی ایران', options)
+    self.registration.showNotification('آرشیو اسناد حقوقی', options)
   );
 });
 
-// Notification click handling
+// Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
-  console.log('Service Worker: Notification clicked', event);
+  console.log('🔔 Notification clicked:', event.action);
   
   event.notification.close();
-
-  if (event.action === 'explore') {
+  
+  if (event.action === 'view') {
     event.waitUntil(
-      clients.openWindow(BASE_PATH)
-    );
-  } else if (event.action === 'close') {
-    // Just close the notification
-  } else {
-    // Default action - open the app
-    event.waitUntil(
-      clients.openWindow(BASE_PATH)
+      clients.openWindow('/Aihoghoghi/')
     );
   }
 });
 
-// Error handling
-self.addEventListener('error', (event) => {
-  console.error('Service Worker: Error occurred', event.error);
+// Sync legal documents in background
+async function syncLegalDocuments() {
+  try {
+    // This would normally sync with a backend
+    // For now, we'll just update the cache timestamp
+    const cache = await caches.open(DYNAMIC_CACHE);
+    const syncData = {
+      lastSync: new Date().toISOString(),
+      status: 'success'
+    };
+    
+    const response = new Response(JSON.stringify(syncData), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    await cache.put('/api/sync-status', response);
+    
+    return syncData;
+  } catch (error) {
+    console.error('Sync failed:', error);
+    throw error;
+  }
+}
+
+// Handle messages from main thread
+self.addEventListener('message', (event) => {
+  console.log('📨 Message received:', event.data);
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'GET_VERSION') {
+    event.ports[0].postMessage({
+      version: CACHE_NAME,
+      timestamp: new Date().toISOString()
+    });
+  }
+  
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    event.waitUntil(
+      caches.keys()
+        .then((cacheNames) => {
+          return Promise.all(
+            cacheNames.map((cacheName) => caches.delete(cacheName))
+          );
+        })
+        .then(() => {
+          event.ports[0].postMessage({ success: true });
+        })
+        .catch((error) => {
+          event.ports[0].postMessage({ success: false, error: error.message });
+        })
+    );
+  }
 });
 
-self.addEventListener('unhandledrejection', (event) => {
-  console.error('Service Worker: Unhandled promise rejection', event.reason);
+// Periodic background tasks
+self.addEventListener('periodicsync', (event) => {
+  console.log('⏰ Periodic sync triggered:', event.tag);
+  
+  if (event.tag === 'legal-documents-update') {
+    event.waitUntil(
+      syncLegalDocuments()
+        .then(() => {
+          console.log('✅ Periodic sync completed');
+        })
+        .catch((error) => {
+          console.error('❌ Periodic sync failed:', error);
+        })
+    );
+  }
 });
 
-console.log('Service Worker: Script loaded successfully');
+console.log('🚀 Iranian Legal Archive Service Worker loaded successfully');

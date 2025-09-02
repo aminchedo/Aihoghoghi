@@ -1,412 +1,648 @@
-import React, { useState, useEffect } from 'react';
-import { useResilientAPI } from '../../hooks/useResilientAPI';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useConfig } from '../../contexts/ConfigContext';
-import { useNotification } from '../../contexts/NotificationContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  BarChart3, 
+  TrendingUp, 
+  FileText, 
+  Server, 
+  Zap, 
+  Shield, 
+  Clock,
+  Users,
+  Database,
+  Activity,
+  AlertCircle,
+  CheckCircle,
+  Loader,
+  RefreshCw
+} from 'lucide-react';
 
-// Components
+// Enhanced Services
+import { realTimeMetricsService } from '../../services/realTimeMetricsService';
+import { legalDocumentService } from '../../services/legalDocumentService';
+import { smartScrapingService } from '../../services/smartScrapingService';
+import { enhancedAIService } from '../../services/enhancedAIService';
+
+// UI Components
 import StatsCard from '../ui/StatsCard';
 import Chart from '../ui/Chart';
 import RecentActivity from '../ui/RecentActivity';
 import SystemHealth from '../ui/SystemHealth';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ErrorMessage from '../ui/ErrorMessage';
-import AutoStartupStatus from '../ui/AutoStartupStatus';
 
 const Dashboard = () => {
-  const { getApiUrl, config } = useConfig();
-  const { showApiError } = useNotification();
   const queryClient = useQueryClient();
-  const [refreshInterval, setRefreshInterval] = useState(30000); // 30 seconds
-  
-  // Resilient API for additional system health data
-  const { 
-    data: healthData, 
-    loading: healthLoading, 
-    error: healthError,
-    refetch: refetchHealth 
-  } = useResilientAPI('/health', {
-    fallbackData: {
-      status: 'unknown',
-      services: {
-        database: 'unknown',
-        ai: 'unknown',
-        scraping: 'unknown'
-      }
-    }
-  });
+  const [refreshInterval, setRefreshInterval] = useState(5000); // 5 seconds for real-time feel
+  const [systemMetrics, setSystemMetrics] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  // Fetch system status
-  const { data: systemStatus, isLoading: statusLoading, error: statusError } = useQuery({
-    queryKey: ['systemStatus'],
-    queryFn: async () => {
-      const response = await fetch(getApiUrl('/status'));
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      return response.json();
-    },
+  // Real-time metrics subscription
+  useEffect(() => {
+    const unsubscribe = realTimeMetricsService.subscribe((metrics) => {
+      setSystemMetrics(metrics);
+      setLastUpdate(new Date());
+    });
+    
+    // Initial load
+    setSystemMetrics(realTimeMetricsService.getMetrics());
+    
+    return unsubscribe;
+  }, []);
+
+  // Enhanced data fetching with real services
+  const { data: documentStats, isLoading: docStatsLoading } = useQuery({
+    queryKey: ['documentStats'],
+    queryFn: () => legalDocumentService.getDocumentStats(),
     refetchInterval: refreshInterval,
-    refetchOnWindowFocus: true,
   });
 
-  // Fetch system statistics
-  const { data: systemStats, isLoading: statsLoading, error: statsError } = useQuery({
-    queryKey: ['systemStats'],
-    queryFn: async () => {
-      const response = await fetch(getApiUrl('/stats'));
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      return response.json();
-    },
+  const { data: scrapingStats, isLoading: scrapingStatsLoading } = useQuery({
+    queryKey: ['scrapingStats'],
+    queryFn: () => smartScrapingService.getScrapingStats(),
     refetchInterval: refreshInterval,
-    refetchOnWindowFocus: true,
   });
 
-  // Fetch network status
+  const { data: aiStats, isLoading: aiStatsLoading } = useQuery({
+    queryKey: ['aiStats'],
+    queryFn: () => enhancedAIService.getAnalysisStats(),
+    refetchInterval: refreshInterval,
+  });
+
   const { data: networkStatus, isLoading: networkLoading } = useQuery({
     queryKey: ['networkStatus'],
-    queryFn: async () => {
-      const response = await fetch(getApiUrl('/network'));
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      return response.json();
-    },
-    refetchInterval: refreshInterval * 2, // Less frequent for network status
+    queryFn: () => smartScrapingService.getNetworkStatus(),
+    refetchInterval: refreshInterval * 2,
   });
 
-  // Fetch recent logs
-  const { data: recentLogs, isLoading: logsLoading } = useQuery({
-    queryKey: ['recentLogs'],
-    queryFn: async () => {
-      const response = await fetch(getApiUrl('/logs?limit=10'));
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      return response.json();
-    },
+  const { data: recentDocuments, isLoading: recentDocsLoading } = useQuery({
+    queryKey: ['recentDocuments'],
+    queryFn: () => legalDocumentService.getRecentDocuments(5),
     refetchInterval: refreshInterval,
   });
 
-  // Handle errors
-  useEffect(() => {
-    if (statusError) {
-      showApiError(statusError, 'خطا در دریافت وضعیت سیستم');
+  // Manual refresh with real-time feedback
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await queryClient.invalidateQueries();
+      setLastUpdate(new Date());
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 1000);
     }
-    if (statsError) {
-      showApiError(statsError, 'خطا در دریافت آمار سیستم');
+  }, [queryClient]);
+
+  // Quick actions
+  const handleQuickScrape = useCallback(async () => {
+    try {
+      await smartScrapingService.startScraping({ maxDocuments: 3 });
+      await queryClient.invalidateQueries(['documentStats', 'scrapingStats']);
+    } catch (error) {
+      console.error('Quick scrape failed:', error);
     }
-  }, [statusError, statsError, showApiError]);
+  }, [queryClient]);
 
-  // Manual refresh
-  const handleRefresh = () => {
-    queryClient.invalidateQueries();
-  };
+  const handleQuickAnalysis = useCallback(async () => {
+    try {
+      const recentDocs = legalDocumentService.getRecentDocuments(2);
+      if (recentDocs.length > 0) {
+        await enhancedAIService.analyzeDocument(recentDocs[0]);
+        await queryClient.invalidateQueries(['aiStats']);
+      }
+    } catch (error) {
+      console.error('Quick analysis failed:', error);
+    }
+  }, [queryClient]);
 
-  // Toggle auto-refresh
-  const toggleAutoRefresh = () => {
-    setRefreshInterval(prev => prev === 0 ? 30000 : 0);
-  };
-
-  const isLoading = statusLoading || statsLoading;
-
-  // Prepare stats cards data
-  const statsCards = [
-    {
-      title: 'کل عملیات',
-      value: systemStats?.session?.total_operations || 0,
-      change: '+12%',
-      changeType: 'positive',
-      icon: '📊',
-      description: 'تعداد کل عملیات انجام شده',
-    },
-    {
-      title: 'عملیات موفق',
-      value: systemStats?.session?.successful_operations || 0,
-      change: '+8%',
-      changeType: 'positive',
-      icon: '✅',
-      description: 'عملیات با موفقیت انجام شده',
-    },
-    {
-      title: 'پروکسی فعال',
-      value: networkStatus?.active_proxies || 0,
-      change: networkStatus?.total_proxies ? `از ${networkStatus.total_proxies}` : '0',
-      changeType: networkStatus?.active_proxies > 0 ? 'positive' : 'negative',
-      icon: '🌐',
-      description: 'تعداد پروکسی‌های فعال',
-    },
-    {
-      title: 'کارهای در صف',
-      value: systemStatus?.current_batch || 0,
-      change: systemStatus?.is_processing ? 'در حال پردازش' : 'آماده',
-      changeType: systemStatus?.is_processing ? 'warning' : 'neutral',
-      icon: '⏳',
-      description: 'وضعیت صف پردازش',
-    },
-  ];
-
-  // Prepare chart data for operations over time
-  const chartData = {
-    labels: ['۶ ساعت قبل', '۵ ساعت قبل', '۴ ساعت قبل', '۳ ساعت قبل', '۲ ساعت قبل', '۱ ساعت قبل', 'اکنون'],
-    datasets: [
-      {
-        label: 'عملیات موفق',
-        data: [12, 19, 15, 25, 22, 30, 28],
-        borderColor: 'rgb(34, 197, 94)',
-        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-        tension: 0.4,
-      },
-      {
-        label: 'عملیات ناموفق',
-        data: [2, 3, 2, 5, 2, 4, 3],
-        borderColor: 'rgb(239, 68, 68)',
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-        tension: 0.4,
-      },
-    ],
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <LoadingSpinner size="lg" />
-      </div>
-    );
-  }
+  // Calculate derived metrics
+  const performanceSummary = systemMetrics ? realTimeMetricsService.getPerformanceSummary() : null;
+  
+  const isLoading = docStatsLoading || scrapingStatsLoading || aiStatsLoading || networkLoading;
 
   return (
     <div className="space-y-6">
-      {/* Auto-Startup Status */}
-      <AutoStartupStatus />
-      
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            داشبورد اصلی
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <BarChart3 className="w-8 h-8 text-blue-600" />
+            داشبورد سیستم آرشیو حقوقی
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            نمای کلی از وضعیت سیستم آرشیو حقوقی
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
+            نظارت بر عملکرد سیستم و آمار کلی • آخرین بروزرسانی: {lastUpdate.toLocaleTimeString('fa-IR')}
           </p>
         </div>
         
-        <div className="flex items-center space-x-3 space-x-reverse">
-          <button
-            onClick={toggleAutoRefresh}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              refreshInterval > 0
-                ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900 dark:text-green-300'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
-            }`}
+        <div className="flex items-center gap-3">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleQuickScrape}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
           >
-            {refreshInterval > 0 ? '🔄 بروزرسانی خودکار' : '⏸️ بروزرسانی متوقف'}
-          </button>
+            <Zap className="w-4 h-4" />
+            استخراج سریع
+          </motion.button>
           
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleQuickAnalysis}
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+          >
+            <Activity className="w-4 h-4" />
+            تحلیل سریع
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleRefresh}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            disabled={isRefreshing}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50"
           >
-            🔄 بروزرسانی
-          </button>
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            بروزرسانی
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((card, index) => (
-          <StatsCard key={index} {...card} />
-        ))}
-      </div>
-
-      {/* Charts and Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Operations Chart */}
-        <div className="lg:col-span-2">
-          <div className="card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                روند عملیات
-              </h2>
-              <div className="flex space-x-2 space-x-reverse">
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                  <div className="w-2 h-2 bg-green-500 rounded-full ml-1"></div>
-                  موفق
-                </span>
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                  <div className="w-2 h-2 bg-red-500 rounded-full ml-1"></div>
-                  ناموفق
-                </span>
+      {/* System Health Overview */}
+      {performanceSummary && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">سلامت کلی سیستم</h3>
+                <p className="text-3xl font-bold text-green-600 mt-2">{performanceSummary.overall.health}%</p>
+              </div>
+              <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
+                <Shield className="w-8 h-8 text-green-600" />
               </div>
             </div>
-            <Chart type="line" data={chartData} height={300} />
+            <div className="mt-4 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${performanceSummary.overall.health}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="h-full bg-gradient-to-r from-green-500 to-green-600"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Recent Activity */}
-        <div className="space-y-6">
-          <RecentActivity logs={recentLogs?.logs || []} loading={logsLoading} />
-          <SystemHealth 
-            status={systemStats?.system_health}
-            networkStatus={networkStatus}
-          />
-        </div>
-      </div>
-
-      {/* System Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Processing Status */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            وضعیت پردازش
-          </h3>
-          
-          {systemStatus?.is_processing ? (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">پردازش فعال</span>
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse ml-1"></div>
-                  در حال اجرا
-                </span>
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">عملکرد سیستم</h3>
+                <p className="text-3xl font-bold text-blue-600 mt-2">{performanceSummary.overall.performance}%</p>
               </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600 dark:text-gray-400">پیشرفت</span>
-                  <span className="font-medium">
-                    {systemStatus.current_batch}/{systemStatus.total_batches}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                    style={{ 
-                      width: `${(systemStatus.current_batch / systemStatus.total_batches) * 100}%` 
-                    }}
-                  ></div>
-                </div>
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                <TrendingUp className="w-8 h-8 text-blue-600" />
               </div>
-              
-              {systemStatus.current_url && (
-                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">در حال پردازش:</p>
-                  <p className="text-sm font-mono text-gray-800 dark:text-gray-200 truncate">
-                    {systemStatus.current_url}
-                  </p>
-                </div>
-              )}
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
-                <span className="text-2xl">💤</span>
+            <div className="mt-4 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${performanceSummary.overall.performance}%` }}
+                transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
+              />
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">قابلیت اطمینان</h3>
+                <p className="text-3xl font-bold text-purple-600 mt-2">{performanceSummary.overall.reliability}%</p>
               </div>
-              <p className="text-gray-600 dark:text-gray-400">سیستم در حالت آماده باش</p>
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                <CheckCircle className="w-8 h-8 text-purple-600" />
+              </div>
+            </div>
+            <div className="mt-4 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${performanceSummary.overall.reliability}%` }}
+                transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
+                className="h-full bg-gradient-to-r from-purple-500 to-purple-600"
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Main Statistics Grid */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
+        <StatsCard
+          title="اسناد استخراج شده"
+          value={documentStats?.total || 0}
+          change={systemMetrics?.scraping?.totalDocuments || 0}
+          changeType="increase"
+          icon={FileText}
+          color="blue"
+          loading={docStatsLoading}
+        />
+        
+        <StatsCard
+          title="نرخ موفقیت"
+          value={`${systemMetrics?.scraping?.successRate || 0}%`}
+          change={performanceSummary?.scraping?.averageSuccessRate || 0}
+          changeType="increase"
+          icon={TrendingUp}
+          color="green"
+          loading={scrapingStatsLoading}
+        />
+        
+        <StatsCard
+          title="تحلیل‌های انجام شده"
+          value={systemMetrics?.ai?.documentsAnalyzed || 0}
+          change={aiStats?.cacheSize || 0}
+          changeType="increase"
+          icon={Activity}
+          color="purple"
+          loading={aiStatsLoading}
+        />
+        
+        <StatsCard
+          title="پروکسی‌های فعال"
+          value={systemMetrics?.scraping?.activeProxies || 0}
+          change={networkStatus?.proxies?.active || 0}
+          changeType="neutral"
+          icon={Server}
+          color="orange"
+          loading={networkLoading}
+        />
+      </motion.div>
+
+      {/* Charts and Analytics Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Document Categories Chart */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-blue-600" />
+            توزیع دسته‌بندی اسناد
+          </h3>
+          {documentStats?.categories && Object.keys(documentStats.categories).length > 0 ? (
+            <Chart
+              type="doughnut"
+              data={{
+                labels: Object.keys(documentStats.categories),
+                datasets: [{
+                  data: Object.values(documentStats.categories),
+                  backgroundColor: [
+                    '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
+                    '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'
+                  ],
+                  borderWidth: 2,
+                  borderColor: '#ffffff'
+                }]
+              }}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'bottom',
+                    labels: {
+                      font: { family: 'Vazirmatn' },
+                      usePointStyle: true
+                    }
+                  }
+                }
+              }}
+            />
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <BarChart3 className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>آمار دسته‌بندی در دسترس نیست</p>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {/* Database Stats */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            آمار پایگاه داده
+        {/* System Performance Chart */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-green-600" />
+            عملکرد سیستم
+          </h3>
+          {performanceSummary ? (
+            <Chart
+              type="radar"
+              data={{
+                labels: ['استخراج', 'تحلیل هوش مصنوعی', 'پایگاه داده', 'شبکه', 'پردازش'],
+                datasets: [{
+                  label: 'عملکرد فعلی',
+                  data: [
+                    performanceSummary.scraping.averageSuccessRate,
+                    performanceSummary.ai.analysisAccuracy,
+                    Math.max(100 - performanceSummary.database.querySpeed, 0),
+                    networkStatus?.connectivity === 'online' ? 95 : 50,
+                    performanceSummary.overall.performance
+                  ],
+                  backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                  borderColor: 'rgb(59, 130, 246)',
+                  borderWidth: 2,
+                  pointBackgroundColor: 'rgb(59, 130, 246)'
+                }]
+              }}
+              options={{
+                responsive: true,
+                scales: {
+                  r: {
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                      font: { family: 'Vazirmatn' }
+                    }
+                  }
+                },
+                plugins: {
+                  legend: {
+                    labels: {
+                      font: { family: 'Vazirmatn' }
+                    }
+                  }
+                }
+              }}
+            />
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <TrendingUp className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>آمار عملکرد در حال محاسبه...</p>
+            </div>
+          )}
+        </motion.div>
+      </div>
+
+      {/* Recent Activity and System Status */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Documents */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <FileText className="w-5 h-5 text-blue-600" />
+            آخرین اسناد استخراج شده
+          </h3>
+          
+          {recentDocsLoading ? (
+            <div className="flex items-center justify-center h-32">
+              <LoadingSpinner size="lg" />
+            </div>
+          ) : recentDocuments && recentDocuments.length > 0 ? (
+            <div className="space-y-3">
+              {recentDocuments.map((doc, index) => (
+                <motion.div
+                  key={doc.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 dark:text-white line-clamp-1">
+                        {doc.title}
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                        {doc.content.substring(0, 150)}...
+                      </p>
+                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {doc.date}
+                        </span>
+                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded">
+                          {doc.category}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Database className="w-3 h-3" />
+                          {doc.wordCount || 0} کلمه
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <FileText className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>هنوز سندی استخراج نشده است</p>
+              <button
+                onClick={handleQuickScrape}
+                className="mt-3 text-blue-600 hover:text-blue-700 font-medium"
+              >
+                شروع استخراج اسناد
+              </button>
+            </div>
+          )}
+        </motion.div>
+
+        {/* System Status */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-green-600" />
+            وضعیت سرویس‌ها
           </h3>
           
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400">کل اسناد</span>
-              <span className="font-semibold text-lg">
-                {systemStats?.documents?.total_documents || 0}
-              </span>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400">دسته‌بندی شده</span>
-              <span className="font-semibold text-lg text-green-600">
-                {systemStats?.documents?.classified_documents || 0}
-              </span>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400">منابع فعال</span>
-              <span className="font-semibold text-lg text-blue-600">
-                {systemStats?.sources?.total || 0}
-              </span>
-            </div>
-            
-            {systemStats?.sources?.categories && (
-              <div className="mt-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">دسته‌بندی منابع:</p>
-                <div className="flex flex-wrap gap-1">
-                  {systemStats.sources.categories.slice(0, 3).map((category, index) => (
-                    <span key={index} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">
-                      {category}
-                    </span>
-                  ))}
-                  {systemStats.sources.categories.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">
-                      +{systemStats.sources.categories.length - 3} بیشتر
-                    </span>
-                  )}
-                </div>
+            {/* Scraping Service */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className={`w-3 h-3 rounded-full ${scrapingStats?.isActive ? 'bg-green-500' : 'bg-gray-400'}`} />
+                <span className="font-medium text-gray-900 dark:text-white">سرویس استخراج</span>
               </div>
-            )}
-          </div>
-        </div>
+              <span className={`text-sm ${scrapingStats?.isActive ? 'text-green-600' : 'text-gray-500'}`}>
+                {scrapingStats?.isActive ? 'فعال' : 'غیرفعال'}
+              </span>
+            </div>
 
-        {/* Quick Actions */}
-        <div className="card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            عملیات سریع
-          </h3>
-          
-          <div className="space-y-3">
-            <button 
-              className="w-full flex items-center justify-center px-4 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-              onClick={() => window.location.href = '/process'}
-            >
-              <span className="ml-2">📄</span>
-              پردازش سند جدید
-            </button>
-            
-            <button 
-              className="w-full flex items-center justify-center px-4 py-3 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
-              onClick={() => window.location.href = '/search'}
-            >
-              <span className="ml-2">🔍</span>
-              جستجو در پایگاه داده
-            </button>
-            
-            <button 
-              className="w-full flex items-center justify-center px-4 py-3 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
-              onClick={() => window.location.href = '/proxy'}
-            >
-              <span className="ml-2">🌐</span>
-              مدیریت پروکسی
-            </button>
+            {/* AI Service */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className={`w-3 h-3 rounded-full ${aiStats?.hasApiKey ? 'bg-green-500' : 'bg-yellow-500'}`} />
+                <span className="font-medium text-gray-900 dark:text-white">سرویس هوش مصنوعی</span>
+              </div>
+              <span className={`text-sm ${aiStats?.hasApiKey ? 'text-green-600' : 'text-yellow-600'}`}>
+                {aiStats?.hasApiKey ? 'متصل' : 'حالت نمایشی'}
+              </span>
+            </div>
+
+            {/* Database Service */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-green-500" />
+                <span className="font-medium text-gray-900 dark:text-white">پایگاه داده</span>
+              </div>
+              <span className="text-sm text-green-600">آماده</span>
+            </div>
+
+            {/* Network Status */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className={`w-3 h-3 rounded-full ${networkStatus?.connectivity === 'online' ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="font-medium text-gray-900 dark:text-white">اتصال شبکه</span>
+              </div>
+              <span className={`text-sm ${networkStatus?.connectivity === 'online' ? 'text-green-600' : 'text-red-600'}`}>
+                {networkStatus?.connectivity === 'online' ? 'متصل' : 'قطع'}
+              </span>
+            </div>
           </div>
-        </div>
+
+          {/* Quick Stats */}
+          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+              <div className="flex justify-between">
+                <span>زمان آپ‌تایم:</span>
+                <span className="font-medium">
+                  {systemMetrics?.system?.uptime ? 
+                    Math.round(systemMetrics.system.uptime / (60 * 1000)) + ' دقیقه' : 
+                    'نامعلوم'
+                  }
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>استفاده حافظه:</span>
+                <span className="font-medium">{systemMetrics?.system?.memoryUsage || 0}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span>تأخیر شبکه:</span>
+                <span className="font-medium">{systemMetrics?.system?.networkLatency || 0}ms</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
-      {/* Error States */}
-      {statusError && (
-        <ErrorMessage 
-          title="خطا در دریافت وضعیت سیستم"
-          message={statusError.message}
-          onRetry={() => queryClient.invalidateQueries(['systemStatus'])}
-        />
+      {/* Performance Metrics */}
+      {performanceSummary && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-blue-600" />
+            جزئیات عملکرد سیستم
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Scraping Performance */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-gray-900 dark:text-white">استخراج اسناد</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">اسناد در ساعت:</span>
+                  <span className="font-medium">{performanceSummary.scraping.documentsPerHour}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">کارایی پروکسی:</span>
+                  <span className="font-medium">{performanceSummary.scraping.proxyEfficiency}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">نرخ موفقیت:</span>
+                  <span className="font-medium text-green-600">{performanceSummary.scraping.averageSuccessRate}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Performance */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-gray-900 dark:text-white">هوش مصنوعی</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">دقت تحلیل:</span>
+                  <span className="font-medium">{Math.round(performanceSummary.ai.analysisAccuracy)}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">سرعت پردازش:</span>
+                  <span className="font-medium">{performanceSummary.ai.processingSpeed} doc/s</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">عملکرد مدل:</span>
+                  <span className="font-medium text-purple-600">{Math.round(performanceSummary.ai.modelPerformance)}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Database Performance */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-gray-900 dark:text-white">پایگاه داده</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">سرعت کوئری:</span>
+                  <span className="font-medium">{performanceSummary.database.querySpeed}ms</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">کارایی ذخیره‌سازی:</span>
+                  <span className="font-medium">{performanceSummary.database.storageEfficiency}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">سلامت ایندکس:</span>
+                  <span className="font-medium text-blue-600">{performanceSummary.database.indexHealth}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       )}
-      
-      {statsError && (
-        <ErrorMessage 
-          title="خطا در دریافت آمار سیستم"
-          message={statsError.message}
-          onRetry={() => queryClient.invalidateQueries(['systemStats'])}
-        />
-      )}
+
+      {/* Loading Overlay */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center"
+          >
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-2xl">
+              <div className="flex items-center gap-3">
+                <Loader className="w-6 h-6 animate-spin text-blue-600" />
+                <span className="text-gray-900 dark:text-white font-medium">
+                  در حال بروزرسانی داده‌ها...
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
