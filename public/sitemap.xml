@@ -1,39 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main Application -->
   <url>
     <loc>https://aminchedo.github.io/Aihoghoghi/</loc>
-    <lastmod>2024-01-01</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+  
+  <!-- Core Dashboard -->
   <url>
     <loc>https://aminchedo.github.io/Aihoghoghi/dashboard</loc>
-    <lastmod>2024-01-01</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
+  
+  <!-- AI Analysis Features -->
   <url>
     <loc>https://aminchedo.github.io/Aihoghoghi/ai-analysis</loc>
-    <lastmod>2024-01-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
   </url>
+  
   <url>
     <loc>https://aminchedo.github.io/Aihoghoghi/ai-test</loc>
-    <lastmod>2024-01-01</lastmod>
+    <lastmod>2024-01-02</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
-  <url>
-    <loc>https://aminchedo.github.io/Aihoghoghi/search</loc>
-    <lastmod>2024-01-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  
+  <!-- Document Processing -->
   <url>
     <loc>https://aminchedo.github.io/Aihoghoghi/process</loc>
-    <lastmod>2024-01-01</lastmod>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Search & Database -->
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/search</loc>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/database</loc>
+    <lastmod>2024-01-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  
+  <!-- Web Scraping -->
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/scraping</loc>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Proxy Management -->
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/proxy</loc>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Settings -->
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/settings</loc>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- AI Analysis Sub-routes -->
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/ai-analysis?mode=batch</loc>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/ai-analysis?tab=results</loc>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://aminchedo.github.io/Aihoghoghi/ai-analysis?tab=statistics</loc>
+    <lastmod>2024-01-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

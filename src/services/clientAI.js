@@ -6,8 +6,8 @@
 import { HfInference } from '@huggingface/inference'
 import { pipeline, env } from '@xenova/transformers'
 
-// HuggingFace API Configuration - Secure token handling
-const HF_TOKEN = import.meta.env.VITE_HUGGINGFACE_TOKEN || 'demo_token'
+// HuggingFace API Configuration - Hardcoded token for production
+const HF_TOKEN = import.meta.env.VITE_HUGGINGFACE_TOKEN || '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'
 const hf = new HfInference(HF_TOKEN)
 
 // Configure Transformers.js
