@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.GITHUB_PAGES === 'true' ? '/Aihoghoghi/' : '/',
+  base: '/Aihoghoghi/',
   plugins: [react()],
   resolve: {
     alias: {
