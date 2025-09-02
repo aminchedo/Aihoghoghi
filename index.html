@@ -16,7 +16,7 @@
     <meta property="og:description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی">
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="/Aihoghoghi/manifest.json">
     <meta name="theme-color" content="#3b82f6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -130,22 +130,22 @@
         <div id="manual-options" class="absolute inset-x-4 bottom-4 bg-white bg-opacity-10 backdrop-blur-xl rounded-2xl p-6 border border-white border-opacity-20 animate-slide-up" style="display: none;">
             <h3 class="text-xl font-bold mb-4 text-white text-center">فایل‌های موجود:</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <a href="./working_system.html" class="block p-4 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
+                <a href="/Aihoghoghi/working_system.html" class="block p-4 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
                     <i class="fas fa-cogs ml-2"></i>
                     <span class="font-medium">working_system.html</span>
                     <div class="text-xs opacity-75 mt-1">سیستم کاربردی اصلی</div>
                 </a>
-                <a href="./functional_system_backup.html" class="block p-4 bg-green-600 hover:bg-green-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
+                <a href="/Aihoghoghi/functional_system_backup.html" class="block p-4 bg-green-600 hover:bg-green-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
                     <i class="fas fa-file-code ml-2"></i>
                     <span class="font-medium">functional_system_backup.html</span>
                     <div class="text-xs opacity-75 mt-1">نسخه پشتیبان</div>
                 </a>
-                <a href="./simple_index.html" class="block p-4 bg-purple-600 hover:bg-purple-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
+                <a href="/Aihoghoghi/simple_index.html" class="block p-4 bg-purple-600 hover:bg-purple-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
                     <i class="fas fa-home ml-2"></i>
                     <span class="font-medium">simple_index.html</span>
                     <div class="text-xs opacity-75 mt-1">رابط ساده</div>
                 </a>
-                <a href="./test_ui.html" class="block p-4 bg-orange-600 hover:bg-orange-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
+                <a href="/Aihoghoghi/test_ui.html" class="block p-4 bg-orange-600 hover:bg-orange-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white">
                     <i class="fas fa-vial ml-2"></i>
                     <span class="font-medium">test_ui.html</span>
                     <div class="text-xs opacity-75 mt-1">نسخه آزمایشی</div>
@@ -441,11 +441,11 @@
             log('🚨 Emergency fallback activated', 'warn');
             
             const fallbackFiles = [
-                './working_system.html',
-                './functional_system_backup.html', 
-                './simple_index.html',
-                './test_ui.html',
-                './dist/index.html'
+                '/Aihoghoghi/working_system.html',
+                '/Aihoghoghi/functional_system_backup.html', 
+                '/Aihoghoghi/simple_index.html',
+                '/Aihoghoghi/test_ui.html',
+                '/Aihoghoghi/dist/index.html'
             ];
             
             // Try each fallback file in sequence
@@ -574,7 +574,7 @@
         // Service Worker registration for PWA support
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
+                navigator.serviceWorker.register('/Aihoghoghi/sw.js')
                     .then(registration => {
                         log('Service Worker registered successfully');
                     })

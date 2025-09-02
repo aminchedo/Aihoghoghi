@@ -227,6 +227,15 @@
     </div>
     
     <script>
+        // API Configuration for production
+        const API_CONFIG = {
+            BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? 'http://localhost:8000' 
+                : 'https://iranian-legal-archive-api.herokuapp.com',
+            TIMEOUT: 30000,
+            RETRY_ATTEMPTS: 3
+        };
+        
         // Real working JavaScript functions
         
         let systemStats = {
@@ -267,7 +276,7 @@
             showLoading('در حال اسکرپینگ سایت‌ها...');
             
             try {
-                const response = await fetch('/api/scrape', {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/scrape`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'scrape_working_sites'})
@@ -309,7 +318,7 @@
             showLoading('در حال تحلیل هوشمند محتوا...');
             
             try {
-                const response = await fetch('/api/ai-analyze', {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/ai-analyze`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'analyze_all_content'})
@@ -358,7 +367,7 @@
             showLoading('در حال اجرای تست یکپارچه...');
             
             try {
-                const response = await fetch('/api/integrated-test', {
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/integrated-test`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({action: 'full_system_test'})
@@ -441,7 +450,7 @@
             showLoading('در حال بارگذاری آمار...');
             
             try {
-                const response = await fetch('/api/stats');
+                const response = await fetch(`${API_CONFIG.BASE_URL}/api/stats`);
                 if (response.ok) {
                     const stats = await response.json();
                     
