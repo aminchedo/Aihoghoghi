@@ -64,7 +64,7 @@ export default defineConfig({
     assetsInlineLimit: 4096,
     cssCodeSplit: true,
     minify: 'esbuild',
-    target: 'es2015',
+    target: 'es2020',
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query'],

@@ -24,6 +24,9 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { ConfigProvider } from './contexts/ConfigContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 
+// Utils
+import githubPagesConfig from './utils/githubPagesConfig';
+
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +44,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(null);
   const [initializationComplete, setInitializationComplete] = useState(false);
+  const [githubConfig, setGithubConfig] = useState(null);
 
   useEffect(() => {
     // Initialize application with auto-startup integration
@@ -49,6 +53,16 @@ function App() {
       
       try {
         console.log('🚀 Initializing Iranian Legal Archive System...');
+        
+        // Initialize GitHub Pages configuration
+        setGithubConfig(githubPagesConfig);
+        
+        // Setup environment-specific features
+        if (githubPagesConfig.isGitHubPages) {
+          console.log('🌐 GitHub Pages environment detected');
+          githubPagesConfig.setupClientSideAPI();
+        }
+        
         console.log('🔗 Connecting to auto-startup services...');
         
         // Wait for auto-startup service to be ready (reduced timeout)

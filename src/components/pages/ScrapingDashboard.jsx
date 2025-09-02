@@ -20,6 +20,8 @@ import {
   ExternalLink
 } from 'lucide-react';
 import webScrapingService from '../../services/webScrapingService';
+import advancedScrapingService from '../../services/advancedScrapingService';
+import scrapingEngine from '../../services/scrapingEngine';
 
 const ScrapingDashboard = () => {
   const [activeTab, setActiveTab] = useState('scraper');

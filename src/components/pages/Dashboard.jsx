@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useResilientAPI } from '../../hooks/useResilientAPI';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useConfig } from '../../contexts/ConfigContext';
 import { useNotification } from '../../contexts/NotificationContext';
@@ -17,6 +18,23 @@ const Dashboard = () => {
   const { showApiError } = useNotification();
   const queryClient = useQueryClient();
   const [refreshInterval, setRefreshInterval] = useState(30000); // 30 seconds
+  
+  // Resilient API for additional system health data
+  const { 
+    data: healthData, 
+    loading: healthLoading, 
+    error: healthError,
+    refetch: refetchHealth 
+  } = useResilientAPI('/health', {
+    fallbackData: {
+      status: 'unknown',
+      services: {
+        database: 'unknown',
+        ai: 'unknown',
+        scraping: 'unknown'
+      }
+    }
+  });
 
   // Fetch system status
   const { data: systemStatus, isLoading: statusLoading, error: statusError } = useQuery({

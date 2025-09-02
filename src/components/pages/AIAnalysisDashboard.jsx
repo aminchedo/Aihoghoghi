@@ -23,6 +23,8 @@ import {
   Activity
 } from 'lucide-react';
 import aiService from '../../services/aiService';
+import aiAnalysisService from '../../services/aiAnalysisService';
+import { PersianLegalAI } from '../../services/clientAI';
 
 const AIAnalysisDashboard = () => {
   const [activeTab, setActiveTab] = useState('analyzer');
@@ -31,6 +33,8 @@ const AIAnalysisDashboard = () => {
   const [inputText, setInputText] = useState('');
   const [analysisMode, setAnalysisMode] = useState('single');
   const [batchTexts, setBatchTexts] = useState(['']);
+  const [advancedMode, setAdvancedMode] = useState(false);
+  const [persianAI, setPersianAI] = useState(null);
   const [stats, setStats] = useState({
     totalAnalyzed: 0,
     successfulAnalyses: 0,
@@ -47,6 +51,24 @@ const AIAnalysisDashboard = () => {
     'شکایت آقای محمد کریمی از شرکت تجاری پارس به دلیل نقض قرارداد و عدم ایفای تعهدات قراردادی در مهلت مقرر که موجب ضرر و زیان شاکی گردیده است.'
   ];
 
+  // Initialize Persian AI
+  useEffect(() => {
+    const initPersianAI = async () => {
+      try {
+        const ai = new PersianLegalAI();
+        await ai.initialize();
+        setPersianAI(ai);
+        console.log('✅ Persian Legal AI initialized');
+      } catch (error) {
+        console.error('❌ Failed to initialize Persian AI:', error);
+      }
+    };
+    
+    if (advancedMode) {
+      initPersianAI();
+    }
+  }, [advancedMode]);
+
   const handleSingleAnalysis = async () => {
     if (!inputText.trim()) {
       alert('لطفاً متن مورد نظر را وارد کنید');
@@ -55,8 +77,32 @@ const AIAnalysisDashboard = () => {
 
     setIsAnalyzing(true);
     try {
-      const result = await aiService.analyzeTexts([inputText]);
-      setAnalysisResults(result.ranked);
+      let result;
+      
+      if (advancedMode && persianAI) {
+        // Use advanced Persian AI
+        console.log('🧠 Using advanced Persian Legal AI...');
+        result = await persianAI.classifyDocument(inputText);
+        setAnalysisResults([{
+          text: inputText.substring(0, 150) + (inputText.length > 150 ? '...' : ''),
+          fullText: inputText,
+          category: result.category || 'نامشخص',
+          score: result.confidence || 0.5,
+          confidence: Math.round((result.confidence || 0.5) * 100),
+          legalType: result.legalType || 'عمومی',
+          legalScore: result.legalScore || 0,
+          entities: result.entities || {},
+          textLength: inputText.length,
+          language: 'fa',
+          analyzedAt: new Date().toISOString(),
+          advanced: true
+        }]);
+      } else {
+        // Use standard service
+        result = await aiService.analyzeTexts([inputText]);
+        setAnalysisResults(result.ranked);
+      }
+      
       setStats(aiService.getStats());
     } catch (error) {
       console.error('Analysis failed:', error);
@@ -185,6 +231,28 @@ const AIAnalysisDashboard = () => {
           </div>
           
           <div className="flex items-center gap-3">
+            {/* Advanced Mode Toggle */}
+            <div className="flex items-center gap-2">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={advancedMode}
+                  onChange={(e) => setAdvancedMode(e.target.checked)}
+                  className="sr-only"
+                />
+                <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  advancedMode ? 'bg-purple-600' : 'bg-gray-200 dark:bg-gray-700'
+                }`}>
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    advancedMode ? 'translate-x-6' : 'translate-x-1'
+                  }`} />
+                </div>
+                <span className="mr-2 text-sm text-gray-700 dark:text-gray-300">
+                  حالت پیشرفته
+                </span>
+              </label>
+            </div>
+            
             <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
               isAnalyzing 
                 ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' 

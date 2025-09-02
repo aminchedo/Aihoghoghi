@@ -5,7 +5,6 @@
 
 import { HfInference } from '@huggingface/inference'
 import { pipeline, env } from '@xenova/transformers'
-import { persianNLP } from './persianNLP.js'
 
 // HuggingFace API Configuration - Secure token handling
 const HF_TOKEN = import.meta.env.VITE_HUGGINGFACE_TOKEN || 'demo_token'
@@ -241,7 +240,7 @@ export class PersianLegalAI {
       }
 
       const fullText = `${title} ${text}`.trim()
-      const processedText = persianNLP.normalizeText(fullText).slice(0, this.modelConfigs.classification.maxLength)
+      const processedText = this.normalizeText(fullText).slice(0, this.modelConfigs.classification.maxLength)
       
       // Check cache first
       const cacheKey = this.generateCacheKey(processedText)
@@ -278,7 +277,7 @@ export class PersianLegalAI {
       result.model_version = this.modelConfigs.classification.model
       result.timestamp = new Date().toISOString()
       result.text_length = processedText.length
-      result.language = persianNLP.detectLanguage(processedText)
+      result.language = this.detectLanguage(processedText)
 
       // Update metrics
       this.updateMetrics('classification', result.processing_time, true)
@@ -334,8 +333,8 @@ export class PersianLegalAI {
    * Rule-based classification for Persian legal documents
    */
   performRuleBasedClassification(text, title) {
-    const entities = persianNLP.extractLegalEntities(text)
-    const nlpResult = persianNLP.classifyDocumentType(title, text)
+    const entities = this.extractLegalEntities(text)
+    const nlpResult = this.classifyDocumentType(title, text)
     
     return {
       category: nlpResult.category,
@@ -412,7 +411,7 @@ export class PersianLegalAI {
         throw new Error('Invalid input text for embeddings')
       }
 
-      const processedText = persianNLP.normalizeText(text).slice(0, maxLength)
+      const processedText = this.normalizeText(text).slice(0, maxLength)
       const cacheKey = this.generateCacheKey(processedText)
 
       // Check cache
@@ -570,5 +569,60 @@ persianAI.initialize().then(success => {
 }).catch(error => {
   console.error('🚨 Persian AI initialization error:', error)
 })
+
+// Add missing helper methods to PersianLegalAI class
+PersianLegalAI.prototype.normalizeText = function(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/[‌]/g, ' ') // Replace ZWNJ with space
+    .normalize('NFD');
+};
+
+PersianLegalAI.prototype.detectLanguage = function(text) {
+  const persianChars = (text.match(/[\u0600-\u06FF]/g) || []).length;
+  const totalChars = text.replace(/\s/g, '').length;
+  const persianRatio = persianChars / totalChars;
+  
+  if (persianRatio > 0.7) return 'fa';
+  if (persianRatio > 0.3) return 'mixed';
+  return 'en';
+};
+
+PersianLegalAI.prototype.extractLegalEntities = function(text) {
+  return {
+    persons: [...(text.match(/(?:آقای|خانم|دکتر)\s+([آ-ی\s]{2,30})/gi) || [])].slice(0, 3),
+    dates: [...(text.match(/\d{4}\/\d{1,2}\/\d{1,2}|[۰-۹]{4}\/[۰-۹]{1,2}\/[۰-۹]{1,2}/g) || [])].slice(0, 3),
+    amounts: [...(text.match(/([\d,۰-۹]+)\s*(تومان|ریال)/gi) || [])].slice(0, 2)
+  };
+};
+
+PersianLegalAI.prototype.classifyDocumentType = function(title, text) {
+  const legalPatterns = {
+    'قرارداد': /قرارداد|طرفین|خریدار|فروشنده|اجاره/gi,
+    'رای_دادگاه': /رای|حکم|دادگاه|قاضی|خواهان|خوانده/gi,
+    'قانون': /قانون|ماده|تبصره|فصل|باب/gi,
+    'دادخواست': /دادخواست|خواهان|علیه|خوانده/gi,
+    'شکایت': /شکایت|متهم|شاکی|جرم/gi,
+    'مصوبه': /مصوبه|تصویب|شورا|کمیسیون/gi
+  };
+
+  let maxScore = 0;
+  let category = 'عمومی';
+  
+  Object.entries(legalPatterns).forEach(([type, pattern]) => {
+    const matches = (title + ' ' + text).match(pattern) || [];
+    if (matches.length > maxScore) {
+      maxScore = matches.length;
+      category = type;
+    }
+  });
+
+  return {
+    category,
+    confidence: Math.min(maxScore * 0.1, 0.95)
+  };
+};
 
 export default PersianLegalAI
