@@ -1,0 +1,69 @@
+# Vercel deployment ignore file
+# Exclude unnecessary files from deployment to reduce build size
+
+# Test and verification files
+test_*.py
+verify_*.py
+*_test.py
+*_verification.py
+
+# Development files
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Documentation (keep README.md)
+DEPLOYMENT.md
+VERCEL_DEPLOYMENT_SUMMARY.md
+
+# Test data and reports
+*_report*.json
+verification_report*.json
+scraped_*.csv
+scraped_*.json
+
+# Node.js files (if not needed for API)
+node_modules/
+package-lock.json
+package.json
+vite.config.js
+tailwind.config.js
+postcss.config.js
+
+# Build artifacts
+dist/
+.git/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large test files
+enhanced_legal_scraper*.py
+ultimate_*.py
+real_*.py
+complete_*.py
+smart_*.py
+expanded_*.py
+final_*.py
+integration_*.py
+
+# HTML test files
+*.html
+!index.html
+!functional_system.html
