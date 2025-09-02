@@ -1,111 +1,158 @@
-# 🏛️ سیستم آرشیو اسناد حقوقی ایران - نسخه حرفه‌ای
+# Iranian Legal Archive System - FastAPI + ML
 
-## 🌟 سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران
+A FastAPI-based web application for Iranian legal document analysis with AI-powered classification and processing.
 
-سیستم کاملاً حرفه‌ای و آماده تولید برای مدیریت، آرشیو، و تحلیل اسناد حقوقی با قابلیت‌های پیشرفته هوش مصنوعی.
+## 🚀 Deployment on Vercel
 
-### 🚀 [مشاهده سیستم زنده](https://aminchedo.github.io/Aihoghoghi/)
+This project is optimized for deployment on Vercel with Python 3.12 support.
 
----
+### Dependencies Structure
 
-## ✨ ویژگی‌های کلیدی
+The project uses a modular dependency structure for better build management:
 
-### 🤖 هوش مصنوعی پیشرفته
-- تحلیل خودکار متون حقوقی فارسی
-- دسته‌بندی هوشمند اسناد با BERT فارسی
-- استخراج موجودیت‌های حقوقی
-- تحلیل احساسات و خلاصه‌سازی
+- **`requirements.txt`** - Main dependencies file including core FastAPI and ML packages
+- **`requirements-core.txt`** - Lightweight core dependencies without ML packages
+- **`requirements-ml.txt`** - Heavy ML dependencies (torch, transformers, sentence-transformers)
 
-### 🌐 استخراج هوشمند
-- استخراج خودکار از منابع دولتی (majlis.ir, judiciary.ir, dotic.ir)
-- سیستم پروکسی پیشرفته با چرخش خودکار
-- پشتیبانی از 22+ سرور DNS
-- تست خودکار اتصال شبکه
+### Python Version Compatibility
 
-### 🗄️ پایگاه داده قدرتمند
-- ذخیره‌سازی محلی با IndexedDB
-- جستجوی تمام‌متن فارسی
-- ایندکس‌گذاری هوشمند
-- صادرات/وارد کردن داده‌ها
+- **Target Python Version**: 3.12 (default on Vercel)
+- **Alternative**: Python 3.11 (configured in `runtime.txt` if needed)
+- **Compatibility**: All dependencies are tested and compatible with Python 3.12
 
-### 📊 داشبورد آمار لحظه‌ای
-- نظارت بر عملکرد سیستم
-- آمار استخراج و تحلیل
-- نمودارهای تعاملی
-- متریک‌های عملکرد
+### Key Dependency Updates for Python 3.12
 
-### 🎨 رابط کاربری مدرن
-- طراحی واکنش‌گرا و مدرن
-- پشتیبانی کامل از RTL
-- تایپوگرافی فارسی با فونت Vazirmatn
-- تم تیره/روشن
+The following changes were made to ensure Python 3.12 compatibility:
 
-### 📱 PWA آماده
-- قابلیت نصب روی دستگاه
-- کارکرد آفلاین
-- کش هوشمند
-- اعلان‌های Push
+1. **Torch**: Updated to `torch==2.2.2` (supports Python 3.12)
+2. **NumPy**: Updated to `numpy==1.26.4` (no distutils dependency)
+3. **Transformers**: Updated to `transformers==4.36.2` (latest stable)
+4. **Sentence Transformers**: Added `sentence-transformers==2.7.0`
+5. **Build Dependencies**: Added `setuptools>=68.0.0`, `packaging>=23.0`, `wheel>=0.42.0`
 
----
+### Installation
 
-## 🚀 راه‌اندازی سریع
+#### Local Development
 
 ```bash
-# نصب وابستگی‌ها
-npm install
+# Create virtual environment
+python3.12 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# اجرای محیط توسعه
-npm run dev
+# Install dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
 
-# ساخت نسخه تولید
-npm run build
+# Or install core dependencies only (without ML)
+pip install -r requirements-core.txt
 
-# تست سیستم
-node system_verification.cjs
+# Start the development server
+uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
----
+#### Production Deployment on Vercel
 
-## 📊 آمار عملکرد
+1. **Automatic Deployment**: Push to your connected Git repository
+2. **Manual Deployment**: Use Vercel CLI
+   ```bash
+   vercel --prod
+   ```
 
-### 🎯 نتایج تست سیستم
-- ✅ **100% موفقیت** در تست‌های سیستم
-- ✅ **31/31 فایل** موجود و صحیح  
-- ✅ **PWA کامل** با قابلیت آفلاین
-- ✅ **GitHub Pages** آماده استقرار
-- ✅ **عملکرد بالا** - JS: 944KB, CSS: 63KB
+### Vercel Configuration
 
-### 🚀 قابلیت‌های تأیید شده
-- [x] استخراج خودکار اسناد حقوقی
-- [x] تحلیل هوش مصنوعی متون فارسی  
-- [x] جستجوی پیشرفته و دسته‌بندی
-- [x] داشبورد آمار و متریک‌ها
-- [x] مدیریت تنظیمات و API
-- [x] رابط کاربری مدرن و واکنش‌گرا
-- [x] پشتیبانی کامل زبان فارسی
-- [x] قابلیت‌های PWA و آفلاین
-- [x] بهینه‌سازی برای موبایل
-- [x] امنیت و رمزنگاری
+The project includes optimized Vercel configuration:
 
----
+- **Runtime**: Python 3.12 (specified in `runtime.txt` and `vercel.json`)
+- **Memory**: Increased Lambda size to 50MB for ML models
+- **Timeout**: 30 seconds for API functions
+- **Environment**: Custom PYTHONPATH and version settings
 
-## 🔧 پیکربندی
+### Project Structure
 
-### کلیدهای API
-1. **HuggingFace API Key**: برای تحلیل متن فارسی
-2. **OpenAI API Key** (اختیاری): برای قابلیت‌های اضافی
+```
+├── api/                    # FastAPI application
+│   ├── main.py            # Main API entry point
+│   ├── ai_processor.py    # AI/ML processing module
+│   ├── database.py        # Database operations
+│   └── scraper.py         # Web scraping functionality
+├── utils/                 # Utility modules
+├── static/               # Static files
+├── templates/            # HTML templates
+├── requirements.txt      # Main dependencies
+├── requirements-core.txt # Core dependencies only
+├── requirements-ml.txt   # ML dependencies only
+├── runtime.txt          # Python version for Vercel
+├── vercel.json          # Vercel deployment configuration
+└── README.md            # This file
+```
 
-### منابع استخراج
-- مجلس شورای اسلامی (majlis.ir)
-- قوه قضائیه (judiciary.ir)
-- مرکز اسناد ایران (dotic.ir)
+### Environment Variables
 
----
+Set these environment variables in your Vercel project settings:
 
-<div align="center">
+```
+PYTHONPATH=/var/task
+PYTHON_VERSION=3.12
+```
 
-### 🏛️ ساخته شده برای حقوقدانان ایران
+### Troubleshooting
 
-**[مشاهده سیستم زنده](https://aminchedo.github.io/Aihoghoghi/)**
+#### Common Issues
 
-</div>
+1. **Build timeouts**: The ML dependencies are heavy. Vercel has been configured with increased memory and timeout limits.
+
+2. **Import errors**: If you encounter import errors for ML packages, ensure all dependencies in `requirements.txt` are installed.
+
+3. **Distutils errors**: Python 3.12 removed distutils. This is handled by including `setuptools>=68.0.0`.
+
+#### Alternative Deployment Options
+
+If you encounter persistent issues with the full ML stack on Vercel:
+
+1. **Use core dependencies only**:
+   ```bash
+   # Replace requirements.txt with requirements-core.txt for deployment
+   cp requirements-core.txt requirements.txt
+   ```
+
+2. **Switch to Python 3.11**:
+   ```bash
+   # Update runtime.txt
+   echo "python-3.11" > runtime.txt
+   ```
+
+### API Endpoints
+
+- **GET `/`** - Health check and API information
+- **POST `/process`** - Process legal documents
+- **GET `/api/health`** - Health status
+- **WebSocket `/ws`** - Real-time updates
+
+### Development
+
+#### Running Tests
+
+```bash
+python -m pytest tests/ -v
+```
+
+#### Code Quality
+
+```bash
+# Format code
+black .
+
+# Type checking
+mypy .
+
+# Linting
+flake8 .
+```
+
+### License
+
+[Add your license information here]
+
+### Contributing
+
+[Add contributing guidelines here]
