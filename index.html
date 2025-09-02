@@ -3,998 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم آرشیو اسناد حقوقی ایران | Iranian Legal Archive System</title>
+    <title>سیستم آرشیو اسناد حقوقی ایران</title>
     
+    <!-- Preload critical resources for instant loading -->
+    <link rel="preload" href="functional_system.html" as="document">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    
+    <!-- Critical inline CSS for instant rendering -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        :root {
-            --neon-cyan: #00ffff;
-            --neon-pink: #ff0080;
-            --neon-purple: #8b5cf6;
-            --neon-green: #00ff88;
-            --dark-bg: #0a0a0f;
-            --darker-bg: #050507;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-bright: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.7);
-        }
-        
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--dark-bg);
-            color: var(--text-bright);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Futuristic Background */
-        .cyber-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 20%, var(--neon-purple) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, var(--neon-cyan) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, var(--neon-pink) 0%, transparent 50%),
-                linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
-            opacity: 0.8;
-        }
-        
-        .grid-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-            animation: grid-move 20s linear infinite;
-        }
-        
-        @keyframes grid-move {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-        
-        /* Floating Particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            animation: float-particle 15s linear infinite;
-            box-shadow: 0 0 10px var(--neon-cyan);
-        }
-        
-        .particle:nth-child(2n) {
-            background: var(--neon-pink);
-            box-shadow: 0 0 10px var(--neon-pink);
-            animation-duration: 12s;
-        }
-        
-        .particle:nth-child(3n) {
-            background: var(--neon-green);
-            box-shadow: 0 0 10px var(--neon-green);
-            animation-duration: 18s;
-        }
-        
-        @keyframes float-particle {
-            0% { 
-                transform: translateY(100vh) translateX(0px) rotate(0deg);
-                opacity: 0;
-            }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { 
-                transform: translateY(-10vh) translateX(50px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        /* Advanced Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--darker-bg) 0%, #1a0a2e 50%, var(--dark-bg) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 1s ease, visibility 1s ease;
-        }
-        
-        .loading-screen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .neural-loader {
-            width: 200px;
-            height: 200px;
-            position: relative;
-            margin-bottom: 2rem;
-        }
-        
-        .neural-node {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 20px var(--neon-cyan);
-            animation: pulse-node 2s ease-in-out infinite;
-        }
-        
-        .neural-connection {
-            position: absolute;
-            height: 2px;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-            box-shadow: 0 0 10px rgba(0,255,255,0.5);
-            animation: data-flow 3s linear infinite;
-        }
-        
-        @keyframes pulse-node {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.3); opacity: 1; }
-        }
-        
-        @keyframes data-flow {
-            0% { opacity: 0.3; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-        
-        .loading-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: text-glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes text-glow {
-            from { filter: brightness(1); }
-            to { filter: brightness(1.3); }
-        }
-        
-        .cyber-progress {
-            width: 300px;
-            height: 6px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 3px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-            background-size: 200% 100%;
-            animation: progress-fill 3s ease-out, progress-shine 1s ease-in-out infinite;
-        }
-        
-        @keyframes progress-fill {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        
-        @keyframes progress-shine {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        /* Main Content */
-        .main-container {
+            font-family: 'Tahoma', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 2rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: slideUp 1s ease 0.5s forwards;
+            align-items: center;
+            text-align: center;
         }
         
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .cyber-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+        .instant-loader {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 3rem;
-            max-width: 700px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 
-                0 0 50px rgba(0,255,255,0.1),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
         }
         
-        .cyber-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            animation: scan-line 3s ease-in-out infinite;
-        }
-        
-        @keyframes scan-line {
-            0% { left: -100%; }
-            50% { left: 100%; }
-            100% { left: -100%; }
-        }
-        
-        /* AI Neural Network Logo */
-        .ai-logo {
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        
-        .neural-network {
-            width: 150px;
-            height: 150px;
-            position: relative;
-            margin: 0 auto;
-            animation: rotate-network 10s linear infinite;
-        }
-        
-        @keyframes rotate-network {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .main-title {
-            font-size: 2.5rem;
-            font-weight: 800;
+        .logo {
+            font-size: 3rem;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-purple) 50%, var(--neon-pink) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0,255,255,0.3);
-            animation: title-glow 3s ease-in-out infinite alternate;
+            animation: pulse 2s infinite;
         }
         
-        @keyframes title-glow {
-            0% { filter: brightness(1) drop-shadow(0 0 5px rgba(0,255,255,0.5)); }
-            100% { filter: brightness(1.2) drop-shadow(0 0 15px rgba(0,255,255,0.8)); }
+        .title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin-bottom: 3rem;
-            color: var(--text-dim);
-            line-height: 1.6;
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
         }
         
-        /* Futuristic Features */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            margin: 3rem 0;
-        }
-        
-        .cyber-feature {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 2rem 1rem;
-            position: relative;
-            transition: all 0.3s ease;
+        .launch-btn {
+            background: linear-gradient(45deg, #00ff88, #00ffff);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
             cursor: pointer;
-            overflow: hidden;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
         }
         
-        .cyber-feature::before {
-            content: '';
-            position: absolute;
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+        }
+        
+        .performance-info {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Loading animation for transition */
+        .loading-transition {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .cyber-feature:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--neon-cyan);
-            box-shadow: 0 20px 40px rgba(0,255,255,0.2);
-        }
-        
-        .cyber-feature:hover::before {
-            opacity: 0.05;
-        }
-        
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 1rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .feature-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-bright);
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Countdown & Redirect */
-        .cyber-countdown {
-            background: linear-gradient(135deg, var(--glass-bg), rgba(0,255,255,0.05));
-            border: 1px solid var(--neon-cyan);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 3rem 0;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0,255,255,0.1);
-        }
-        
-        .countdown-number {
-            font-size: 4rem;
-            font-weight: 800;
-            color: var(--neon-cyan);
-            margin: 1rem 0;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 30px var(--neon-cyan);
-            animation: number-pulse 1s ease-in-out infinite;
-        }
-        
-        @keyframes number-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        /* Cyber Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 1.5rem;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
             justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-        
-        .cyber-btn {
-            background: transparent;
-            border: 2px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
             align-items: center;
-            gap: 0.8rem;
-            position: relative;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            z-index: 1000;
         }
         
-        .cyber-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .cyber-btn:hover {
-            color: var(--dark-bg);
-            background: var(--neon-cyan);
-            box-shadow: 
-                0 0 20px var(--neon-cyan),
-                inset 0 0 20px rgba(0,0,0,0.2);
-            transform: translateY(-3px);
-        }
-        
-        .cyber-btn:hover::before {
-            left: 100%;
-        }
-        
-        .cyber-btn.primary {
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            border: none;
-            color: var(--dark-bg);
-            box-shadow: 0 10px 25px rgba(0,255,255,0.3);
-        }
-        
-        .cyber-btn.primary:hover {
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-            box-shadow: 0 15px 35px rgba(139,92,246,0.4);
-        }
-        
-        /* Status Indicator */
-        .system-status {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            background: var(--glass-bg);
-            border: 1px solid var(--neon-green);
-            border-radius: 50px;
-            padding: 0.8rem 1.5rem;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            color: var(--neon-green);
-            font-weight: 600;
-        }
-        
-        .status-pulse {
-            width: 10px;
-            height: 10px;
-            background: var(--neon-green);
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #00ffff;
             border-radius: 50%;
-            animation: status-pulse 2s ease-in-out infinite;
-            box-shadow: 0 0 10px var(--neon-green);
+            animation: spin 1s linear infinite;
         }
         
-        @keyframes status-pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 1rem;
-            }
-            
-            .cyber-card {
-                padding: 2rem;
-            }
-            
-            .main-title {
-                font-size: 2rem;
-            }
-            
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .system-status {
-                position: static;
-                margin-bottom: 2rem;
-                align-self: center;
-            }
-            
-            .neural-network {
-                width: 120px;
-                height: 120px;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <!-- Futuristic Background -->
-    <div class="cyber-background"></div>
-    <div class="grid-overlay"></div>
+    <div class="instant-loader">
+        <div class="logo">🏛️</div>
+        <h1 class="title">سیستم آرشیو اسناد حقوقی ایران</h1>
+        <p class="subtitle">Iranian Legal Archive System</p>
+        <p class="subtitle">سیستم کاملاً عملیاتی و بهینه شده</p>
+        
+        <a href="functional_system.html" class="launch-btn" onclick="showLoadingTransition()">
+            ورود به سیستم
+        </a>
+        
+        <div class="performance-info">
+            <div>⚡ بارگذاری فوری - بدون تأخیر</div>
+            <div>🚀 عملکرد بهینه شده</div>
+            <div>✅ آماده برای استفاده</div>
+        </div>
+    </div>
     
-    <!-- Floating Particles -->
-    <div class="particles">
-        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
-        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
-        <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
-        <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
-        <div class="particle" style="left: 60%; animation-delay: 1s;"></div>
-        <div class="particle" style="left: 70%; animation-delay: 3s;"></div>
-        <div class="particle" style="left: 80%; animation-delay: 5s;"></div>
-        <div class="particle" style="left: 90%; animation-delay: 7s;"></div>
-    </div>
-
-    <!-- Advanced Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
-        <div class="neural-loader" id="neuralLoader">
-            <!-- Dynamic neural network will be generated by JS -->
-        </div>
-        
-        <div class="loading-text">سیستم هوش مصنوعی در حال بارگذاری</div>
-        
-        <div class="cyber-progress">
-            <div class="progress-bar"></div>
-        </div>
-        
-        <div style="margin-top: 2rem; font-size: 1rem; opacity: 0.8;">
-            آماده‌سازی شبکه عصبی برای تحلیل اسناد...
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-container" id="mainContent">
-        <div class="system-status">
-            <div class="status-pulse"></div>
-            SYSTEM ONLINE
-        </div>
-        
-        <div class="cyber-card">
-            <div class="ai-logo">
-                <div class="neural-network" id="mainLogo">
-                    <!-- AI Neural Network SVG -->
-                    <svg width="150" height="150" viewBox="0 0 150 150">
-                        <defs>
-                            <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
-                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#ff0080;stop-opacity:1" />
-                            </linearGradient>
-                            
-                            <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#00ffff;stop-opacity:0.8" />
-                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:0.6" />
-                                <stop offset="100%" style="stop-color:#ff0080;stop-opacity:0.8" />
-                            </linearGradient>
-                            
-                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                <feMerge> 
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        
-                        <!-- Neural Network Structure -->
-                        <!-- Input Layer -->
-                        <circle cx="25" cy="40" r="8" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="25" cy="75" r="8" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="25" cy="110" r="8" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        
-                        <!-- Hidden Layer 1 -->
-                        <circle cx="75" cy="30" r="10" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="75" cy="60" r="10" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="75" cy="90" r="10" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="75" cy="120" r="10" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        
-                        <!-- Hidden Layer 2 -->
-                        <circle cx="110" cy="45" r="9" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="110" cy="75" r="9" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="110" cy="105" r="9" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        
-                        <!-- Output Layer -->
-                        <circle cx="140" cy="60" r="12" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        <circle cx="140" cy="90" r="12" fill="url(#nodeGradient)" filter="url(#glow)"/>
-                        
-                        <!-- Connections -->
-                        <line x1="33" y1="40" x2="67" y2="30" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="33" y1="40" x2="67" y2="60" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="33" y1="75" x2="67" y2="60" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="33" y1="75" x2="67" y2="90" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="33" y1="110" x2="67" y2="90" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="33" y1="110" x2="67" y2="120" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        
-                        <line x1="85" y1="30" x2="101" y2="45" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="85" y1="60" x2="101" y2="45" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="85" y1="60" x2="101" y2="75" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="85" y1="90" x2="101" y2="75" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="85" y1="90" x2="101" y2="105" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        <line x1="85" y1="120" x2="101" y2="105" stroke="url(#connectionGradient)" stroke-width="2" opacity="0.7"/>
-                        
-                        <line x1="119" y1="45" x2="128" y2="60" stroke="url(#connectionGradient)" stroke-width="3" opacity="0.8"/>
-                        <line x1="119" y1="75" x2="128" y2="60" stroke="url(#connectionGradient)" stroke-width="3" opacity="0.8"/>
-                        <line x1="119" y1="75" x2="128" y2="90" stroke="url(#connectionGradient)" stroke-width="3" opacity="0.8"/>
-                        <line x1="119" y1="105" x2="128" y2="90" stroke="url(#connectionGradient)" stroke-width="3" opacity="0.8"/>
-                        
-                        <!-- Data Flow Animation -->
-                        <circle cx="25" cy="75" r="3" fill="#00ffff" opacity="0">
-                            <animate attributeName="cx" values="25;75;110;140" dur="2s" repeatCount="indefinite"/>
-                            <animate attributeName="cy" values="75;60;75;75" dur="2s" repeatCount="indefinite"/>
-                            <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
-                        </circle>
-                    </svg>
-                </div>
-            </div>
-            
-            <h1 class="main-title">AI Legal Archive System</h1>
-            <p class="subtitle">سیستم یکپارچه استخراج و تحلیل اسناد حقوقی با قدرت شبکه‌های عصبی مصنوعی</p>
-            
-            <div class="features-grid">
-                <div class="cyber-feature">
-                    <div class="feature-icon">
-                        <svg width="60" height="60" viewBox="0 0 60 60">
-                            <defs>
-                                <linearGradient id="webGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#00ffff"/>
-                                    <stop offset="100%" style="stop-color:#8b5cf6"/>
-                                </linearGradient>
-                            </defs>
-                            <circle cx="30" cy="30" r="25" fill="none" stroke="url(#webGrad)" stroke-width="2"/>
-                            <circle cx="30" cy="15" r="3" fill="#00ffff"/>
-                            <circle cx="45" cy="30" r="3" fill="#8b5cf6"/>
-                            <circle cx="30" cy="45" r="3" fill="#ff0080"/>
-                            <circle cx="15" cy="30" r="3" fill="#00ff88"/>
-                            <path d="M15,30 Q30,15 45,30 Q30,45 15,30" fill="none" stroke="url(#webGrad)" stroke-width="1"/>
-                        </svg>
-                    </div>
-                    <div class="feature-title">WEB SCRAPING</div>
-                </div>
-                
-                <div class="cyber-feature">
-                    <div class="feature-icon">
-                        <svg width="60" height="60" viewBox="0 0 60 60">
-                            <defs>
-                                <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#8b5cf6"/>
-                                    <stop offset="100%" style="stop-color:#ff0080"/>
-                                </linearGradient>
-                            </defs>
-                            <path d="M15,25 Q30,10 45,25 Q50,40 30,45 Q10,40 15,25" fill="url(#brainGrad)" opacity="0.3"/>
-                            <circle cx="20" cy="25" r="2" fill="#8b5cf6"/>
-                            <circle cx="30" cy="20" r="2" fill="#ff0080"/>
-                            <circle cx="40" cy="25" r="2" fill="#00ffff"/>
-                            <circle cx="25" cy="35" r="2" fill="#00ff88"/>
-                            <circle cx="35" cy="35" r="2" fill="#8b5cf6"/>
-                        </svg>
-                    </div>
-                    <div class="feature-title">AI ANALYSIS</div>
-                </div>
-                
-                <div class="cyber-feature">
-                    <div class="feature-icon">
-                        <svg width="60" height="60" viewBox="0 0 60 60">
-                            <defs>
-                                <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#00ffff"/>
-                                    <stop offset="100%" style="stop-color:#00ff88"/>
-                                </linearGradient>
-                            </defs>
-                            <rect x="10" y="15" width="40" height="30" rx="3" fill="url(#dataGrad)" opacity="0.3"/>
-                            <rect x="15" y="20" width="8" height="4" fill="#00ffff"/>
-                            <rect x="25" y="20" width="12" height="4" fill="#8b5cf6"/>
-                            <rect x="15" y="27" width="15" height="4" fill="#ff0080"/>
-                            <rect x="32" y="27" width="8" height="4" fill="#00ff88"/>
-                            <rect x="15" y="34" width="10" height="4" fill="#00ffff"/>
-                        </svg>
-                    </div>
-                    <div class="feature-title">DATA MINING</div>
-                </div>
-                
-                <div class="cyber-feature">
-                    <div class="feature-icon">
-                        <svg width="60" height="60" viewBox="0 0 60 60">
-                            <defs>
-                                <linearGradient id="quantumGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#ff0080"/>
-                                    <stop offset="100%" style="stop-color:#8b5cf6"/>
-                                </linearGradient>
-                            </defs>
-                            <circle cx="30" cy="30" r="20" fill="none" stroke="url(#quantumGrad)" stroke-width="2" stroke-dasharray="5,5">
-                                <animateTransform attributeName="transform" type="rotate" values="0 30 30;360 30 30" dur="4s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="30" cy="30" r="8" fill="url(#quantumGrad)" opacity="0.5"/>
-                            <circle cx="30" cy="30" r="3" fill="#ffffff"/>
-                        </svg>
-                    </div>
-                    <div class="feature-title">QUANTUM PROCESSING</div>
-                </div>
-            </div>
-            
-            <div class="cyber-countdown">
-                <div style="font-weight: 700; font-size: 1.3rem; margin-bottom: 1rem; color: var(--neon-cyan);">
-                    SYSTEM READY FOR DEPLOYMENT
-                </div>
-                <div class="countdown-number" id="countdown">3</div>
-                <div style="opacity: 0.9; font-size: 1.1rem;">
-                    SECONDS TO AUTO-LAUNCH
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <a href="functional_system.html" class="cyber-btn primary" id="manualLink">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M13 3L4 14H11L10.5 21L19.5 10H12.5L13 3Z"/>
-                    </svg>
-                    LAUNCH SYSTEM
-                </a>
-                
-                <button class="cyber-btn" onclick="showSystemSpecs()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22"/>
-                    </svg>
-                    SYSTEM SPECS
-                </button>
-            </div>
+    <!-- Loading transition overlay -->
+    <div class="loading-transition" id="loadingTransition">
+        <div>
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">در حال انتقال به سیستم...</p>
         </div>
     </div>
 
     <script>
-        // Futuristic System Controller
-        class CyberSystem {
-            constructor() {
-                this.countdownValue = 3;
-                this.isSystemReady = false;
-                this.particleCount = 20;
-                
-                this.init();
+        // Performance monitoring
+        window.addEventListener('load', () => {
+            const perfData = performance.timing;
+            const loadTime = perfData.loadEventEnd - perfData.navigationStart;
+            console.log(`Page load time: ${loadTime}ms`);
+            
+            // Log performance for monitoring
+            if (loadTime < 2000) {
+                console.log('✅ Loading performance: EXCELLENT');
+            } else {
+                console.warn('⚠️ Loading performance: NEEDS OPTIMIZATION');
             }
-            
-            init() {
-                this.generateNeuralNetwork();
-                this.startLoadingSequence();
-                this.setupCountdown();
-                this.createMoreParticles();
-                this.setupSystemChecks();
-            }
-            
-            generateNeuralNetwork() {
-                const loader = document.getElementById('neuralLoader');
-                
-                // Create neural nodes and connections
-                for (let i = 0; i < 8; i++) {
-                    const node = document.createElement('div');
-                    node.className = 'neural-node';
-                    
-                    const angle = (i * 45) * Math.PI / 180;
-                    const radius = 80;
-                    const x = 100 + radius * Math.cos(angle);
-                    const y = 100 + radius * Math.sin(angle);
-                    
-                    node.style.left = `${x - 6}px`;
-                    node.style.top = `${y - 6}px`;
-                    node.style.animationDelay = `${i * 0.2}s`;
-                    
-                    loader.appendChild(node);
-                }
-                
-                // Create connections
-                for (let i = 0; i < 6; i++) {
-                    const connection = document.createElement('div');
-                    connection.className = 'neural-connection';
-                    
-                    const angle = (i * 60) * Math.PI / 180;
-                    const length = Math.random() * 60 + 40;
-                    const x = 100 - length / 2;
-                    const y = 100 - 1;
-                    
-                    connection.style.left = `${x}px`;
-                    connection.style.top = `${y}px`;
-                    connection.style.width = `${length}px`;
-                    connection.style.transform = `rotate(${angle}rad)`;
-                    connection.style.animationDelay = `${i * 0.3}s`;
-                    
-                    loader.appendChild(connection);
-                }
-            }
-            
-            async startLoadingSequence() {
-                const loadingScreen = document.getElementById('loadingScreen');
-                
-                // Show loading for minimum time
-                await new Promise(resolve => setTimeout(resolve, 4000));
-                
-                loadingScreen.classList.add('fade-out');
-                
-                setTimeout(() => {
-                    document.getElementById('mainContent').style.display = 'flex';
-                    this.isSystemReady = true;
-                }, 800);
-            }
-            
-            setupCountdown() {
-                const countdownEl = document.getElementById('countdown');
-                const manualLink = document.getElementById('manualLink');
-                
-                const timer = setInterval(() => {
-                    this.countdownValue--;
-                    countdownEl.textContent = this.countdownValue;
-                    
-                    if (this.countdownValue <= 0) {
-                        clearInterval(timer);
-                        this.launchSystem();
-                    }
-                    
-                    // Update button text
-                    if (this.countdownValue > 0) {
-                        manualLink.innerHTML = `
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M13 3L4 14H11L10.5 21L19.5 10H12.5L13 3Z"/>
-                            </svg>
-                            AUTO-LAUNCH ${this.countdownValue}s
-                        `;
-                    }
-                }, 1000);
-            }
-            
-            createMoreParticles() {
-                const particles = document.querySelector('.particles');
-                
-                for (let i = 0; i < this.particleCount; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.left = `${Math.random() * 100}%`;
-                    particle.style.animationDelay = `${Math.random() * 10}s`;
-                    particle.style.animationDuration = `${12 + Math.random() * 8}s`;
-                    
-                    particles.appendChild(particle);
-                }
-            }
-            
-            async setupSystemChecks() {
-                try {
-                    const response = await fetch('functional_system.html', { method: 'HEAD' });
-                    
-                    if (response.ok) {
-                        console.log('🚀 Target system detected and operational');
-                        this.updateSystemStatus('ONLINE');
-                    } else {
-                        this.handleSystemError();
-                    }
-                } catch (error) {
-                    console.warn('⚠️ Network diagnostics inconclusive, proceeding with launch');
-                    this.updateSystemStatus('LIMITED');
-                }
-            }
-            
-            launchSystem() {
-                document.body.style.transition = 'all 0.8s ease';
-                document.body.style.filter = 'brightness(0.3) blur(2px)';
-                
-                setTimeout(() => {
-                    window.location.href = 'functional_system.html';
-                }, 800);
-            }
-            
-            updateSystemStatus(status) {
-                const statusEl = document.querySelector('.system-status');
-                const statusText = statusEl.lastChild;
-                
-                switch (status) {
-                    case 'ONLINE':
-                        statusText.textContent = 'SYSTEM ONLINE';
-                        statusEl.style.borderColor = 'var(--neon-green)';
-                        statusEl.style.color = 'var(--neon-green)';
-                        break;
-                    case 'LIMITED':
-                        statusText.textContent = 'LIMITED MODE';
-                        statusEl.style.borderColor = '#fbbf24';
-                        statusEl.style.color = '#fbbf24';
-                        break;
-                    case 'ERROR':
-                        statusText.textContent = 'SYSTEM ERROR';
-                        statusEl.style.borderColor = '#ef4444';
-                        statusEl.style.color = '#ef4444';
-                        break;
-                }
-            }
-            
-            handleSystemError() {
-                const countdown = document.querySelector('.cyber-countdown');
-                countdown.innerHTML = `
-                    <div style="font-weight: 700; font-size: 1.3rem; margin-bottom: 1rem; color: #ef4444;">
-                        SYSTEM ERROR DETECTED
-                    </div>
-                    <div style="font-size: 1rem; opacity: 0.8;">
-                        Target system file not found. Please verify functional_system.html is deployed correctly.
-                    </div>
-                `;
-                this.updateSystemStatus('ERROR');
-            }
-        }
-        
-        // System Specifications Display
-        function showSystemSpecs() {
-            const specs = `
-═══════════════════════════════════════
-    AI LEGAL ARCHIVE SYSTEM v2.0
-═══════════════════════════════════════
-
-🔥 CORE SPECIFICATIONS:
-┌────────────────────────────────────┐
-│ SCRAPING ENGINE: Multi-Proxy Array │
-│ DNS SERVERS: 22 Redundant Nodes    │
-│ CORS BYPASS: 7 Proxy Gateways      │
-│ SUCCESS RATE: 80%+ Operational     │
-└────────────────────────────────────┘
-
-🧠 AI NEURAL NETWORK:
-┌────────────────────────────────────┐
-│ MODEL: HuggingFace Persian BERT    │
-│ PROCESSING: Real-time Analysis     │
-│ CLASSIFICATION: Multi-category AI  │
-│ ENTITY EXTRACTION: Advanced NLP    │
-└────────────────────────────────────┘
-
-⚡ SYSTEM ARCHITECTURE:
-┌────────────────────────────────────┐
-│ BACKEND: FastAPI + SQLite          │
-│ FRONTEND: Pure HTML/CSS/JS         │
-│ INTEGRATION: Full-Stack Operational│
-│ STATUS: Production Ready           │
-└────────────────────────────────────┘
-
-🎯 TARGET SITES: Iranian Legal Sources
-📊 PROCESSING: Real-time Document Analysis
-🔒 SECURITY: Enterprise-grade Protection
-
-Press OK to continue mission...
-            `;
-            
-            alert(specs);
-        }
-        
-        // Initialize Cyber System
-        document.addEventListener('DOMContentLoaded', () => {
-            new CyberSystem();
-            
-            // Add dynamic effects
-            setInterval(() => {
-                const particles = document.querySelectorAll('.particle');
-                particles.forEach(particle => {
-                    if (Math.random() > 0.98) {
-                        particle.style.boxShadow = `0 0 ${10 + Math.random() * 10}px ${particle.style.background}`;
-                    }
-                });
-            }, 100);
         });
         
-        // Optimize performance
-        window.addEventListener('beforeunload', () => {
-            document.body.style.transition = 'opacity 0.3s ease';
-            document.body.style.opacity = '0';
-        });
+        // Instant loading transition
+        function showLoadingTransition() {
+            const transition = document.getElementById('loadingTransition');
+            transition.style.display = 'flex';
+            
+            // Minimal transition time - just enough for visual feedback
+            setTimeout(() => {
+                window.location.href = 'functional_system.html';
+            }, 300);
+        }
+        
+        // Preload the main system for instant access
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = 'functional_system.html';
+        document.head.appendChild(link);
     </script>
 </body>
 </html>
