@@ -4,232 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحه یافت نشد - سیستم آرشیو اسناد حقوقی ایران</title>
-    
-    <!-- Meta Tags -->
-    <meta name="description" content="صفحه مورد نظر یافت نشد. بازگشت به سیستم آرشیو اسناد حقوقی ایران">
-    <meta name="robots" content="noindex, nofollow">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzNiODJmNiIvPgo8cGF0aCBkPSJNMTYgOEwxNiAyNE04IDEyTDI0IDEyTTggMThMMjQgMTgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg==">
-    
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
         body {
             font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             direction: rtl;
             text-align: center;
-            padding: 1rem;
         }
-        
         .container {
-            max-width: 600px;
-            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
         }
-        
         .error-code {
-            font-size: 8rem;
-            font-weight: 700;
-            line-height: 1;
+            font-size: 6rem;
+            font-weight: bold;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ffffff, #f0f0f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            opacity: 0.8;
         }
-        
-        .error-title {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .error-description {
-            font-size: 1.125rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-        
-        .actions {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .error-message {
+            font-size: 1.5rem;
             margin-bottom: 2rem;
         }
-        
-        .btn {
+        .back-button {
             padding: 1rem 2rem;
-            border: none;
-            border-radius: 0.75rem;
-            font-size: 1rem;
-            font-weight: 500;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 1rem;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-family: 'Vazirmatn', sans-serif;
+            display: inline-block;
+            transition: all 0.3s ease;
         }
-        
-        .btn-primary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .btn-primary:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .features {
-            margin-top: 3rem;
-            text-align: right;
-        }
-        
-        .features h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .features ul {
-            list-style: none;
-            space-y: 0.5rem;
-        }
-        
-        .features li {
-            margin-bottom: 0.5rem;
-            opacity: 0.9;
-        }
-        
-        .features li::before {
-            content: '✅';
-            margin-left: 0.5rem;
-        }
-        
-        @media (min-width: 640px) {
-            .actions {
-                flex-direction: row;
-                justify-content: center;
-            }
-            
-            .btn {
-                flex: 1;
-                max-width: 200px;
-            }
-        }
-        
-        /* Animation */
-        .animate-bounce {
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% {
-                animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-                transform: translate3d(0, 0, 0);
-            }
-            40%, 43% {
-                animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-                transform: translate3d(0, -30px, 0);
-            }
-            70% {
-                animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-                transform: translate3d(0, -15px, 0);
-            }
-            90% {
-                transform: translate3d(0, -4px, 0);
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="error-code animate-bounce">404</div>
-        
-        <h1 class="error-title">صفحه یافت نشد</h1>
-        
-        <p class="error-description">
-            متأسفانه صفحه‌ای که به دنبال آن هستید وجود ندارد یا منتقل شده است.
-            <br>
-            می‌توانید به صفحه اصلی بازگردید یا از منوی ناوبری استفاده کنید.
+        <div class="error-code">404</div>
+        <div class="error-message">صفحه مورد نظر یافت نشد</div>
+        <p style="margin-bottom: 2rem; opacity: 0.9;">
+            ممکن است صفحه منتقل شده یا حذف شده باشد
         </p>
-        
-        <div class="actions">
-            <a href="/Aihoghoghi/" class="btn btn-primary">
-                🏠 بازگشت به صفحه اصلی
-            </a>
-            
-            <a href="/Aihoghoghi/search" class="btn btn-secondary">
-                🔍 جستجو در اسناد
-            </a>
-        </div>
-        
-        <div class="features">
-            <h3>ویژگی‌های سیستم آرشیو حقوقی:</h3>
-            <ul>
-                <li>استخراج خودکار اسناد از منابع دولتی</li>
-                <li>تحلیل هوش مصنوعی متون فارسی</li>
-                <li>جستجوی پیشرفته و دسته‌بندی</li>
-                <li>داشبورد آمار و گزارش‌گیری</li>
-                <li>پشتیبانی کامل از زبان فارسی</li>
-                <li>رابط کاربری مدرن و واکنش‌گرا</li>
-            </ul>
-        </div>
+        <a href="/Aihoghoghi/" class="back-button">🏠 بازگشت به صفحه اصلی</a>
     </div>
     
-    <!-- Auto-redirect script for SPA routing -->
     <script>
-        // Redirect to main app for SPA routing
-        (function() {
-            const path = window.location.pathname;
-            const basePath = '/Aihoghoghi';
-            
-            // If the path starts with our base path, redirect to index.html
-            // The React Router will handle the routing
-            if (path.startsWith(basePath) && path !== basePath + '/') {
-                console.log('🔄 Redirecting to SPA router:', path);
-                
-                // Store the intended path
-                sessionStorage.setItem('intended-path', path);
-                
-                // Redirect to main app
-                setTimeout(() => {
-                    window.location.href = basePath + '/';
-                }, 2000);
-            }
-        })();
+        // Redirect SPA routes to main app
+        const path = window.location.pathname;
+        if (path.includes('/Aihoghoghi/') && path !== '/Aihoghoghi/') {
+            // Store the intended path and redirect to main app
+            sessionStorage.setItem('intended_path', path);
+            window.location.href = '/Aihoghoghi/';
+        }
     </script>
 </body>
 </html>

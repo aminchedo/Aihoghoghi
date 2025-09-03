@@ -47,6 +47,20 @@ function App() {
   useEffect(() => {
     let isComponentMounted = true;
     
+    // Check for GitHub Pages and disable service worker if needed
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    if (isGitHubPages) {
+      // Disable service worker on GitHub Pages to prevent loading issues
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          registrations.forEach(registration => {
+            registration.unregister();
+            console.log('🚫 Unregistered service worker for GitHub Pages');
+          });
+        });
+      }
+    }
+    
     // Initialize application with modern event-driven approach
     const initializeApp = async () => {
       const startTime = Date.now();
