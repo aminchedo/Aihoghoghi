@@ -73,7 +73,7 @@ const renderApp = () => {
   }
 };
 
-// Modern Promise-based initialization with timeout and fallback
+// Modern Promise-based initialization with immediate render
 const initializeAndRender = async () => {
   try {
     console.log('⏳ Starting app initialization...');
@@ -82,32 +82,24 @@ const initializeAndRender = async () => {
     const isGitHubPages = window.location.hostname.includes('github.io');
     const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     
+    // CRITICAL FIX: Always render app immediately to prevent loading freeze
+    console.log('🚀 Rendering app immediately to prevent loading freeze');
+    renderApp();
+    
     if (isGitHubPages) {
-      console.log('🌐 GitHub Pages detected - using lightweight initialization');
-      // On GitHub Pages, render immediately without waiting for heavy services
-      renderApp();
-      
-      // Initialize services in background after render
+      console.log('🌐 GitHub Pages detected - initializing services in background');
+      // Initialize services in background after render (non-blocking)
       setTimeout(() => {
         initializeServicesInBackground();
       }, 100);
-      return;
+    } else {
+      // For local development, also initialize in background
+      setTimeout(() => {
+        initializeServicesWithTimeout().catch(error => {
+          console.warn('⚠️ Background service initialization failed:', error.message);
+        });
+      }, 500);
     }
-    
-    // For local development, try to initialize services with timeout
-    const initPromise = initializeServicesWithTimeout();
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Service initialization timeout')), 5000)
-    );
-    
-    try {
-      await Promise.race([initPromise, timeoutPromise]);
-      console.log('✅ Services initialized successfully');
-    } catch (error) {
-      console.warn('⚠️ Service initialization failed or timed out, rendering app anyway:', error.message);
-    }
-    
-    renderApp();
     
   } catch (error) {
     console.error('❌ App initialization failed:', error);
