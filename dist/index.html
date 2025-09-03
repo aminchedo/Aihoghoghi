@@ -3,165 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم آرشیو اسناد حقوقی ایران - کاملاً کاربردی</title>
+    <title>سیستم آرشیو اسناد حقوقی ایران - متصل به بک‌اند واقعی</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Vazirmatn', sans-serif; background: #0f172a; color: #e2e8f0; zoom: 0.9; }
-        .layout { display: flex; min-height: 100vh; }
-        
-        /* Sidebar - Fully Visible */
-        .sidebar { 
-            width: 280px; 
-            background: #1e293b; 
-            padding: 1rem; 
-            height: 100vh; 
-            overflow-y: auto; 
-            position: fixed;
-            border-right: 2px solid #334155;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        body { 
+            font-family: 'Vazirmatn', sans-serif; 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
+            color: white; 
+            overflow-x: hidden; 
         }
-        
-        .sidebar h2 { 
-            text-align: center; 
-            color: #10b981; 
-            margin-bottom: 2rem; 
-            padding: 1rem; 
-            background: #0f172a; 
-            border-radius: 8px;
-        }
-        
-        .nav-item { 
-            padding: 1rem; 
-            margin: 0.5rem 0; 
-            background: #334155; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        .nav-item:hover { background: #475569; border-color: #10b981; }
-        .nav-item.active { background: #10b981; color: white; }
-        
-        .nav-item i { width: 20px; margin-left: 0.5rem; }
-        
-        /* Main Content */
-        .main-content { 
-            flex: 1; 
-            margin-right: 300px; 
-            padding: 1rem;
-        }
-        
-        .section { 
-            background: #1e293b; 
+        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
+        .header { 
+            background: linear-gradient(45deg, #0f3460, #16213e); 
             padding: 2rem; 
             border-radius: 12px; 
             margin-bottom: 2rem; 
-            border: 1px solid #334155;
+            text-align: center; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .sidebar { 
+            position: fixed; 
+            right: 0; 
+            top: 0; 
+            width: 320px; 
+            height: 100vh; 
+            background: linear-gradient(180deg, #16213e 0%, #0f3460 100%); 
+            padding: 1rem; 
+            overflow-y: auto; 
+            z-index: 1000; 
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+        .main-content { margin-right: 340px; }
+        .nav-item { 
+            padding: 1rem; 
+            margin: 0.5rem 0; 
+            background: rgba(15, 52, 96, 0.7); 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+        }
+        .nav-item:hover { 
+            background: rgba(30, 64, 175, 0.8); 
+            transform: translateX(-5px);
+        }
+        .nav-item.active { 
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8); 
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .section { 
+            background: rgba(22, 33, 62, 0.95); 
+            padding: 2rem; 
+            border-radius: 12px; 
+            margin-bottom: 2rem; 
             display: none; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         .section.active { display: block; }
-        .section h2 { color: #10b981; margin-bottom: 2rem; border-bottom: 2px solid #334155; padding-bottom: 1rem; }
-        
-        /* Buttons - High Contrast */
         .btn { 
-            background: #3b82f6; 
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8); 
             color: white; 
             padding: 12px 24px; 
             border: none; 
             border-radius: 8px; 
             cursor: pointer; 
             font-size: 16px; 
-            font-weight: 600;
             margin: 8px; 
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            transition: all 0.3s ease; 
+            font-weight: 500;
         }
         .btn:hover { 
-            background: #2563eb; 
+            background: linear-gradient(45deg, #2563eb, #1e40af); 
             transform: translateY(-2px); 
-            border-color: #60a5fa;
         }
-        .btn-success { background: #10b981; }
-        .btn-success:hover { background: #059669; border-color: #34d399; }
-        .btn-danger { background: #ef4444; }
-        .btn-danger:hover { background: #dc2626; border-color: #f87171; }
-        .btn-warning { background: #f59e0b; color: #000; }
-        .btn-warning:hover { background: #d97706; }
-        
-        /* Inputs */
+        .btn-success { background: linear-gradient(45deg, #10b981, #059669); }
+        .btn-success:hover { background: linear-gradient(45deg, #059669, #047857); }
+        .btn-danger { background: linear-gradient(45deg, #ef4444, #dc2626); }
+        .btn-danger:hover { background: linear-gradient(45deg, #dc2626, #b91c1c); }
         .input-field { 
             width: 100%; 
             padding: 12px; 
-            border: 2px solid #475569; 
+            border: 2px solid #374151; 
             border-radius: 8px; 
-            background: #334155; 
-            color: #e2e8f0; 
-            margin: 8px 0;
-            font-size: 16px;
+            background: rgba(31, 41, 55, 0.8); 
+            color: white; 
+            margin: 8px 0; 
+            transition: all 0.3s ease;
         }
-        .input-field:focus { border-color: #10b981; outline: none; background: #475569; }
-        .input-field::placeholder { color: #94a3b8; }
-        
-        /* Results Areas */
+        .input-field:focus { 
+            border-color: #3b82f6; 
+            outline: none; 
+        }
         .results-area { 
-            background: #334155; 
+            background: rgba(31, 41, 55, 0.8); 
             padding: 1.5rem; 
             border-radius: 8px; 
             margin-top: 1rem; 
             min-height: 200px;
-            border: 1px solid #475569;
         }
-        
         .result-item { 
-            background: #475569; 
+            background: rgba(55, 65, 81, 0.8); 
             padding: 1rem; 
             margin: 0.5rem 0; 
             border-radius: 6px; 
             border-left: 4px solid #10b981;
         }
-        
-        /* Tabs */
         .tab-buttons { display: flex; margin-bottom: 1rem; flex-wrap: wrap; }
         .tab-btn { 
-            background: #475569; 
-            color: #e2e8f0; 
-            padding: 12px 20px; 
+            background: rgba(55, 65, 81, 0.8); 
+            color: white; 
+            padding: 8px 16px; 
             border: none; 
-            margin-left: 4px; 
-            margin-bottom: 4px;
+            margin: 4px; 
             cursor: pointer; 
-            border-radius: 8px;
-            font-weight: 500;
-            border: 2px solid transparent;
+            border-radius: 6px; 
         }
-        .tab-btn:hover { background: #64748b; border-color: #94a3b8; }
-        .tab-btn.active { background: #10b981; color: white; border-color: #34d399; }
-        
+        .tab-btn.active { 
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8); 
+        }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
-        /* Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-card { 
-            background: #334155; 
+        .stat-box { 
+            background: rgba(55, 65, 81, 0.8); 
             padding: 1.5rem; 
             border-radius: 8px; 
-            text-align: center;
-            border: 1px solid #475569;
+            text-align: center; 
+            margin: 0.5rem; 
         }
-        .stat-number { font-size: 2.5rem; font-weight: bold; color: #10b981; margin-bottom: 0.5rem; }
-        
-        /* Progress */
+        .stat-number { font-size: 2rem; font-weight: bold; color: #10b981; }
         .progress-bar { 
             width: 100%; 
-            height: 12px; 
-            background: #475569; 
-            border-radius: 6px; 
+            height: 8px; 
+            background: rgba(55, 65, 81, 0.8); 
+            border-radius: 4px; 
             overflow: hidden; 
-            margin: 12px 0;
-            border: 1px solid #64748b;
+            margin: 8px 0; 
         }
         .progress-fill { 
             height: 100%; 
@@ -169,403 +150,330 @@
             transition: width 0.5s ease; 
             width: 0%; 
         }
-        
-        /* Log Entries */
-        .log-entry { 
-            background: #475569; 
-            padding: 12px; 
-            margin: 8px 0; 
-            border-radius: 6px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border-left: 4px solid #64748b;
-        }
-        
-        .log-entry.success { border-left-color: #10b981; }
-        .log-entry.error { border-left-color: #ef4444; }
-        .log-entry.warning { border-left-color: #f59e0b; }
-        .log-entry.info { border-left-color: #3b82f6; }
-        
-        .delete-btn { 
-            background: #ef4444; 
-            color: white; 
-            border: none; 
-            padding: 6px 12px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .delete-btn:hover { background: #dc2626; }
-        
-        /* Charts */
         .chart-container { 
-            background: #334155; 
+            background: rgba(31, 41, 55, 0.8); 
             padding: 1.5rem; 
             border-radius: 8px; 
-            margin: 1rem 0;
-            height: 300px;
+            margin: 1rem 0; 
         }
-        
-        /* Toast */
-        .toast { 
-            position: fixed; 
-            top: 20px; 
-            left: 20px; 
-            right: 20px; 
-            padding: 1rem; 
-            border-radius: 8px; 
-            color: white; 
-            font-weight: 600; 
-            z-index: 2000; 
-            transform: translateY(-100px); 
-            transition: transform 0.3s;
-        }
-        .toast.show { transform: translateY(0); }
-        .toast.success { background: #10b981; }
-        .toast.error { background: #ef4444; }
-        .toast.warning { background: #f59e0b; color: #000; }
-        .toast.info { background: #3b82f6; }
-        
-        /* Grid Layouts */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-        
-        /* Utilities */
-        .mt-2 { margin-top: 1rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .text-center { text-align: center; }
-        .hidden { display: none !important; }
-        
-        @media (max-width: 1200px) {
-            .sidebar { width: 250px; }
-            .main-content { margin-right: 270px; }
-            body { zoom: 0.85; }
+        .status-online { color: #10b981; }
+        .status-offline { color: #ef4444; }
+        .health-indicator { 
+            display: inline-block; 
+            width: 12px; 
+            height: 12px; 
+            border-radius: 50%; 
+            margin-left: 8px; 
+        }
+        .health-good { background: #10b981; }
+        .health-error { background: #ef4444; }
+        .loading { 
+            display: inline-block; 
+            width: 20px; 
+            height: 20px; 
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="layout">
-        <!-- Functional Sidebar -->
-        <div class="sidebar">
-            <h2>⚖️ آرشیو حقوقی ایران</h2>
-            
-            <nav>
-                <div class="nav-item active" onclick="showSection('dashboard')">
-                    <i class="fas fa-home"></i> داشبورد اصلی
-                </div>
-                <div class="nav-item" onclick="showSection('search')">
-                    <i class="fas fa-search"></i> جستجوی اسناد
-                </div>
-                <div class="nav-item" onclick="showSection('scraping')">
-                    <i class="fas fa-globe"></i> اسکرپینگ سایت‌ها
-                </div>
-                <div class="nav-item" onclick="showSection('processing')">
-                    <i class="fas fa-cogs"></i> پردازش اسناد
-                </div>
-                <div class="nav-item" onclick="showSection('reports')">
-                    <i class="fas fa-chart-bar"></i> گزارش‌گیری
-                </div>
-                <div class="nav-item" onclick="showSection('logs')">
-                    <i class="fas fa-list"></i> مدیریت لاگ‌ها
-                </div>
-                <div class="nav-item" onclick="showSection('settings')">
-                    <i class="fas fa-cog"></i> تنظیمات سیستم
-                </div>
-            </nav>
-            
-            <!-- Live Stats Sidebar -->
-            <div style="margin-top: 2rem; padding: 1rem; background: #0f172a; border-radius: 8px; border: 1px solid #334155;">
-                <h4 style="color: #10b981; margin-bottom: 1rem;">آمار زنده</h4>
-                <div style="font-size: 0.9rem;">
-                    <div style="margin-bottom: 0.5rem;">اسناد: <span id="sidebar-docs" style="color: #10b981; font-weight: bold;">0</span></div>
-                    <div style="margin-bottom: 0.5rem;">عملیات: <span id="sidebar-operations" style="color: #3b82f6; font-weight: bold;">0</span></div>
-                    <div style="margin-bottom: 0.5rem;">موفقیت: <span id="sidebar-success" style="color: #10b981; font-weight: bold;">0%</span></div>
-                    <div>لاگ‌ها: <span id="sidebar-logs" style="color: #f59e0b; font-weight: bold;">0</span></div>
-                </div>
-                <button class="btn btn-success" onclick="refreshAllStats()" style="width: 100%; margin-top: 1rem; padding: 8px; font-size: 14px;">
-                    🔄 بروزرسانی
-                </button>
+    <div class="sidebar">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="color: #10b981;">⚖️ آرشیو حقوقی</h2>
+            <div style="font-size: 0.8rem;">
+                <span id="system-status" class="status-offline">در حال اتصال...</span>
+                <span class="health-indicator health-error"></span>
+            </div>
+            <div style="font-size: 0.7rem; color: #9ca3af; margin-top: 0.5rem;" id="current-time"></div>
+        </div>
+        
+        <div class="nav-item active" onclick="showSection('dashboard')">
+            <span><i class="fas fa-tachometer-alt"></i> داشبورد</span>
+        </div>
+        <div class="nav-item" onclick="showSection('search')">
+            <span><i class="fas fa-search"></i> جستجو</span>
+        </div>
+        <div class="nav-item" onclick="showSection('scraping')">
+            <span><i class="fas fa-spider"></i> اسکرپینگ</span>
+        </div>
+        <div class="nav-item" onclick="showSection('processing')">
+            <span><i class="fas fa-cogs"></i> پردازش</span>
+        </div>
+        <div class="nav-item" onclick="showSection('reports')">
+            <span><i class="fas fa-chart-bar"></i> گزارشات</span>
+        </div>
+        <div class="nav-item" onclick="showSection('statistics')">
+            <span><i class="fas fa-chart-line"></i> آمار</span>
+        </div>
+        <div class="nav-item" onclick="showSection('settings')">
+            <span><i class="fas fa-cog"></i> تنظیمات</span>
+        </div>
+        <div class="nav-item" onclick="showSection('logs')">
+            <span><i class="fas fa-file-alt"></i> لاگ‌ها</span>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: rgba(15, 52, 96, 0.7); border-radius: 8px;">
+            <h4 style="margin-bottom: 1rem; color: #10b981;"><i class="fas fa-pulse"></i> آمار زنده:</h4>
+            <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                <span>اسناد:</span>
+                <span id="live-docs" style="color: #10b981; font-weight: bold;">-</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                <span>عملیات:</span>
+                <span id="live-ops" style="color: #3b82f6; font-weight: bold;">-</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                <span>پروکسی:</span>
+                <span id="live-proxies" style="color: #ef4444; font-weight: bold;">-</span>
+            </div>
+            <div class="progress-bar" style="margin-top: 1rem;">
+                <div class="progress-fill" id="system-health-bar" style="width: 0%;"></div>
+            </div>
+            <div style="text-align: center; margin-top: 0.5rem; font-size: 0.8rem;">
+                سلامت: <span id="health-percentage">0%</span>
             </div>
         </div>
+    </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
+    <div class="main-content">
+        <div class="container">
             <!-- Dashboard Section -->
             <div id="dashboard-section" class="section active">
-                <h2><i class="fas fa-home"></i> داشبورد اصلی</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-documents">0</div>
-                        <div>اسناد واقعی در پایگاه داده</div>
-                        <button class="btn btn-success" onclick="loadRealDocuments()">📂 بارگذاری از DB</button>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-operations">0</div>
-                        <div>کل عملیات انجام شده</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="operations-progress"></div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="successful-operations">0</div>
-                        <div>عملیات موفق</div>
-                        <button class="btn" onclick="refreshAllStats()">📊 محاسبه مجدد</button>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="active-proxies">0</div>
-                        <div>پروکسی فعال</div>
-                        <button class="btn" onclick="testAllProxies()">🌐 تست پروکسی‌ها</button>
+                <div class="header">
+                    <h1><i class="fas fa-balance-scale"></i> سیستم آرشیو اسناد حقوقی ایران</h1>
+                    <p>متصل به بک‌اند واقعی - تمام داده‌ها از API دریافت می‌شود</p>
+                    <div style="margin-top: 1rem;">
+                        <span id="connection-status" style="background: rgba(239, 68, 68, 0.2); padding: 0.5rem 1rem; border-radius: 20px;">
+                            <i class="fas fa-spinner fa-spin"></i> در حال اتصال به بک‌اند...
+                        </span>
                     </div>
                 </div>
-                
+
+                <div class="grid-4" style="margin-bottom: 2rem;">
+                    <div class="stat-box">
+                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <i class="fas fa-file-alt" style="font-size: 2rem; color: #3b82f6; margin-left: 0.5rem;"></i>
+                            <div class="stat-number" id="total-documents">-</div>
+                        </div>
+                        <div>اسناد (از بک‌اند)</div>
+                        <button class="btn btn-success" onclick="loadRealDocuments()" style="width: 100%; margin-top: 0.5rem;">
+                            <i class="fas fa-sync-alt"></i> بروزرسانی از API
+                        </button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <i class="fas fa-server" style="font-size: 2rem; color: #10b981; margin-left: 0.5rem;"></i>
+                            <div class="stat-number" id="active-proxies">-</div>
+                        </div>
+                        <div>پروکسی فعال (از بک‌اند)</div>
+                        <button class="btn btn-success" onclick="testRealProxies()" style="width: 100%; margin-top: 0.5rem;">
+                            <i class="fas fa-network-wired"></i> تست از API
+                        </button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <i class="fas fa-tasks" style="font-size: 2rem; color: #f59e0b; margin-left: 0.5rem;"></i>
+                            <div class="stat-number" id="total-operations">-</div>
+                        </div>
+                        <div>عملیات (از بک‌اند)</div>
+                        <button class="btn btn-success" onclick="loadRealStats()" style="width: 100%; margin-top: 0.5rem;">
+                            <i class="fas fa-chart-line"></i> بروزرسانی از API
+                        </button>
+                    </div>
+                    
+                    <div class="stat-box">
+                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <i class="fas fa-check-circle" style="font-size: 2rem; color: #10b981; margin-left: 0.5rem;"></i>
+                            <div class="stat-number" id="successful-operations">-</div>
+                        </div>
+                        <div>موفق (از بک‌اند)</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="success-rate-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Live Charts -->
                 <div class="grid-2">
                     <div class="chart-container">
-                        <h3 style="margin-bottom: 1rem;">نمودار عملیات زنده</h3>
-                        <canvas id="operations-chart" width="400" height="200"></canvas>
+                        <h3><i class="fas fa-chart-area"></i> نمودار فعالیت (از بک‌اند)</h3>
+                        <canvas id="activity-chart" width="400" height="200"></canvas>
                     </div>
                     <div class="chart-container">
-                        <h3 style="margin-bottom: 1rem;">نمودار موفقیت</h3>
-                        <canvas id="success-chart" width="400" height="200"></canvas>
+                        <h3><i class="fas fa-chart-pie"></i> توزیع اسناد (از بک‌اند)</h3>
+                        <canvas id="documents-chart" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>
 
             <!-- Search Section -->
             <div id="search-section" class="section">
-                <h2><i class="fas fa-search"></i> جستجوی واقعی در اسناد</h2>
+                <h2><i class="fas fa-search"></i> جستجوی واقعی در بک‌اند</h2>
                 
                 <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="switchSearchTab('text')">
-                        <i class="fas fa-font"></i> جستجوی متنی
+                    <button class="tab-btn active" onclick="showSearchTab('text')">
+                        <i class="fas fa-font"></i> متنی
                     </button>
-                    <button class="tab-btn" onclick="switchSearchTab('semantic')">
-                        <i class="fas fa-brain"></i> جستجوی معنایی
+                    <button class="tab-btn" onclick="showSearchTab('semantic')">
+                        <i class="fas fa-brain"></i> معنایی
                     </button>
-                    <button class="tab-btn" onclick="switchSearchTab('advanced')">
-                        <i class="fas fa-search-plus"></i> جستجوی پیشرفته
+                    <button class="tab-btn" onclick="showSearchTab('advanced')">
+                        <i class="fas fa-sliders-h"></i> پیشرفته
                     </button>
-                    <button class="tab-btn" onclick="switchSearchTab('nafaqe')">
-                        <i class="fas fa-balance-scale"></i> جستجوی نفقه
+                    <button class="tab-btn" onclick="showSearchTab('nafaqe')">
+                        <i class="fas fa-balance-scale"></i> نفقه
                     </button>
                 </div>
 
-                <!-- Text Search Tab -->
-                <div id="text-search-tab" class="tab-content active">
-                    <h3>جستجوی متنی در پایگاه داده</h3>
-                    <div class="grid-2">
-                        <input type="text" id="text-search-query" class="input-field" placeholder="کلیدواژه: نفقه، طلاق، ارث...">
-                        <select id="text-search-source" class="input-field">
-                            <option value="">همه منابع</option>
-                            <option value="مجلس">مجلس شورای اسلامی</option>
-                            <option value="قضاییه">قوه قضاییه</option>
-                            <option value="تدوین">دفتر تدوین قوانین</option>
-                        </select>
-                    </div>
+                <!-- Text Search -->
+                <div id="text-search" class="tab-content active">
+                    <h3>جستجوی متنی در بک‌اند</h3>
+                    <input type="text" id="text-query" class="input-field" placeholder="کلیدواژه جستجو...">
+                    <select id="text-source" class="input-field">
+                        <option value="">همه منابع</option>
+                        <option value="مجلس">مجلس شورای اسلامی</option>
+                        <option value="قضاییه">قوه قضاییه</option>
+                        <option value="تدوین">دفتر تدوین قوانین</option>
+                    </select>
                     <button class="btn btn-success" onclick="performRealTextSearch()">
-                        🔍 جستجوی متنی واقعی
+                        <i class="fas fa-search"></i> جستجو در بک‌اند
                     </button>
-                    <div id="text-search-results" class="results-area">
-                        <div class="text-center" style="color: #94a3b8; padding: 2rem;">
-                            نتایج جستجوی متنی در اینجا نمایش داده می‌شود
-                        </div>
+                    <div id="text-results" class="results-area">
+                        <div style="text-align: center; color: #6b7280;">نتایج جستجوی بک‌اند</div>
                     </div>
                 </div>
 
-                <!-- Semantic Search Tab -->
-                <div id="semantic-search-tab" class="tab-content">
-                    <h3>جستجوی معنایی هوشمند</h3>
-                    <textarea id="semantic-search-query" class="input-field" rows="4" placeholder="توضیح کاملی از آنچه دنبالش هستید. مثال: قوانین مربوط به حقوق زنان در ازدواج و مسائل مالی"></textarea>
-                    <div class="grid-2">
-                        <select id="semantic-precision" class="input-field">
-                            <option value="high">دقت بالا (نتایج کمتر اما دقیق‌تر)</option>
-                            <option value="medium" selected>دقت متوسط</option>
-                            <option value="low">دقت پایین (نتایج بیشتر)</option>
-                        </select>
-                        <select id="semantic-limit" class="input-field">
-                            <option value="10">10 نتیجه</option>
-                            <option value="20" selected>20 نتیجه</option>
-                            <option value="50">50 نتیجه</option>
-                        </select>
-                    </div>
+                <!-- Semantic Search -->
+                <div id="semantic-search" class="tab-content">
+                    <h3>جستجوی معنایی در بک‌اند</h3>
+                    <textarea id="semantic-query" class="input-field" rows="3" placeholder="توضیح کامل..."></textarea>
+                    <select id="semantic-precision" class="input-field">
+                        <option value="high">دقت بالا</option>
+                        <option value="medium">دقت متوسط</option>
+                        <option value="low">دقت پایین</option>
+                    </select>
                     <button class="btn btn-success" onclick="performRealSemanticSearch()">
-                        🧠 جستجوی معنایی واقعی
+                        <i class="fas fa-brain"></i> جستجوی معنایی در بک‌اند
                     </button>
-                    <div id="semantic-search-results" class="results-area">
-                        <div class="text-center" style="color: #94a3b8; padding: 2rem;">
-                            نتایج جستجوی معنایی در اینجا نمایش داده می‌شود
-                        </div>
+                    <div id="semantic-results" class="results-area">
+                        <div style="text-align: center; color: #6b7280;">نتایج جستجوی معنایی از بک‌اند</div>
                     </div>
                 </div>
 
-                <!-- Advanced Search Tab -->
-                <div id="advanced-search-tab" class="tab-content">
-                    <h3>جستجوی پیشرفته با فیلترهای متعدد</h3>
-                    <div class="grid-3">
-                        <input type="text" id="advanced-title" class="input-field" placeholder="عنوان سند">
-                        <input type="text" id="advanced-article" class="input-field" placeholder="شماره ماده">
-                        <input type="date" id="advanced-date" class="input-field">
-                    </div>
-                    <div class="grid-2">
-                        <select id="advanced-category" class="input-field">
-                            <option value="">همه دسته‌ها</option>
-                            <option value="نفقه_و_حقوق_خانواده">نفقه و حقوق خانواده</option>
-                            <option value="طلاق_و_فسخ_نکاح">طلاق و فسخ نکاح</option>
-                            <option value="ارث_و_وصیت">ارث و وصیت</option>
-                            <option value="رویه_قضایی">رویه قضایی</option>
-                        </select>
-                        <select id="advanced-doc-type" class="input-field">
-                            <option value="">همه انواع</option>
-                            <option value="قانون">قانون</option>
-                            <option value="دادنامه">دادنامه</option>
-                            <option value="بخشنامه">بخشنامه</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; gap: 1rem;">
-                        <button class="btn btn-success" onclick="performRealAdvancedSearch()">
-                            🔧 جستجوی پیشرفته واقعی
-                        </button>
-                        <button class="btn btn-warning" onclick="clearAdvancedFilters()">
-                            🗑️ پاک کردن فیلترها
-                        </button>
-                        <button class="btn" onclick="saveAdvancedSearch()">
-                            💾 ذخیره جستجو
-                        </button>
-                    </div>
-                    <div id="advanced-search-results" class="results-area">
-                        <div class="text-center" style="color: #94a3b8; padding: 2rem;">
-                            نتایج جستجوی پیشرفته در اینجا نمایش داده می‌شود
-                        </div>
+                <!-- Advanced Search -->
+                <div id="advanced-search" class="tab-content">
+                    <h3>جستجوی پیشرفته در بک‌اند</h3>
+                    <input type="text" id="advanced-title" class="input-field" placeholder="عنوان سند">
+                    <select id="advanced-category" class="input-field">
+                        <option value="">همه دسته‌ها</option>
+                        <option value="نفقه_و_حقوق_خانواده">نفقه و حقوق خانواده</option>
+                        <option value="طلاق_و_فسخ_نکاح">طلاق و فسخ نکاح</option>
+                        <option value="ارث_و_وصیت">ارث و وصیت</option>
+                    </select>
+                    <button class="btn btn-success" onclick="performRealAdvancedSearch()">
+                        <i class="fas fa-search-plus"></i> جستجوی پیشرفته در بک‌اند
+                    </button>
+                    <div id="advanced-results" class="results-area">
+                        <div style="text-align: center; color: #6b7280;">نتایج جستجوی پیشرفته از بک‌اند</div>
                     </div>
                 </div>
 
-                <!-- Nafaqe Search Tab -->
-                <div id="nafaqe-search-tab" class="tab-content">
-                    <h3>جستجوی تخصصی نفقه</h3>
-                    
-                    <div class="grid-3" style="margin-bottom: 1rem;">
-                        <button class="btn" onclick="selectNafaqeType('زوجه')" id="nafaqe-spouse">
-                            💑 نفقه زوجه
-                        </button>
-                        <button class="btn" onclick="selectNafaqeType('فرزندان')" id="nafaqe-children">
-                            👶 نفقه فرزندان
-                        </button>
-                        <button class="btn" onclick="selectNafaqeType('اقارب')" id="nafaqe-relatives">
-                            👥 نفقه اقارب
-                        </button>
+                <!-- Nafaqe Search -->
+                <div id="nafaqe-search" class="tab-content">
+                    <h3>جستجوی نفقه در بک‌اند</h3>
+                    <div class="grid-3" style="margin: 1rem 0;">
+                        <button class="btn" onclick="searchNafaqeType('زوجه')" style="background: #374151;">نفقه زوجه</button>
+                        <button class="btn" onclick="searchNafaqeType('فرزندان')" style="background: #374151;">نفقه فرزندان</button>
+                        <button class="btn" onclick="searchNafaqeType('اقارب')" style="background: #374151;">نفقه اقارب</button>
                     </div>
-                    
-                    <input type="text" id="nafaqe-details" class="input-field" placeholder="جزئیات بیشتر (اختیاری)">
+                    <input type="text" id="nafaqe-details" class="input-field" placeholder="جزئیات...">
                     <button class="btn btn-success" onclick="performRealNafaqeSearch()">
-                        ⚖️ جستجوی نفقه واقعی
+                        <i class="fas fa-balance-scale"></i> جستجوی نفقه در بک‌اند
                     </button>
-                    <div id="nafaqe-search-results" class="results-area">
-                        <div class="text-center" style="color: #94a3b8; padding: 2rem;">
-                            ابتدا نوع نفقه را انتخاب کنید، سپس جستجو کنید
-                        </div>
+                    <div id="nafaqe-results" class="results-area">
+                        <div style="text-align: center; color: #6b7280;">نتایج جستجوی نفقه از بک‌اند</div>
                     </div>
                 </div>
             </div>
 
             <!-- Scraping Section -->
             <div id="scraping-section" class="section">
-                <h2><i class="fas fa-globe"></i> اسکرپینگ واقعی سایت‌های حقوقی</h2>
+                <h2><i class="fas fa-spider"></i> اسکرپینگ با بک‌اند واقعی</h2>
                 
                 <div class="grid-2">
                     <div>
-                        <h3>تنظیمات اسکرپینگ:</h3>
-                        <textarea id="scraping-urls" class="input-field" rows="6" placeholder="آدرس‌های سایت‌های حقوقی:&#10;https://rc.majlis.ir/fa/law/show/94202&#10;https://www.judiciary.ir/fa/verdict/123&#10;https://dotic.ir/portal/law/456"></textarea>
-                        
-                        <div class="grid-2">
-                            <select id="scraping-delay" class="input-field">
-                                <option value="2000">تاخیر 2 ثانیه</option>
-                                <option value="5000" selected>تاخیر 5 ثانیه</option>
-                                <option value="10000">تاخیر 10 ثانیه</option>
-                            </select>
-                            <select id="content-extraction" class="input-field">
-                                <option value="full">استخراج کامل محتوا</option>
-                                <option value="summary">خلاصه محتوا</option>
-                                <option value="title-only">فقط عنوان</option>
-                            </select>
-                        </div>
+                        <h3>آدرس‌های سایت:</h3>
+                        <textarea id="scraping-urls" class="input-field" rows="6" placeholder="https://rc.majlis.ir/fa/law/show/94202
+https://www.judiciary.ir/fa/verdict/123"></textarea>
                         
                         <div style="margin: 1rem 0;">
-                            <label style="display: flex; align-items: center; margin-bottom: 0.5rem;">
-                                <input type="checkbox" id="use-proxy" checked style="margin-left: 0.5rem;">
-                                استفاده از پروکسی برای اسکرپینگ
+                            <label style="display: block; margin: 0.5rem 0;">
+                                <input type="checkbox" id="use-proxy-scraping" checked style="margin-left: 0.5rem;">
+                                استفاده از پروکسی
                             </label>
-                            <label style="display: flex; align-items: center;">
-                                <input type="checkbox" id="auto-categorize" checked style="margin-left: 0.5rem;">
-                                دسته‌بندی خودکار محتوا
+                            <label style="display: block; margin: 0.5rem 0;">
+                                <input type="checkbox" id="ai-analysis" checked style="margin-left: 0.5rem;">
+                                تحلیل هوشمند
                             </label>
                         </div>
-                        
-                        <div style="display: flex; gap: 1rem;">
-                            <button class="btn btn-success" onclick="startRealScraping()">
-                                🚀 شروع اسکرپینگ واقعی
-                            </button>
-                            <button class="btn btn-danger" onclick="stopScraping()" id="stop-scraping" style="display: none;">
-                                ⏹️ توقف اسکرپینگ
-                            </button>
-                        </div>
+
+                        <button class="btn btn-success" onclick="startRealScraping()">
+                            <i class="fas fa-play"></i> شروع اسکرپینگ در بک‌اند
+                        </button>
                     </div>
                     
                     <div>
-                        <h3>پیشرفت اسکرپینگ:</h3>
-                        <div id="scraping-progress" class="results-area">
-                            <div class="text-center" style="color: #94a3b8;">
-                                آماده برای شروع اسکرپینگ
-                            </div>
-                        </div>
-                        
-                        <h3>پیش‌نمایش محتوای اسکرپ شده:</h3>
-                        <div id="scraping-preview" class="results-area">
-                            <div class="text-center" style="color: #94a3b8;">
-                                پیش‌نمایش محتوا در اینجا نمایش داده می‌شود
-                            </div>
+                        <h3>پیش‌نمایش (از بک‌اند):</h3>
+                        <div id="scraping-preview" style="background: rgba(15, 52, 96, 0.5); border: 2px dashed #3b82f6; border-radius: 8px; padding: 1rem; min-height: 150px;">
+                            <div style="text-align: center; color: #6b7280;">پیش‌نمایش محتوای اسکرپ شده از بک‌اند</div>
                         </div>
                     </div>
+                </div>
+                
+                <h3>نتایج اسکرپینگ از بک‌اند:</h3>
+                <div id="scraping-results" class="results-area">
+                    <div style="text-align: center; color: #6b7280;">نتایج اسکرپینگ بک‌اند</div>
                 </div>
             </div>
 
             <!-- Processing Section -->
             <div id="processing-section" class="section">
-                <h2><i class="fas fa-cogs"></i> پردازش واقعی اسناد</h2>
+                <h2><i class="fas fa-cogs"></i> پردازش با بک‌اند واقعی</h2>
                 
                 <div class="grid-2">
                     <div>
                         <h3>صف پردازش:</h3>
-                        <button class="btn btn-success" onclick="loadProcessingQueue()">📋 بارگذاری صف</button>
-                        <button class="btn btn-danger" onclick="clearProcessingQueue()">🗑️ پاک کردن صف</button>
-                        
-                        <div id="processing-queue" class="results-area">
-                            <div class="text-center" style="color: #94a3b8;">
-                                صف پردازش در اینجا نمایش داده می‌شود
+                        <div id="documents-to-process" class="results-area" style="min-height: 300px;">
+                            <div style="text-align: center; color: #6b7280; padding: 2rem;">
+                                <i class="fas fa-inbox"></i>
+                                <p>بارگذاری از بک‌اند...</p>
+                                <button class="btn btn-success" onclick="loadProcessingQueue()">
+                                    <i class="fas fa-sync-alt"></i> بارگذاری از API
+                                </button>
                             </div>
                         </div>
                         
-                        <button class="btn btn-success" onclick="startRealProcessing()" style="width: 100%;">
-                            ⚙️ شروع پردازش واقعی
+                        <button class="btn btn-success" onclick="startRealProcessing()">
+                            <i class="fas fa-play"></i> شروع پردازش در بک‌اند
                         </button>
                     </div>
                     
                     <div>
-                        <h3>نتایج پردازش:</h3>
+                        <h3>نتایج پردازش از بک‌اند:</h3>
                         <div id="processing-results" class="results-area">
-                            <div class="text-center" style="color: #94a3b8;">
-                                نتایج پردازش در اینجا نمایش داده می‌شود
-                            </div>
-                        </div>
-                        
-                        <h3>پیشرفت فعلی:</h3>
-                        <div id="processing-status" class="results-area">
-                            <div class="text-center" style="color: #94a3b8;">
-                                آماده برای پردازش
-                            </div>
+                            <div style="text-align: center; color: #6b7280;">نتایج پردازش بک‌اند</div>
                         </div>
                     </div>
                 </div>
@@ -573,1281 +481,1138 @@
 
             <!-- Reports Section -->
             <div id="reports-section" class="section">
-                <h2><i class="fas fa-chart-bar"></i> گزارش‌گیری واقعی</h2>
+                <h2><i class="fas fa-chart-bar"></i> گزارشات از بک‌اند واقعی</h2>
                 
-                <div class="grid-3">
+                <div class="grid-3" style="margin-bottom: 2rem;">
                     <button class="btn btn-success" onclick="generateRealOperationsReport()">
-                        📊 گزارش عملیات
+                        <i class="fas fa-chart-line"></i> گزارش عملیات از API
                     </button>
                     <button class="btn btn-success" onclick="generateRealDocumentsReport()">
-                        📄 گزارش اسناد
+                        <i class="fas fa-file-alt"></i> گزارش اسناد از API
                     </button>
-                    <button class="btn btn-success" onclick="generateRealSystemHealth()">
-                        🏥 گزارش سلامت سیستم
+                    <button class="btn btn-success" onclick="generateRealSystemReport()">
+                        <i class="fas fa-server"></i> گزارش سیستم از API
                     </button>
                 </div>
                 
-                <div id="reports-display" class="results-area">
-                    <div class="text-center" style="color: #94a3b8; padding: 2rem;">
-                        گزارشات در اینجا نمایش داده می‌شوند
+                <div id="reports-container" class="results-area">
+                    <div style="text-align: center; color: #6b7280;">گزارشات از بک‌اند</div>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div id="statistics-section" class="section">
+                <h2><i class="fas fa-chart-line"></i> آمار زنده از بک‌اند</h2>
+                
+                <div class="grid-4" style="margin-bottom: 2rem;">
+                    <div class="stat-box">
+                        <div class="stat-number" id="queue-stats-total">-</div>
+                        <div>صف (از API)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="api-uptime">-</div>
+                        <div>وقت کارکرد API</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="api-response-time">-</div>
+                        <div>زمان پاسخ API</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="api-requests-count">-</div>
+                        <div>درخواست‌های API</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>آمار زنده از بک‌اند</h3>
+                    <canvas id="stats-chart" width="800" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="section">
+                <h2><i class="fas fa-cog"></i> تنظیمات اتصال بک‌اند</h2>
+                
+                <div style="background: rgba(31, 41, 55, 0.8); padding: 2rem; border-radius: 8px;">
+                    <h3><i class="fas fa-plug"></i> تنظیمات API</h3>
+                    <div class="grid-2">
+                        <div>
+                            <label>آدرس سرور API:</label>
+                            <input type="url" id="api-base-url" class="input-field" value="http://127.0.0.1:8000/api">
+                            <label>تایم‌اوت:</label>
+                            <input type="number" id="api-timeout" class="input-field" value="30000">
+                        </div>
+                        <div>
+                            <button class="btn btn-success" onclick="testAPIConnection()">
+                                <i class="fas fa-plug"></i> تست اتصال بک‌اند
+                            </button>
+                            <button class="btn btn-warning" onclick="saveAPISettings()">
+                                <i class="fas fa-save"></i> ذخیره تنظیمات
+                            </button>
+                        </div>
+                    </div>
+                    <div id="api-test-result" class="results-area">
+                        <div style="text-align: center; color: #6b7280;">نتیجه تست اتصال بک‌اند</div>
                     </div>
                 </div>
             </div>
 
             <!-- Logs Section -->
             <div id="logs-section" class="section">
-                <h2><i class="fas fa-list"></i> مدیریت کامل لاگ‌ها</h2>
+                <h2><i class="fas fa-file-alt"></i> لاگ‌های سیستم</h2>
                 
-                <div style="margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button class="btn btn-success" onclick="refreshLogs()">🔄 بروزرسانی لاگ‌ها</button>
-                    <button class="btn btn-danger" onclick="clearAllLogs()">🗑️ پاک کردن همه</button>
-                    <button class="btn" onclick="exportAllLogs()">💾 صدر همه لاگ‌ها</button>
-                    <select onchange="filterLogsByType(this.value)" class="input-field" style="width: auto;">
-                        <option value="all">همه لاگ‌ها</option>
-                        <option value="success">موفقیت‌ها</option>
-                        <option value="error">خطاها</option>
-                        <option value="info">اطلاعات</option>
-                        <option value="warning">هشدارها</option>
-                    </select>
+                <div style="margin-bottom: 1rem;">
+                    <button class="btn btn-success" onclick="refreshLogs()">
+                        <i class="fas fa-sync-alt"></i> بروزرسانی
+                    </button>
+                    <button class="btn btn-danger" onclick="clearAllLogs()">
+                        <i class="fas fa-trash"></i> پاک کردن
+                    </button>
                 </div>
                 
-                <div id="logs-display" class="results-area" style="height: 500px; overflow-y: auto;">
-                    <div class="text-center" style="color: #94a3b8;">
-                        لاگ‌ها در اینجا نمایش داده می‌شوند
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Section -->
-            <div id="settings-section" class="section">
-                <h2><i class="fas fa-cog"></i> تنظیمات سیستم</h2>
-                
-                <div class="grid-2">
-                    <div>
-                        <h3>تنظیمات API:</h3>
-                        <input type="text" id="api-endpoint" class="input-field" placeholder="آدرس API" value="http://localhost:5000/api">
-                        <input type="number" id="api-timeout" class="input-field" placeholder="timeout (ثانیه)" value="30">
-                        <button class="btn btn-success" onclick="testApiConnection()">🔗 تست اتصال API</button>
-                        <button class="btn" onclick="saveApiSettings()">💾 ذخیره تنظیمات API</button>
-                    </div>
-                    
-                    <div>
-                        <h3>تنظیمات پروکسی:</h3>
-                        <textarea id="proxy-list" class="input-field" rows="4" placeholder="لیست پروکسی‌ها:&#10;185.239.105.187:12345&#10;91.107.223.94:8080"></textarea>
-                        <button class="btn btn-success" onclick="updateProxyList()">🌐 بروزرسانی پروکسی‌ها</button>
-                        <button class="btn" onclick="testAllProxies()">🧪 تست همه پروکسی‌ها</button>
-                    </div>
-                </div>
-                
-                <div class="grid-2 mt-2">
-                    <div>
-                        <h3>تنظیمات ظاهری:</h3>
-                        <select id="theme-setting" class="input-field" onchange="applyTheme(this.value)">
-                            <option value="dark">حالت تاریک</option>
-                            <option value="light">حالت روشن</option>
-                            <option value="auto">خودکار</option>
-                        </select>
-                        <select id="language-setting" class="input-field" onchange="changeLanguage(this.value)">
-                            <option value="fa">فارسی</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <h3>تنظیمات عملکرد:</h3>
-                        <label style="display: flex; align-items: center; margin: 1rem 0;">
-                            <input type="checkbox" id="auto-save" checked style="margin-left: 0.5rem;">
-                            ذخیره خودکار تغییرات
-                        </label>
-                        <label style="display: flex; align-items: center; margin: 1rem 0;">
-                            <input type="checkbox" id="real-time-updates" checked style="margin-left: 0.5rem;">
-                            بروزرسانی‌های زنده
-                        </label>
-                        <button class="btn btn-success" onclick="saveAllSettings()">💾 ذخیره همه تنظیمات</button>
-                        <button class="btn btn-warning" onclick="resetAllSettings()">🔄 بازنشانی</button>
-                    </div>
-                </div>
-                
-                <div id="settings-status" class="results-area mt-2">
-                    <div class="text-center" style="color: #94a3b8;">
-                        وضعیت تنظیمات در اینجا نمایش داده می‌شود
-                    </div>
+                <div id="logs-container" class="results-area" style="height: 400px; overflow-y: auto;">
+                    <div style="text-align: center; color: #6b7280;">لاگ‌های سیستم</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Toast Container -->
-    <div id="toast-container"></div>
+    <div id="toast-container" style="position: fixed; top: 20px; left: 20px; z-index: 3000;"></div>
 
     <script>
-        // REAL System State - NO FAKE DATA
-        let realSystem = {
-            apiEndpoint: 'http://localhost:5000/api',
+        // REAL BACKEND API INTEGRATION - NO MOCK DATA
+        
+        const API_BASE_URL = 'http://127.0.0.1:8000/api';
+        const WS_URL = 'ws://127.0.0.1:8000/ws/updates';
+        
+        let realSystemData = {
             documents: [],
-            operations: [],
-            activityLogs: [],
             proxies: [],
-            stats: {
-                totalDocs: 0,
-                totalOps: 0,
-                successOps: 0,
-                activeProxies: 0
-            },
-            settings: {
-                theme: 'dark',
-                language: 'fa',
-                autoSave: true,
-                realTimeUpdates: true,
-                apiTimeout: 30000
-            },
-            charts: {},
-            currentScraping: false,
-            currentProcessing: false,
-            selectedNafaqeType: null
+            categories: [],
+            logs: [],
+            stats: {},
+            isConnected: false,
+            selectedNafaqeType: null,
+            charts: {}
         };
 
-        // Initialize REAL system
+        // ==================== BACKEND API CALLS ====================
+
+        async function callBackendAPI(endpoint, method = 'GET', data = null) {
+            try {
+                const config = {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    timeout: 30000
+                };
+
+                if (data && method !== 'GET') {
+                    config.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log(`✅ Backend API Success: ${endpoint}`, result);
+                addRealLog(`API Call: ${endpoint} - Success`, 'success');
+                return result;
+            } catch (error) {
+                console.error(`❌ Backend API Failed: ${endpoint}`, error);
+                addRealLog(`API Call: ${endpoint} - Failed: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        // ==================== AUTO-LOAD ON PAGE LOAD ====================
+
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log('🚀 Initializing REAL system...');
-            await loadAllRealData();
-            setupAllEventHandlers();
-            initializeRealCharts();
-            loadSavedSettings();
-            updateAllDisplays();
-            addLog('سیستم واقعی راه‌اندازی شد', 'success');
+            console.log('🚀 Starting REAL backend-connected system...');
+            
+            try {
+                // Test backend connection first
+                await testBackendHealth();
+                
+                // Load ALL real data from backend APIs
+                await loadAllRealDataFromBackend();
+                
+                // Initialize charts with real data
+                initializeRealCharts();
+                
+                // Start real-time updates
+                connectWebSocket();
+                startRealTimeUpdates();
+                
+                updateConnectionStatus(true);
+                addRealLog('سیستم به بک‌اند واقعی متصل شد - تمام داده‌ها واقعی', 'success');
+                
+            } catch (error) {
+                console.error('❌ Backend connection failed:', error);
+                updateConnectionStatus(false);
+                addRealLog(`خطا در اتصال به بک‌اند: ${error.message}`, 'error');
+                showRealToast('خطا در اتصال به بک‌اند - لطفاً سرور را راه‌اندازی کنید', 'error');
+            }
         });
 
-        // Load ALL real data from backend
-        async function loadAllRealData() {
-            try {
-                // Load real documents
-                const docsResponse = await fetch(`${realSystem.apiEndpoint}/documents`);
-                if (docsResponse.ok) {
-                    const docsData = await docsResponse.json();
-                    realSystem.documents = docsData.documents || [];
-                    console.log(`📂 Loaded ${realSystem.documents.length} real documents`);
-                }
-
-                // Load real stats
-                const statsResponse = await fetch(`${realSystem.apiEndpoint}/stats`);
-                if (statsResponse.ok) {
-                    const statsData = await statsResponse.json();
-                    realSystem.stats = statsData;
-                    console.log('📊 Loaded real statistics');
-                }
-
-            } catch (error) {
-                console.error('❌ API not available, loading from localStorage:', error);
-                loadFromLocalStorage();
-            }
+        async function testBackendHealth() {
+            const health = await callBackendAPI('/health');
+            console.log('✅ Backend health verified:', health);
+            return health;
         }
 
-        function loadFromLocalStorage() {
-            // Load real data from localStorage as fallback
-            const savedDocs = localStorage.getItem('realDocuments');
-            if (savedDocs) {
-                realSystem.documents = JSON.parse(savedDocs);
-            }
-
-            const savedLogs = localStorage.getItem('realActivityLogs');
-            if (savedLogs) {
-                realSystem.activityLogs = JSON.parse(savedLogs);
-            }
-
-            const savedStats = localStorage.getItem('realStats');
-            if (savedStats) {
-                realSystem.stats = JSON.parse(savedStats);
-            }
-
-            console.log('📂 Loaded data from localStorage');
-        }
-
-        function setupAllEventHandlers() {
-            console.log('🔗 Setting up ALL event handlers...');
+        async function loadAllRealDataFromBackend() {
+            console.log('📡 Loading ALL data from real backend APIs...');
             
-            // No fake handlers - all real
-            document.getElementById('text-search-query')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') performRealTextSearch();
-            });
-
-            document.getElementById('semantic-search-query')?.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') performRealSemanticSearch();
-            });
+            // Load real statistics
+            await loadRealStats();
+            
+            // Load real documents
+            await loadRealDocuments();
+            
+            // Load real categories
+            await loadRealCategories();
+            
+            // Test real proxies
+            await testRealProxies();
+            
+            console.log('✅ All real data loaded from backend APIs');
         }
 
-        // REAL Navigation Functions
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
+        // ==================== BACKEND DATA LOADING ====================
 
-            // Remove active from nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Show selected section
-            const targetSection = document.getElementById(sectionName + '-section');
-            if (targetSection) {
-                targetSection.classList.add('active');
-                event.target.classList.add('active');
-                addLog(`بخش ${sectionName} باز شد`, 'info');
+        async function loadRealStats() {
+            try {
+                const stats = await callBackendAPI('/stats');
+                realSystemData.stats = stats;
+                updateDashboardWithBackendData(stats);
+                updateStatisticsWithBackendData(stats);
+                console.log('📊 Real stats loaded from backend:', stats);
+                showRealToast('آمار از بک‌اند بروزرسانی شد', 'success');
+            } catch (error) {
+                console.error('❌ Stats loading failed:', error);
+                showRealToast('خطا در بارگذاری آمار از بک‌اند', 'error');
+                throw error;
             }
         }
 
-        function switchSearchTab(tabType) {
-            // Hide all search tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Remove active from tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Show selected tab
-            const targetTab = document.getElementById(tabType + '-search-tab');
-            if (targetTab) {
-                targetTab.classList.add('active');
-                event.target.classList.add('active');
-                addLog(`تب جستجوی ${tabType} فعال شد`, 'info');
+        async function loadRealDocuments() {
+            try {
+                const result = await callBackendAPI('/search', 'POST', {
+                    query: '',
+                    search_type: 'text',
+                    limit: 1000
+                });
+                
+                realSystemData.documents = result.results || [];
+                updateDocumentDisplays();
+                console.log('📄 Real documents loaded from backend:', realSystemData.documents.length);
+                showRealToast(`${realSystemData.documents.length} سند از بک‌اند بارگذاری شد`, 'success');
+            } catch (error) {
+                console.error('❌ Document loading failed:', error);
+                showRealToast('خطا در بارگذاری اسناد از بک‌اند', 'error');
+                throw error;
             }
         }
 
-        // REAL Search Functions
+        async function loadRealCategories() {
+            try {
+                const result = await callBackendAPI('/categories');
+                realSystemData.categories = result.categories || [];
+                console.log('📂 Real categories loaded from backend:', realSystemData.categories.length);
+            } catch (error) {
+                console.error('❌ Category loading failed:', error);
+            }
+        }
+
+        async function testRealProxies() {
+            try {
+                const result = await callBackendAPI('/proxy/test', 'POST', { test_all: true });
+                realSystemData.proxies = result.proxies || [];
+                updateProxyDisplays();
+                console.log('🌐 Real proxies tested via backend:', realSystemData.proxies.length);
+                showRealToast(`${result.active_count || 0} پروکسی فعال از بک‌اند`, 'success');
+            } catch (error) {
+                console.error('❌ Proxy testing failed:', error);
+                showRealToast('خطا در تست پروکسی‌ها', 'error');
+            }
+        }
+
+        // ==================== REAL SEARCH FUNCTIONS ====================
+
         async function performRealTextSearch() {
-            const query = document.getElementById('text-search-query').value.trim();
-            const source = document.getElementById('text-search-source').value;
-
+            const query = document.getElementById('text-query').value.trim();
+            const source = document.getElementById('text-source').value;
+            
             if (!query) {
-                showToast('لطفاً کلیدواژه جستجو را وارد کنید', 'error');
+                showRealToast('لطفاً کلیدواژه جستجو را وارد کنید', 'error');
                 return;
             }
 
-            addLog(`شروع جستجوی متنی واقعی: "${query}"`, 'info');
-
             try {
-                // Real API call
-                const response = await fetch(`${realSystem.apiEndpoint}/search`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        query: query,
-                        type: 'text',
-                        source: source
-                    })
+                showLoadingInContainer('text-results', 'جستجو در بک‌اند...');
+                
+                const result = await callBackendAPI('/search', 'POST', {
+                    query: query,
+                    search_type: 'text',
+                    source_filter: source || null,
+                    limit: 50
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    displayRealSearchResults(data.results, 'text-search-results', 'متنی');
-                    addLog(`جستجوی متنی کامل شد: ${data.total} نتیجه واقعی`, 'success');
-                } else {
-                    throw new Error(`API Error: ${response.status}`);
-                }
-
+                
+                displayRealResults(result.results, 'text-results', `جستجوی متنی "${query}"`);
+                addRealLog(`جستجوی متنی بک‌اند: ${result.total} نتیجه در ${result.search_time_ms}ms`, 'success');
+                
             } catch (error) {
-                console.error('Search API failed, using local search:', error);
-                performLocalTextSearch(query, source);
+                displayError('text-results', 'خطا در جستجوی بک‌اند: ' + error.message);
             }
-        }
-
-        function performLocalTextSearch(query, source) {
-            // Fallback to local search
-            const results = realSystem.documents.filter(doc => {
-                const matchQuery = doc.title.toLowerCase().includes(query.toLowerCase()) || 
-                                 doc.content.toLowerCase().includes(query.toLowerCase());
-                const matchSource = !source || doc.source.includes(source);
-                return matchQuery && matchSource;
-            });
-
-            displayRealSearchResults(results, 'text-search-results', 'متنی');
-            addLog(`جستجوی متنی محلی: ${results.length} نتیجه`, 'success');
         }
 
         async function performRealSemanticSearch() {
-            const query = document.getElementById('semantic-search-query').value.trim();
+            const query = document.getElementById('semantic-query').value.trim();
             const precision = document.getElementById('semantic-precision').value;
-            const limit = parseInt(document.getElementById('semantic-limit').value);
-
+            
             if (!query) {
-                showToast('لطفاً توضیحات جستجو را وارد کنید', 'error');
+                showRealToast('لطفاً توضیحات جستجو را وارد کنید', 'error');
                 return;
             }
 
-            addLog(`شروع جستجوی معنایی واقعی: "${query}" با دقت ${precision}`, 'info');
-
-            // Real semantic search logic
-            const queryWords = query.toLowerCase().split(' ').filter(w => w.length > 2);
-            let scoredResults = [];
-
-            realSystem.documents.forEach(doc => {
-                let relevanceScore = 0;
-
-                queryWords.forEach(word => {
-                    // Title matches (highest weight)
-                    if (doc.title.toLowerCase().includes(word)) {
-                        relevanceScore += 5;
-                    }
-                    // Content matches
-                    if (doc.content.toLowerCase().includes(word)) {
-                        relevanceScore += 3;
-                    }
-                    // Category matches
-                    if (doc.category && doc.category.toLowerCase().includes(word)) {
-                        relevanceScore += 2;
-                    }
-                    // Keywords matches
-                    if (doc.keywords && doc.keywords.toLowerCase().includes(word)) {
-                        relevanceScore += 4;
-                    }
-                });
-
-                // Apply precision filter
-                const minScore = precision === 'high' ? 8 : precision === 'medium' ? 5 : 2;
+            try {
+                showLoadingInContainer('semantic-results', 'جستجوی معنایی در بک‌اند...');
                 
-                if (relevanceScore >= minScore) {
-                    scoredResults.push({
-                        ...doc,
-                        relevanceScore: relevanceScore
-                    });
-                }
-            });
-
-            // Sort by relevance
-            scoredResults.sort((a, b) => b.relevanceScore - a.relevanceScore);
-            
-            // Limit results
-            const finalResults = scoredResults.slice(0, limit);
-
-            displayRealSearchResults(finalResults, 'semantic-search-results', `معنایی (دقت ${precision})`);
-            addLog(`جستجوی معنایی کامل شد: ${finalResults.length} نتیجه با دقت ${precision}`, 'success');
+                const limit = precision === 'high' ? 20 : precision === 'medium' ? 35 : 50;
+                const result = await callBackendAPI('/search', 'POST', {
+                    query: query,
+                    search_type: 'semantic',
+                    limit: limit
+                });
+                
+                displayRealResults(result.results, 'semantic-results', `جستجوی معنایی دقت ${precision}`);
+                addRealLog(`جستجوی معنایی بک‌اند: ${result.total} نتیجه`, 'success');
+                
+            } catch (error) {
+                displayError('semantic-results', 'خطا در جستجوی معنایی: ' + error.message);
+            }
         }
 
         async function performRealAdvancedSearch() {
             const title = document.getElementById('advanced-title').value.trim();
-            const article = document.getElementById('advanced-article').value.trim();
-            const date = document.getElementById('advanced-date').value;
             const category = document.getElementById('advanced-category').value;
-            const docType = document.getElementById('advanced-doc-type').value;
-
-            addLog(`شروع جستجوی پیشرفته واقعی`, 'info');
-
-            // Real advanced filtering
-            let results = realSystem.documents.filter(doc => {
-                let matches = true;
-
-                if (title && !doc.title.toLowerCase().includes(title.toLowerCase())) {
-                    matches = false;
-                }
-
-                if (article && !(doc.title.includes(article) || doc.content.includes(article))) {
-                    matches = false;
-                }
-
-                if (category && doc.category !== category) {
-                    matches = false;
-                }
-
-                if (docType) {
-                    const typeMatch = 
-                        (docType === 'قانون' && doc.title.includes('قانون')) ||
-                        (docType === 'دادنامه' && doc.title.includes('دادنامه')) ||
-                        (docType === 'بخشنامه' && doc.title.includes('بخشنامه'));
-                    
-                    if (!typeMatch) matches = false;
-                }
-
-                return matches;
-            });
-
-            displayRealSearchResults(results, 'advanced-search-results', 'پیشرفته');
-            addLog(`جستجوی پیشرفته کامل شد: ${results.length} نتیجه`, 'success');
-        }
-
-        function selectNafaqeType(type) {
-            realSystem.selectedNafaqeType = type;
-
-            // Visual feedback
-            document.querySelectorAll('#nafaqe-search-tab .btn').forEach(btn => {
-                btn.style.background = '#3b82f6';
-            });
             
-            const selectedBtn = event.target;
-            selectedBtn.style.background = '#10b981';
-
-            addLog(`نوع نفقه انتخاب شد: ${type}`, 'info');
-            showToast(`نوع نفقه "${type}" انتخاب شد`, 'info');
+            try {
+                showLoadingInContainer('advanced-results', 'جستجوی پیشرفته در بک‌اند...');
+                
+                const result = await callBackendAPI('/search', 'POST', {
+                    query: title || '',
+                    search_type: 'exact',
+                    category_filter: category || null,
+                    limit: 100
+                });
+                
+                displayRealResults(result.results, 'advanced-results', 'جستجوی پیشرفته');
+                addRealLog(`جستجوی پیشرفته بک‌اند: ${result.total} نتیجه`, 'success');
+                
+            } catch (error) {
+                displayError('advanced-results', 'خطا در جستجوی پیشرفته: ' + error.message);
+            }
         }
 
         async function performRealNafaqeSearch() {
             const details = document.getElementById('nafaqe-details').value.trim();
-            const nafaqeType = realSystem.selectedNafaqeType;
-
+            const nafaqeType = realSystemData.selectedNafaqeType;
+            
             if (!nafaqeType) {
-                showToast('ابتدا نوع نفقه را انتخاب کنید', 'error');
+                showRealToast('ابتدا نوع نفقه را انتخاب کنید', 'error');
                 return;
             }
 
-            addLog(`شروع جستجوی نفقه واقعی: ${nafaqeType}`, 'info');
-
-            // Real nafaqe search
-            const results = realSystem.documents.filter(doc => {
-                const hasNafaqe = doc.title.includes('نفقه') || doc.content.includes('نفقه');
-                const hasType = doc.title.includes(nafaqeType) || doc.content.includes(nafaqeType);
-                const matchDetails = !details || 
-                    doc.title.toLowerCase().includes(details.toLowerCase()) ||
-                    doc.content.toLowerCase().includes(details.toLowerCase());
-
-                return hasNafaqe && hasType && matchDetails;
-            });
-
-            displayRealSearchResults(results, 'nafaqe-search-results', `نفقه ${nafaqeType}`);
-            addLog(`جستجوی نفقه کامل شد: ${results.length} نتیجه برای ${nafaqeType}`, 'success');
+            try {
+                showLoadingInContainer('nafaqe-results', 'جستجوی نفقه در بک‌اند...');
+                
+                const result = await callBackendAPI('/search', 'POST', {
+                    query: `نفقه ${nafaqeType} ${details}`.trim(),
+                    search_type: 'semantic',
+                    category_filter: 'نفقه_و_حقوق_خانواده',
+                    limit: 30
+                });
+                
+                displayRealResults(result.results, 'nafaqe-results', `جستجوی نفقه ${nafaqeType}`);
+                addRealLog(`جستجوی نفقه بک‌اند: ${result.total} نتیجه`, 'success');
+                
+            } catch (error) {
+                displayError('nafaqe-results', 'خطا در جستجوی نفقه: ' + error.message);
+            }
         }
 
-        function displayRealSearchResults(results, containerId, searchType) {
-            const container = document.getElementById(containerId);
+        // ==================== REAL SCRAPING & PROCESSING ====================
 
-            if (results.length === 0) {
+        async function startRealScraping() {
+            const urls = document.getElementById('scraping-urls').value.split('\n').filter(url => url.trim());
+            const useProxy = document.getElementById('use-proxy-scraping').checked;
+            const aiAnalysis = document.getElementById('ai-analysis').checked;
+            
+            if (urls.length === 0) {
+                showRealToast('لطفاً آدرس‌های سایت را وارد کنید', 'error');
+                return;
+            }
+
+            try {
+                showLoadingInContainer('scraping-results', 'ارسال درخواست اسکرپینگ به بک‌اند...');
+                
+                const result = await callBackendAPI('/process', 'POST', {
+                    urls: urls,
+                    use_proxy: useProxy,
+                    ai_analysis: aiAnalysis,
+                    batch_size: 3
+                });
+                
+                displayScrapingResults(result);
+                addRealLog(`اسکرپینگ بک‌اند: ${result.successful}/${result.total_urls} موفق`, 'success');
+                
+                // Reload documents after scraping
+                await loadRealDocuments();
+                await loadRealStats();
+                
+            } catch (error) {
+                displayError('scraping-results', 'خطا در اسکرپینگ بک‌اند: ' + error.message);
+            }
+        }
+
+        async function startRealProcessing() {
+            try {
+                showLoadingInContainer('processing-results', 'ارسال درخواست پردازش به بک‌اند...');
+                
+                const unprocessedUrls = realSystemData.documents
+                    .filter(doc => !doc.processed && doc.url)
+                    .map(doc => doc.url)
+                    .slice(0, 10);
+
+                if (unprocessedUrls.length === 0) {
+                    showRealToast('همه اسناد پردازش شده‌اند', 'info');
+                    displayError('processing-results', 'همه اسناد در بک‌اند پردازش شده‌اند');
+                    return;
+                }
+
+                const result = await callBackendAPI('/process', 'POST', {
+                    urls: unprocessedUrls,
+                    use_proxy: true,
+                    ai_analysis: true,
+                    batch_size: 5
+                });
+                
+                displayProcessingResults(result);
+                addRealLog(`پردازش بک‌اند: ${result.successful} سند موفق`, 'success');
+                
+                // Reload data after processing
+                await loadRealDocuments();
+                await loadRealStats();
+                
+            } catch (error) {
+                displayError('processing-results', 'خطا در پردازش بک‌اند: ' + error.message);
+            }
+        }
+
+        async function loadProcessingQueue() {
+            try {
+                await loadRealDocuments();
+                
+                const container = document.getElementById('documents-to-process');
+                
+                if (realSystemData.documents.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #6b7280;">هیچ سندی در بک‌اند یافت نشد</div>';
+                    return;
+                }
+
+                const queueHTML = realSystemData.documents.slice(0, 20).map(doc => `
+                    <div class="result-item">
+                        <h5>${doc.title}</h5>
+                        <p><strong>منبع:</strong> ${doc.source}</p>
+                        <p><strong>ID بک‌اند:</strong> ${doc.id}</p>
+                        <p><strong>وضعیت:</strong> ${doc.verified ? '✅ تأیید شده' : '⏳ در انتظار'}</p>
+                    </div>
+                `).join('');
+                
+                container.innerHTML = queueHTML;
+                
+            } catch (error) {
+                displayError('documents-to-process', 'خطا در بارگذاری صف از بک‌اند: ' + error.message);
+            }
+        }
+
+        // ==================== REAL REPORTS ====================
+
+        async function generateRealOperationsReport() {
+            try {
+                showLoadingInContainer('reports-container', 'تولید گزارش عملیات از بک‌اند...');
+                
+                const stats = await callBackendAPI('/stats');
+                
+                const reportHTML = `
+                    <div style="background: rgba(15, 52, 96, 0.7); padding: 2rem; border-radius: 8px;">
+                        <h3><i class="fas fa-chart-line"></i> گزارش عملیات (از بک‌اند)</h3>
+                        <p><strong>تاریخ:</strong> ${new Date().toLocaleString('fa-IR')}</p>
+                        <div class="grid-4" style="margin: 1rem 0;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; color: #10b981;">${stats.total_operations || 0}</div>
+                                <div>کل عملیات</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; color: #10b981;">${stats.successful_operations || 0}</div>
+                                <div>موفق</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; color: #ef4444;">${(stats.total_operations - stats.successful_operations) || 0}</div>
+                                <div>ناموفق</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; color: #3b82f6;">${stats.success_rate || 0}%</div>
+                                <div>نرخ موفقیت</div>
+                            </div>
+                        </div>
+                        <p style="color: #10b981;">✅ داده‌ها مستقیماً از بک‌اند دریافت شده</p>
+                        <button class="btn btn-success" onclick="downloadBackendReport('operations')">
+                            <i class="fas fa-download"></i> دانلود از بک‌اند
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('reports-container').innerHTML = reportHTML;
+                addRealLog('گزارش عملیات از بک‌اند تولید شد', 'success');
+                
+            } catch (error) {
+                displayError('reports-container', 'خطا در تولید گزارش: ' + error.message);
+            }
+        }
+
+        async function generateRealDocumentsReport() {
+            try {
+                showLoadingInContainer('reports-container', 'تولید گزارش اسناد از بک‌اند...');
+                
+                const [categories, stats] = await Promise.all([
+                    callBackendAPI('/categories'),
+                    callBackendAPI('/stats')
+                ]);
+                
+                const reportHTML = `
+                    <div style="background: rgba(15, 52, 96, 0.7); padding: 2rem; border-radius: 8px;">
+                        <h3><i class="fas fa-file-alt"></i> گزارش اسناد (از بک‌اند)</h3>
+                        <p><strong>تاریخ:</strong> ${new Date().toLocaleString('fa-IR')}</p>
+                        <div class="grid-3" style="margin: 1rem 0;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; color: #10b981;">${stats.total_documents || 0}</div>
+                                <div>کل اسناد</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; color: #3b82f6;">${stats.verified_documents || 0}</div>
+                                <div>تأیید شده</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.5rem; color: #f59e0b;">${categories.categories?.length || 0}</div>
+                                <div>دسته‌ها</div>
+                            </div>
+                        </div>
+                        <h4>توزیع دسته‌ها (از بک‌اند):</h4>
+                        ${categories.categories?.map(cat => `
+                            <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                                <span>${cat.name.replace(/_/g, ' ')}</span>
+                                <span style="font-weight: bold;">${cat.count}</span>
+                            </div>
+                        `).join('') || '<p>دسته‌ای در بک‌اند یافت نشد</p>'}
+                        <p style="color: #10b981;">✅ داده‌ها مستقیماً از بک‌اند دریافت شده</p>
+                    </div>
+                `;
+                
+                document.getElementById('reports-container').innerHTML = reportHTML;
+                addRealLog('گزارش اسناد از بک‌اند تولید شد', 'success');
+                
+            } catch (error) {
+                displayError('reports-container', 'خطا در تولید گزارش اسناد: ' + error.message);
+            }
+        }
+
+        async function generateRealSystemReport() {
+            try {
+                showLoadingInContainer('reports-container', 'تولید گزارش سیستم از بک‌اند...');
+                
+                const [health, stats] = await Promise.all([
+                    callBackendAPI('/health'),
+                    callBackendAPI('/stats')
+                ]);
+                
+                const reportHTML = `
+                    <div style="background: rgba(15, 52, 96, 0.7); padding: 2rem; border-radius: 8px;">
+                        <h3><i class="fas fa-server"></i> گزارش سیستم (از بک‌اند)</h3>
+                        <p><strong>تاریخ:</strong> ${new Date().toLocaleString('fa-IR')}</p>
+                        <div class="grid-4" style="margin: 1rem 0;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; color: #10b981;">${health.version || 'N/A'}</div>
+                                <div>نسخه API</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; color: #3b82f6;">${health.status || 'N/A'}</div>
+                                <div>وضعیت</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; color: #f59e0b;">${stats.system_health || 0}%</div>
+                                <div>سلامت</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; color: #ef4444;">${stats.queue_length || 0}</div>
+                                <div>صف</div>
+                            </div>
+                        </div>
+                        <p style="color: #10b981;">✅ داده‌ها مستقیماً از بک‌اند دریافت شده</p>
+                    </div>
+                `;
+                
+                document.getElementById('reports-container').innerHTML = reportHTML;
+                addRealLog('گزارش سیستم از بک‌اند تولید شد', 'success');
+                
+            } catch (error) {
+                displayError('reports-container', 'خطا در تولید گزارش سیستم: ' + error.message);
+            }
+        }
+
+        // ==================== SETTINGS ====================
+
+        async function testAPIConnection() {
+            const apiUrl = document.getElementById('api-base-url').value;
+            
+            try {
+                showLoadingInContainer('api-test-result', 'تست اتصال به بک‌اند...');
+                
+                const startTime = Date.now();
+                const response = await fetch(`${apiUrl}/health`);
+                const responseTime = Date.now() - startTime;
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const health = await response.json();
+                
+                document.getElementById('api-test-result').innerHTML = `
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h4>✅ اتصال به بک‌اند برقرار است</h4>
+                        <p><strong>وضعیت:</strong> ${health.status}</p>
+                        <p><strong>زمان پاسخ:</strong> ${responseTime}ms</p>
+                        <p><strong>نسخه:</strong> ${health.version}</p>
+                        <p><strong>آدرس:</strong> ${apiUrl}</p>
+                    </div>
+                `;
+                
+                addRealLog(`تست API موفق: ${responseTime}ms`, 'success');
+                showRealToast('اتصال به بک‌اند برقرار است', 'success');
+                
+            } catch (error) {
+                document.getElementById('api-test-result').innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h4>❌ خطا در اتصال به بک‌اند</h4>
+                        <p><strong>خطا:</strong> ${error.message}</p>
+                        <p><strong>آدرس:</strong> ${apiUrl}</p>
+                    </div>
+                `;
+                
+                addRealLog(`تست API ناموفق: ${error.message}`, 'error');
+                showRealToast('خطا در اتصال به بک‌اند', 'error');
+            }
+        }
+
+        async function saveAPISettings() {
+            const settings = {
+                baseUrl: document.getElementById('api-base-url').value,
+                timeout: document.getElementById('api-timeout').value
+            };
+            
+            localStorage.setItem('apiSettings', JSON.stringify(settings));
+            showRealToast('تنظیمات API ذخیره شد', 'success');
+            addRealLog('تنظیمات API بروزرسانی شد', 'success');
+        }
+
+        // ==================== UI UPDATE FUNCTIONS ====================
+
+        function updateDashboardWithBackendData(stats) {
+            document.getElementById('total-documents').textContent = stats.total_documents || 0;
+            document.getElementById('total-operations').textContent = stats.total_operations || 0;
+            document.getElementById('successful-operations').textContent = stats.successful_operations || 0;
+            document.getElementById('active-proxies').textContent = stats.active_proxies || 0;
+
+            // Update sidebar
+            document.getElementById('live-docs').textContent = stats.total_documents || 0;
+            document.getElementById('live-ops').textContent = stats.total_operations || 0;
+            document.getElementById('live-proxies').textContent = stats.active_proxies || 0;
+
+            // Update progress bars
+            const successRate = stats.total_operations > 0 ? 
+                Math.round((stats.successful_operations / stats.total_operations) * 100) : 0;
+            
+            document.getElementById('success-rate-bar').style.width = successRate + '%';
+
+            // Update health
+            document.getElementById('health-percentage').textContent = (stats.system_health || 0) + '%';
+            document.getElementById('system-health-bar').style.width = (stats.system_health || 0) + '%';
+        }
+
+        function updateStatisticsWithBackendData(stats) {
+            document.getElementById('queue-stats-total').textContent = stats.queue_length || 0;
+            document.getElementById('api-uptime').textContent = (stats.api_uptime || 0) + '%';
+            document.getElementById('api-response-time').textContent = (stats.avg_response_time || 0) + 'ms';
+            document.getElementById('api-requests-count').textContent = stats.requests_today || 0;
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connection-status');
+            const systemStatus = document.getElementById('system-status');
+            const healthIndicator = document.querySelector('.health-indicator');
+            
+            if (connected) {
+                statusElement.innerHTML = '<i class="fas fa-check-circle"></i> متصل به بک‌اند واقعی';
+                statusElement.style.background = 'rgba(16, 185, 129, 0.2)';
+                systemStatus.textContent = 'آنلاین';
+                systemStatus.className = 'status-online';
+                healthIndicator.className = 'health-indicator health-good';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-times-circle"></i> خطا در اتصال به بک‌اند';
+                statusElement.style.background = 'rgba(239, 68, 68, 0.2)';
+                systemStatus.textContent = 'آفلاین';
+                systemStatus.className = 'status-offline';
+                healthIndicator.className = 'health-indicator health-error';
+            }
+            
+            realSystemData.isConnected = connected;
+        }
+
+        function updateDocumentDisplays() {
+            // Update document-related progress indicators
+            const totalDocs = realSystemData.documents.length;
+            if (totalDocs > 0) {
+                const processedDocs = realSystemData.documents.filter(d => d.verified).length;
+                const progressPercentage = Math.round((processedDocs / totalDocs) * 100);
+                const progressElement = document.getElementById('documents-progress');
+                if (progressElement) {
+                    progressElement.style.width = progressPercentage + '%';
+                }
+            }
+        }
+
+        function updateProxyDisplays() {
+            const totalProxies = realSystemData.proxies.length;
+            if (totalProxies > 0) {
+                const activeProxies = realSystemData.proxies.filter(p => p.active).length;
+                const progressPercentage = Math.round((activeProxies / totalProxies) * 100);
+                const progressElement = document.getElementById('proxies-progress');
+                if (progressElement) {
+                    progressElement.style.width = progressPercentage + '%';
+                }
+            }
+        }
+
+        // ==================== DISPLAY FUNCTIONS ====================
+
+        function displayRealResults(results, containerId, searchType) {
+            const container = document.getElementById(containerId);
+            
+            if (!results || results.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center" style="color: #ef4444; padding: 2rem;">
-                        <h3>❌ نتیجه‌ای یافت نشد</h3>
-                        <p>برای جستجوی ${searchType} نتیجه‌ای در پایگاه داده واقعی وجود ندارد</p>
-                        <button class="btn" onclick="loadRealDocuments()">🔄 بروزرسانی پایگاه داده</button>
+                    <div style="text-align: center; color: #ef4444; padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <h4>نتیجه‌ای در بک‌اند یافت نشد</h4>
+                        <p>${searchType}</p>
                     </div>
                 `;
                 return;
             }
 
             const resultsHTML = `
-                <div style="background: #10b981; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                    <h3>✅ نتایج جستجوی ${searchType}</h3>
-                    <p>تعداد نتایج واقعی: ${results.length}</p>
-                    <p>منبع: پایگاه داده SQLite</p>
+                <div style="background: rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4>✅ ${searchType} - نتایج از بک‌اند واقعی</h4>
+                    <p><strong>تعداد:</strong> ${results.length}</p>
+                    <p><strong>منبع:</strong> Backend API Database</p>
                 </div>
-                ${results.map((doc, index) => `
+                ${results.map(doc => `
                     <div class="result-item">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                            <h4 style="color: #10b981;">${doc.title}</h4>
-                            <span style="background: #3b82f6; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
-                                ${doc.source}
-                            </span>
-                        </div>
-                        
-                        ${doc.category ? `<p><strong>دسته:</strong> ${doc.category.replace(/_/g, ' ')}</p>` : ''}
-                        ${doc.relevanceScore ? `<p><strong>امتیاز ارتباط:</strong> ${doc.relevanceScore}</p>` : ''}
-                        
-                        <p style="margin: 1rem 0; line-height: 1.6;">
-                            <strong>محتوا:</strong> ${doc.content ? doc.content.substring(0, 300) : 'محتوا در دسترس نیست'}...
-                        </p>
-                        
-                        ${doc.keywords ? `<p><strong>کلیدواژه‌ها:</strong> ${doc.keywords}</p>` : ''}
-                        
-                        <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                            <button class="btn" onclick="viewFullDocument(${doc.id || index})">
-                                👁️ مشاهده کامل
-                            </button>
-                            <button class="btn btn-success" onclick="downloadDocument(${doc.id || index})">
-                                💾 دانلود
-                            </button>
-                            <button class="btn btn-warning" onclick="addToFavorites(${doc.id || index})">
-                                ⭐ علاقه‌مندی
-                            </button>
-                            <button class="delete-btn" onclick="removeFromResults(${index}, '${containerId}')">
-                                🗑️ حذف از نتایج
-                            </button>
-                        </div>
+                        <h4>${doc.title}</h4>
+                        <p><strong>منبع:</strong> ${doc.source}</p>
+                        <p><strong>دسته:</strong> ${doc.category?.replace(/_/g, ' ') || 'نامشخص'}</p>
+                        <p><strong>محتوا:</strong> ${(doc.content || '').substring(0, 200)}...</p>
+                        <p><strong>ID بک‌اند:</strong> ${doc.id}</p>
+                        <p style="color: #10b981; font-size: 0.9rem;">✅ داده واقعی از بک‌اند</p>
                     </div>
                 `).join('')}
             `;
-
+            
             container.innerHTML = resultsHTML;
         }
 
-        // REAL Scraping Functions
-        async function startRealScraping() {
-            const urls = document.getElementById('scraping-urls').value.split('\n').filter(url => url.trim());
-            const delay = parseInt(document.getElementById('scraping-delay').value);
-            const extractionType = document.getElementById('content-extraction').value;
-            const useProxy = document.getElementById('use-proxy').checked;
-
-            if (urls.length === 0) {
-                showToast('لطفاً آدرس‌های سایت را وارد کنید', 'error');
-                return;
-            }
-
-            realSystem.currentScraping = true;
-            document.getElementById('stop-scraping').style.display = 'inline-block';
-            
-            addLog(`شروع اسکرپینگ واقعی: ${urls.length} آدرس با تاخیر ${delay}ms`, 'info');
-
-            try {
-                // Real API call for scraping
-                const response = await fetch(`${realSystem.apiEndpoint}/scrape`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        urls: urls,
-                        delay: delay,
-                        extraction_type: extractionType,
-                        use_proxy: useProxy
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    displayScrapingResults(data);
-                } else {
-                    throw new Error(`API Error: ${response.status}`);
-                }
-
-            } catch (error) {
-                console.error('Scraping API failed, using simulation:', error);
-                performLocalScraping(urls, delay);
-            }
-        }
-
-        function performLocalScraping(urls, delay) {
-            const progressContainer = document.getElementById('scraping-progress');
+        function displayScrapingResults(result) {
+            const resultsContainer = document.getElementById('scraping-results');
             const previewContainer = document.getElementById('scraping-preview');
             
-            let scrapedCount = 0;
-            const scrapedDocs = [];
-
-            urls.forEach((url, index) => {
-                setTimeout(() => {
-                    if (!realSystem.currentScraping) return;
-
-                    // Update progress
-                    const progress = Math.round(((index + 1) / urls.length) * 100);
-                    progressContainer.innerHTML = `
-                        <div class="text-center">
-                            <h4>اسکرپینگ: ${index + 1}/${urls.length}</h4>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${progress}%"></div>
-                            </div>
-                            <p>آدرس: ${url}</p>
-                            <p>پیشرفت: ${progress}%</p>
-                        </div>
-                    `;
-
-                    // Simulate real scraping with meaningful results
-                    setTimeout(() => {
-                        const success = Math.random() > 0.2; // 80% success rate
-                        
-                        if (success) {
-                            const scrapedDoc = {
-                                id: Date.now() + index,
-                                title: `سند حقوقی اسکرپ شده از ${url.split('/').pop()}`,
-                                url: url,
-                                content: `محتوای کاملی که از ${url} استخراج شده است. این شامل متن قانونی، مواد قانون، و سایر اطلاعات مربوطه می‌باشد که به صورت واقعی از سایت گرفته شده است.`,
-                                source: url.includes('majlis') ? 'مجلس شورای اسلامی' : 
-                                       url.includes('judiciary') ? 'قوه قضاییه' : 'منبع اسکرپ شده',
-                                category: url.includes('nafaqe') || url.includes('نفقه') ? 'نفقه_و_حقوق_خانواده' : 'عمومی',
-                                scrapedAt: new Date().toISOString(),
-                                wordCount: Math.floor(Math.random() * 500) + 100
-                            };
-
-                            scrapedDocs.push(scrapedDoc);
-                            realSystem.documents.push(scrapedDoc);
-
-                            // Show preview
-                            previewContainer.innerHTML = `
-                                <div class="result-item">
-                                    <h4>✅ ${scrapedDoc.title}</h4>
-                                    <p><strong>منبع:</strong> ${scrapedDoc.source}</p>
-                                    <p><strong>تعداد کلمات:</strong> ${scrapedDoc.wordCount}</p>
-                                    <p><strong>محتوا:</strong> ${scrapedDoc.content}</p>
-                                    <p><strong>زمان اسکرپ:</strong> ${new Date().toLocaleTimeString('fa-IR')}</p>
-                                </div>
-                            `;
-
-                            addLog(`اسکرپ موفق: ${url} - ${scrapedDoc.wordCount} کلمه`, 'success');
-                        } else {
-                            addLog(`اسکرپ ناموفق: ${url} - خطا در دسترسی`, 'error');
-                        }
-
-                        scrapedCount++;
-                        
-                        if (scrapedCount === urls.length) {
-                            realSystem.currentScraping = false;
-                            document.getElementById('stop-scraping').style.display = 'none';
-                            
-                            // Save scraped data
-                            localStorage.setItem('realDocuments', JSON.stringify(realSystem.documents));
-                            updateAllDisplays();
-                            
-                            showToast(`اسکرپینگ کامل شد: ${scrapedDocs.length} سند جدید`, 'success');
-                            addLog(`اسکرپینگ کامل شد: ${scrapedDocs.length} سند از ${urls.length} آدرس`, 'success');
-                        }
-                    }, 2000); // Real processing time
-                }, index * delay);
-            });
-        }
-
-        function stopScraping() {
-            realSystem.currentScraping = false;
-            document.getElementById('stop-scraping').style.display = 'none';
-            showToast('اسکرپینگ متوقف شد', 'warning');
-            addLog('اسکرپینگ توسط کاربر متوقف شد', 'warning');
-        }
-
-        // REAL Processing Functions
-        function loadProcessingQueue() {
-            const container = document.getElementById('processing-queue');
-            
-            if (realSystem.documents.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center" style="color: #94a3b8; padding: 2rem;">
-                        <h4>صف پردازش خالی است</h4>
-                        <p>ابتدا اسناد را اسکرپ کنید یا بارگذاری کنید</p>
-                        <button class="btn" onclick="loadRealDocuments()">📂 بارگذاری اسناد</button>
+            // Show preview of first successful result
+            const firstSuccess = result.results?.find(r => r.success);
+            if (firstSuccess) {
+                previewContainer.innerHTML = `
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h5>پیش‌نمایش از بک‌اند:</h5>
+                        <p><strong>عنوان:</strong> ${firstSuccess.title || 'استخراج نشد'}</p>
+                        <p><strong>محتوا:</strong> ${(firstSuccess.content || '').substring(0, 150)}...</p>
+                        <p style="color: #10b981;">✅ محتوای واقعی از بک‌اند</p>
                     </div>
                 `;
-                return;
             }
 
-            const queueHTML = realSystem.documents.filter(doc => !doc.processed).map((doc, index) => `
-                <div class="result-item">
-                    <h4>${doc.title}</h4>
-                    <p><strong>منبع:</strong> ${doc.source}</p>
-                    <p><strong>وضعیت:</strong> ${doc.processed ? '✅ پردازش شده' : '⏳ در انتظار'}</p>
-                    <p><strong>تعداد کلمات:</strong> ${doc.wordCount || 'نامشخص'}</p>
-                    <div style="margin-top: 0.5rem;">
-                        <button class="btn" onclick="processDocument(${doc.id || index})">⚙️ پردازش</button>
-                        <button class="delete-btn" onclick="removeFromQueue(${index})">🗑️ حذف</button>
-                    </div>
+            // Display results with backend confirmation
+            const resultsHTML = `
+                <div style="background: rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4>✅ اسکرپینگ بک‌اند کامل شد</h4>
+                    <p><strong>کل:</strong> ${result.total_urls}</p>
+                    <p><strong>موفق:</strong> ${result.successful}</p>
+                    <p><strong>نرخ موفقیت:</strong> ${result.success_rate}%</p>
+                    <p style="color: #10b981;">✅ نتایج واقعی از بک‌اند</p>
                 </div>
-            `).join('');
-
-            container.innerHTML = queueHTML;
-            addLog(`صف پردازش بارگذاری شد: ${realSystem.documents.filter(d => !d.processed).length} سند`, 'info');
+                ${result.results?.map(item => `
+                    <div class="result-item" style="border-left-color: ${item.success ? '#10b981' : '#ef4444'}">
+                        <h5>${item.success ? '✅' : '❌'} ${item.url}</h5>
+                        <p><strong>وضعیت بک‌اند:</strong> ${item.status}</p>
+                        ${item.success ? `
+                            <p><strong>عنوان:</strong> ${item.title || 'استخراج نشد'}</p>
+                            <p><strong>دسته:</strong> ${item.category || 'نامشخص'}</p>
+                            <p style="color: #10b981;">✅ داده واقعی از بک‌اند</p>
+                        ` : `
+                            <p style="color: #ef4444;"><strong>خطا:</strong> ${item.error || 'دسترسی ناموفق'}</p>
+                        `}
+                    </div>
+                `).join('') || '<p>نتیجه‌ای از بک‌اند دریافت نشد</p>'}
+            `;
+            
+            resultsContainer.innerHTML = resultsHTML;
         }
 
-        async function startRealProcessing() {
-            const unprocessedDocs = realSystem.documents.filter(doc => !doc.processed);
-            
-            if (unprocessedDocs.length === 0) {
-                showToast('هیچ سندی برای پردازش وجود ندارد', 'warning');
-                return;
-            }
-
-            realSystem.currentProcessing = true;
-            addLog(`شروع پردازش واقعی: ${unprocessedDocs.length} سند`, 'info');
-
-            const statusContainer = document.getElementById('processing-status');
+        function displayProcessingResults(result) {
             const resultsContainer = document.getElementById('processing-results');
-
-            for (let i = 0; i < unprocessedDocs.length; i++) {
-                if (!realSystem.currentProcessing) break;
-
-                const doc = unprocessedDocs[i];
-
-                // Update status
-                statusContainer.innerHTML = `
-                    <div class="text-center">
-                        <h4>پردازش: ${i + 1}/${unprocessedDocs.length}</h4>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${Math.round(((i + 1) / unprocessedDocs.length) * 100)}%"></div>
-                        </div>
-                        <p>سند: ${doc.title}</p>
-                    </div>
-                `;
-
-                // Real processing
-                await new Promise(resolve => setTimeout(resolve, 3000)); // Real delay
-
-                const success = Math.random() > 0.1; // 90% success rate
-
-                if (success) {
-                    // Real processing logic
-                    doc.processed = true;
-                    doc.processedAt = new Date().toISOString();
-                    
-                    // Extract real keywords
-                    const words = doc.content.match(/[\u0600-\u06FF]+/g) || [];
-                    doc.keywords = [...new Set(words.filter(w => w.length > 3))].slice(0, 10).join(',');
-                    
-                    // Real categorization
-                    if (doc.content.includes('نفقه')) {
-                        doc.category = 'نفقه_و_حقوق_خانواده';
-                    } else if (doc.content.includes('طلاق')) {
-                        doc.category = 'طلاق_و_فسخ_نکاح';
-                    } else {
-                        doc.category = 'عمومی';
-                    }
-
-                    const resultHTML = `
-                        <div class="result-item" style="border-left-color: #10b981;">
-                            <h4>✅ ${doc.title}</h4>
-                            <p><strong>وضعیت:</strong> پردازش موفق</p>
-                            <p><strong>دسته‌بندی:</strong> ${doc.category.replace(/_/g, ' ')}</p>
-                            <p><strong>کلیدواژه‌ها:</strong> ${doc.keywords}</p>
-                            <p><strong>زمان پردازش:</strong> ${new Date().toLocaleTimeString('fa-IR')}</p>
-                        </div>
-                    `;
-                    
-                    resultsContainer.innerHTML = resultHTML + resultsContainer.innerHTML;
-                    addLog(`پردازش موفق: ${doc.title}`, 'success');
-                } else {
-                    addLog(`پردازش ناموفق: ${doc.title}`, 'error');
-                }
-            }
-
-            realSystem.currentProcessing = false;
             
-            // Save processed data
-            localStorage.setItem('realDocuments', JSON.stringify(realSystem.documents));
-            updateAllDisplays();
+            const resultsHTML = `
+                <div style="background: rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <h4>✅ پردازش بک‌اند کامل شد</h4>
+                    <p><strong>کل:</strong> ${result.total_urls}</p>
+                    <p><strong>موفق:</strong> ${result.successful}</p>
+                    <p><strong>نرخ موفقیت:</strong> ${result.success_rate}%</p>
+                    <p style="color: #10b981;">✅ پردازش واقعی در بک‌اند</p>
+                </div>
+                ${result.results?.map(item => `
+                    <div class="result-item" style="border-left-color: ${item.success ? '#10b981' : '#ef4444'}">
+                        <h5>${item.success ? '✅' : '❌'} پردازش بک‌اند</h5>
+                        <p><strong>آدرس:</strong> ${item.url}</p>
+                        ${item.success ? `
+                            <p><strong>تحلیل AI:</strong> انجام شد در بک‌اند</p>
+                            <p style="color: #10b981;">✅ پردازش واقعی</p>
+                        ` : `
+                            <p style="color: #ef4444;"><strong>خطا:</strong> ${item.error || 'پردازش ناموفق'}</p>
+                        `}
+                    </div>
+                `).join('') || '<p>نتیجه پردازشی از بک‌اند دریافت نشد</p>'}
+            `;
             
-            const processedCount = realSystem.documents.filter(d => d.processed).length;
-            showToast(`پردازش کامل شد: ${processedCount} سند پردازش شده`, 'success');
-            addLog(`پردازش کامل شد: ${processedCount} سند`, 'success');
+            resultsContainer.innerHTML = resultsHTML;
         }
 
-        // REAL Report Functions
-        function generateRealOperationsReport() {
-            addLog('تولید گزارش عملیات واقعی', 'info');
-
-            const successOps = realSystem.activityLogs.filter(log => log.type === 'success').length;
-            const errorOps = realSystem.activityLogs.filter(log => log.type === 'error').length;
-            const totalOps = realSystem.activityLogs.length;
-            const successRate = totalOps > 0 ? Math.round((successOps / totalOps) * 100) : 0;
-
-            const reportHTML = `
-                <div style="background: #0f172a; padding: 2rem; border-radius: 8px; border: 2px solid #10b981;">
-                    <h3 style="color: #10b981;">📊 گزارش عملیات واقعی</h3>
-                    <p><strong>تاریخ تولید:</strong> ${new Date().toLocaleString('fa-IR')}</p>
-                    <p><strong>منبع داده:</strong> پایگاه داده واقعی و لاگ‌های سیستم</p>
-                    
-                    <div class="grid-4" style="margin: 2rem 0;">
-                        <div class="text-center">
-                            <div style="font-size: 2rem; color: #3b82f6;">${totalOps}</div>
-                            <div>کل عملیات</div>
-                        </div>
-                        <div class="text-center">
-                            <div style="font-size: 2rem; color: #10b981;">${successOps}</div>
-                            <div>موفق</div>
-                        </div>
-                        <div class="text-center">
-                            <div style="font-size: 2rem; color: #ef4444;">${errorOps}</div>
-                            <div>ناموفق</div>
-                        </div>
-                        <div class="text-center">
-                            <div style="font-size: 2rem; color: #f59e0b;">${successRate}%</div>
-                            <div>نرخ موفقیت</div>
-                        </div>
-                    </div>
-                    
-                    <h4>فعالیت‌های اخیر:</h4>
-                    ${realSystem.activityLogs.slice(-5).map(log => `
-                        <div style="background: #334155; padding: 0.5rem; margin: 0.25rem 0; border-radius: 4px;">
-                            [${log.timestamp}] ${log.message}
-                        </div>
-                    `).join('')}
-                    
-                    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-                        <button class="btn btn-success" onclick="downloadRealReport('operations')">💾 دانلود گزارش</button>
-                        <button class="btn" onclick="printReport()">🖨️ چاپ گزارش</button>
-                        <button class="btn btn-warning" onclick="emailReport()">📧 ارسال ایمیل</button>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('reports-display').innerHTML = reportHTML;
-            addLog('گزارش عملیات واقعی تولید شد', 'success');
-        }
-
-        function generateRealDocumentsReport() {
-            addLog('تولید گزارش اسناد واقعی', 'info');
-
-            const categoryCounts = {};
-            const sourceCounts = {};
-
-            realSystem.documents.forEach(doc => {
-                categoryCounts[doc.category || 'نامشخص'] = (categoryCounts[doc.category || 'نامشخص'] || 0) + 1;
-                sourceCounts[doc.source || 'نامشخص'] = (sourceCounts[doc.source || 'نامشخص'] || 0) + 1;
-            });
-
-            const reportHTML = `
-                <div style="background: #0f172a; padding: 2rem; border-radius: 8px; border: 2px solid #3b82f6;">
-                    <h3 style="color: #3b82f6;">📄 گزارش اسناد واقعی</h3>
-                    <p><strong>تاریخ تولید:</strong> ${new Date().toLocaleString('fa-IR')}</p>
-                    <p><strong>کل اسناد:</strong> ${realSystem.documents.length}</p>
-                    
-                    <div class="grid-2" style="margin: 2rem 0;">
-                        <div>
-                            <h4>توزیع بر اساس دسته‌بندی:</h4>
-                            ${Object.entries(categoryCounts).map(([cat, count]) => `
-                                <div style="background: #334155; padding: 0.5rem; margin: 0.25rem 0; border-radius: 4px; display: flex; justify-content: space-between;">
-                                    <span>${cat.replace(/_/g, ' ')}</span>
-                                    <span style="color: #10b981; font-weight: bold;">${count}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div>
-                            <h4>توزیع بر اساس منبع:</h4>
-                            ${Object.entries(sourceCounts).map(([source, count]) => `
-                                <div style="background: #334155; padding: 0.5rem; margin: 0.25rem 0; border-radius: 4px; display: flex; justify-content: space-between;">
-                                    <span>${source}</span>
-                                    <span style="color: #3b82f6; font-weight: bold;">${count}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-                        <button class="btn btn-success" onclick="downloadRealReport('documents')">💾 دانلود گزارش</button>
-                        <button class="btn" onclick="exportAllDocuments()">📤 صدر همه اسناد</button>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('reports-display').innerHTML = reportHTML;
-            addLog('گزارش اسناد واقعی تولید شد', 'success');
-        }
-
-        function generateRealSystemHealth() {
-            addLog('تولید گزارش سلامت سیستم', 'info');
-
-            const healthChecks = {
-                database: realSystem.documents.length > 0,
-                localStorage: typeof(Storage) !== "undefined",
-                apiConnection: false, // Will be tested
-                charts: typeof Chart !== 'undefined'
-            };
-
-            // Test API connection
-            fetch(`${realSystem.apiEndpoint}/health`)
-                .then(response => response.ok)
-                .then(isHealthy => {
-                    healthChecks.apiConnection = isHealthy;
-                    displayHealthReport(healthChecks);
-                })
-                .catch(() => {
-                    healthChecks.apiConnection = false;
-                    displayHealthReport(healthChecks);
-                });
-        }
-
-        function displayHealthReport(healthChecks) {
-            const healthyCount = Object.values(healthChecks).filter(Boolean).length;
-            const totalChecks = Object.keys(healthChecks).length;
-            const healthPercentage = Math.round((healthyCount / totalChecks) * 100);
-
-            const reportHTML = `
-                <div style="background: #0f172a; padding: 2rem; border-radius: 8px; border: 2px solid ${healthPercentage > 75 ? '#10b981' : '#f59e0b'};">
-                    <h3 style="color: ${healthPercentage > 75 ? '#10b981' : '#f59e0b'};">🏥 گزارش سلامت سیستم</h3>
-                    <p><strong>تاریخ بررسی:</strong> ${new Date().toLocaleString('fa-IR')}</p>
-                    <p><strong>وضعیت کلی:</strong> ${healthPercentage}% سالم</p>
-                    
-                    <div style="margin: 2rem 0;">
-                        ${Object.entries(healthChecks).map(([check, status]) => `
-                            <div style="background: #334155; padding: 1rem; margin: 0.5rem 0; border-radius: 4px; display: flex; justify-content: space-between;">
-                                <span>${check === 'database' ? 'پایگاه داده' : 
-                                        check === 'localStorage' ? 'ذخیره محلی' :
-                                        check === 'apiConnection' ? 'اتصال API' :
-                                        check === 'charts' ? 'سیستم نمودارها' : check}</span>
-                                <span style="color: ${status ? '#10b981' : '#ef4444'}; font-weight: bold;">
-                                    ${status ? '✅ سالم' : '❌ خراب'}
-                                </span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <button class="btn btn-success" onclick="downloadRealReport('health')">💾 دانلود گزارش سلامت</button>
-                </div>
-            `;
-
-            document.getElementById('reports-display').innerHTML = reportHTML;
-            addLog(`گزارش سلامت تولید شد: ${healthPercentage}% سالم`, healthPercentage > 75 ? 'success' : 'warning');
-        }
-
-        // REAL Log Management
-        function refreshLogs() {
-            const container = document.getElementById('logs-display');
-            
-            if (realSystem.activityLogs.length === 0) {
+        function showLoadingInContainer(containerId, message) {
+            const container = document.getElementById(containerId);
+            if (container) {
                 container.innerHTML = `
-                    <div class="text-center" style="color: #94a3b8; padding: 2rem;">
-                        <h4>هیچ لاگی وجود ندارد</h4>
-                        <p>فعالیت‌های سیستم در اینجا ثبت می‌شوند</p>
+                    <div style="text-align: center; padding: 2rem;">
+                        <div class="loading"></div>
+                        <p style="margin-top: 1rem;">${message}</p>
                     </div>
                 `;
-                return;
-            }
-
-            const logsHTML = realSystem.activityLogs.map((log, index) => `
-                <div class="log-entry ${log.type}">
-                    <div>
-                        <strong>[${log.timestamp}]</strong>
-                        <span style="margin-right: 1rem;">${log.message}</span>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn" onclick="copyLogEntry(${index})" style="padding: 4px 8px; font-size: 12px;">📋</button>
-                        <button class="delete-btn" onclick="deleteRealLogEntry(${index})">🗑️</button>
-                    </div>
-                </div>
-            `).join('');
-
-            container.innerHTML = logsHTML;
-            container.scrollTop = container.scrollHeight;
-            
-            // Update sidebar log count
-            document.getElementById('sidebar-logs').textContent = realSystem.activityLogs.length;
-        }
-
-        function deleteRealLogEntry(index) {
-            if (confirm('حذف این لاگ؟')) {
-                const deletedLog = realSystem.activityLogs.splice(index, 1)[0];
-                localStorage.setItem('realActivityLogs', JSON.stringify(realSystem.activityLogs));
-                refreshLogs();
-                showToast('لاگ حذف شد', 'success');
-                console.log(`🗑️ Deleted log: ${deletedLog.message}`);
             }
         }
 
-        function copyLogEntry(index) {
-            const log = realSystem.activityLogs[index];
-            const text = `[${log.timestamp}] ${log.message}`;
+        function displayError(containerId, errorMessage) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 6px; text-align: center;">
+                        <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <h4 style="color: #ef4444;">خطا در بک‌اند</h4>
+                        <p>${errorMessage}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== NAVIGATION ====================
+
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('لاگ کپی شد', 'success');
+            document.getElementById(sectionName + '-section').classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+            
+            addRealLog(`بخش ${sectionName} باز شد`, 'info');
+        }
+
+        function showSearchTab(tabName) {
+            document.querySelectorAll('#search-section .tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#search-section .tab-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabName + '-search').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function searchNafaqeType(type) {
+            realSystemData.selectedNafaqeType = type;
+            
+            document.querySelectorAll('#nafaqe-search button').forEach(btn => {
+                btn.style.background = '#374151';
             });
+            event.target.style.background = 'linear-gradient(45deg, #3b82f6, #1d4ed8)';
+            
+            addRealLog(`نوع نفقه انتخاب شد: ${type}`, 'info');
+            showRealToast(`نوع نفقه "${type}" انتخاب شد`, 'info');
         }
 
-        function clearAllLogs() {
-            if (confirm('حذف همه لاگ‌ها؟')) {
-                realSystem.activityLogs = [];
-                localStorage.removeItem('realActivityLogs');
-                refreshLogs();
-                showToast('همه لاگ‌ها پاک شد', 'success');
+        // ==================== CHARTS ====================
+
+        function initializeRealCharts() {
+            try {
+                // Activity Chart
+                const activityCtx = document.getElementById('activity-chart');
+                if (activityCtx) {
+                    realSystemData.charts.activity = new Chart(activityCtx, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'فعالیت سیستم (از بک‌اند)',
+                                data: [],
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { labels: { color: 'white' } } },
+                            scales: {
+                                x: { ticks: { color: 'white' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } },
+                                y: { ticks: { color: 'white' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                            }
+                        }
+                    });
+                }
+
+                // Documents Chart
+                const documentsCtx = document.getElementById('documents-chart');
+                if (documentsCtx) {
+                    realSystemData.charts.documents = new Chart(documentsCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                data: [],
+                                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { labels: { color: 'white' } } }
+                        }
+                    });
+                }
+
+                console.log('📊 Charts initialized for real backend data');
+            } catch (error) {
+                console.error('Chart initialization failed:', error);
             }
         }
 
-        function exportAllLogs() {
-            if (realSystem.activityLogs.length === 0) {
-                showToast('هیچ لاگی برای صدر وجود ندارد', 'warning');
-                return;
-            }
-            
-            const data = JSON.stringify(realSystem.activityLogs, null, 2);
-            const blob = new Blob([data], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `real-logs-${Date.now()}.json`;
-            a.click();
-            
-            showToast(`${realSystem.activityLogs.length} لاگ صادر شد`, 'success');
-            addLog('لاگ‌ها صادر شد', 'success');
-        }
-
-        function filterLogsByType(type) {
-            const container = document.getElementById('logs-display');
-            const filtered = type === 'all' ? realSystem.activityLogs : 
-                           realSystem.activityLogs.filter(log => log.type === type);
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="text-center" style="color: #94a3b8;">هیچ لاگ ${type} وجود ندارد</div>`;
-                return;
+        function updateChartsWithBackendData() {
+            // Update charts with real backend data
+            if (realSystemData.charts.documents && realSystemData.categories.length > 0) {
+                const chart = realSystemData.charts.documents;
+                chart.data.labels = realSystemData.categories.map(c => c.name.replace(/_/g, ' '));
+                chart.data.datasets[0].data = realSystemData.categories.map(c => c.count);
+                chart.update('none');
             }
 
-            const logsHTML = filtered.map((log, index) => {
-                const realIndex = realSystem.activityLogs.indexOf(log);
-                return `
-                    <div class="log-entry ${log.type}">
-                        <div>
-                            <strong>[${log.timestamp}]</strong>
-                            <span style="margin-right: 1rem;">${log.message}</span>
-                        </div>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn" onclick="copyLogEntry(${realIndex})" style="padding: 4px 8px; font-size: 12px;">📋</button>
-                            <button class="delete-btn" onclick="deleteRealLogEntry(${realIndex})">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            container.innerHTML = logsHTML;
-        }
-
-        // REAL Settings Functions
-        function saveAllSettings() {
-            realSystem.settings = {
-                theme: document.getElementById('theme-setting').value,
-                language: document.getElementById('language-setting').value,
-                autoSave: document.getElementById('auto-save').checked,
-                realTimeUpdates: document.getElementById('real-time-updates').checked,
-                apiEndpoint: document.getElementById('api-endpoint').value,
-                apiTimeout: parseInt(document.getElementById('api-timeout').value) * 1000
-            };
-
-            localStorage.setItem('realSystemSettings', JSON.stringify(realSystem.settings));
-            
-            const statusContainer = document.getElementById('settings-status');
-            statusContainer.innerHTML = `
-                <div style="background: #10b981; color: white; padding: 1rem; border-radius: 6px;">
-                    <h4>✅ تنظیمات ذخیره شد</h4>
-                    <p>همه تنظیمات با موفقیت ذخیره شدند</p>
-                    <p><strong>زمان ذخیره:</strong> ${new Date().toLocaleString('fa-IR')}</p>
-                </div>
-            `;
-
-            showToast('تنظیمات ذخیره شد', 'success');
-            addLog('تنظیمات سیستم ذخیره شد', 'success');
-        }
-
-        function loadSavedSettings() {
-            const saved = localStorage.getItem('realSystemSettings');
-            if (saved) {
-                realSystem.settings = JSON.parse(saved);
+            // Update activity chart with backend stats
+            if (realSystemData.charts.activity && realSystemData.stats) {
+                const chart = realSystemData.charts.activity;
+                const now = new Date();
+                const timeLabel = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
                 
-                document.getElementById('theme-setting').value = realSystem.settings.theme;
-                document.getElementById('language-setting').value = realSystem.settings.language;
-                document.getElementById('auto-save').checked = realSystem.settings.autoSave;
-                document.getElementById('real-time-updates').checked = realSystem.settings.realTimeUpdates;
-                document.getElementById('api-endpoint').value = realSystem.settings.apiEndpoint;
-                document.getElementById('api-timeout').value = realSystem.settings.apiTimeout / 1000;
-
-                applyTheme(realSystem.settings.theme);
-                addLog('تنظیمات بارگذاری شد', 'info');
+                chart.data.labels.push(timeLabel);
+                chart.data.datasets[0].data.push(realSystemData.stats.total_operations || 0);
+                
+                // Keep only last 20 data points
+                if (chart.data.labels.length > 20) {
+                    chart.data.labels.shift();
+                    chart.data.datasets[0].data.shift();
+                }
+                
+                chart.update('none');
             }
         }
 
-        function applyTheme(theme) {
-            if (theme === 'light') {
-                document.body.style.background = '#f8fafc';
-                document.body.style.color = '#1e293b';
-            } else {
-                document.body.style.background = '#0f172a';
-                document.body.style.color = '#e2e8f0';
+        // ==================== WEBSOCKET ====================
+
+        function connectWebSocket() {
+            try {
+                const ws = new WebSocket(WS_URL);
+                
+                ws.onopen = () => {
+                    console.log('🔌 WebSocket connected to real backend');
+                    addRealLog('اتصال WebSocket به بک‌اند برقرار شد', 'success');
+                };
+                
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'stats_update') {
+                        realSystemData.stats = data.data;
+                        updateDashboardWithBackendData(data.data);
+                        updateChartsWithBackendData();
+                        console.log('📊 Real-time update from backend received');
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    console.error('❌ WebSocket error:', error);
+                    addRealLog('خطا در WebSocket', 'error');
+                };
+                
+                ws.onclose = () => {
+                    console.log('🔌 WebSocket disconnected, attempting reconnect...');
+                    setTimeout(() => connectWebSocket(), 5000);
+                };
+                
+            } catch (error) {
+                console.error('❌ WebSocket connection failed:', error);
             }
         }
 
-        function resetAllSettings() {
-            if (confirm('بازنشانی همه تنظیمات؟')) {
-                localStorage.removeItem('realSystemSettings');
-                location.reload();
-            }
+        function startRealTimeUpdates() {
+            // Auto-refresh from backend every 30 seconds
+            setInterval(async () => {
+                if (realSystemData.isConnected) {
+                    try {
+                        await loadRealStats();
+                        updateChartsWithBackendData();
+                    } catch (error) {
+                        console.error('Real-time update failed:', error);
+                    }
+                }
+            }, 30000);
         }
 
-        // REAL Utility Functions
-        function addLog(message, type = 'info') {
-            const log = {
+        // ==================== UTILITY FUNCTIONS ====================
+
+        function showRealToast(message, type) {
+            const toast = document.createElement('div');
+            const colors = { success: '#10b981', error: '#ef4444', warning: '#f59e0b', info: '#3b82f6' };
+            
+            toast.style.cssText = `
+                background: ${colors[type] || colors.info};
+                color: white; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.getElementById('toast-container').appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function addRealLog(message, type = 'info') {
+            const logEntry = {
                 id: Date.now(),
                 message: message,
                 type: type,
                 timestamp: new Date().toLocaleTimeString('fa-IR'),
-                fullDate: new Date().toISOString()
+                source: 'backend_api'
             };
-
-            realSystem.activityLogs.push(log);
-            localStorage.setItem('realActivityLogs', JSON.stringify(realSystem.activityLogs));
-
-            // Update displays
-            document.getElementById('sidebar-logs').textContent = realSystem.activityLogs.length;
             
-            // Auto-refresh logs if on logs section
-            if (document.getElementById('logs-section').classList.contains('active')) {
-                refreshLogs();
+            realSystemData.logs.push(logEntry);
+            if (realSystemData.logs.length > 500) {
+                realSystemData.logs = realSystemData.logs.slice(-500);
             }
+            
+            updateLogsDisplay();
         }
 
-        function showToast(message, type) {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>${message}</span>
-                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; font-size: 18px;">×</button>
+        function updateLogsDisplay() {
+            const container = document.getElementById('logs-container');
+            if (!container) return;
+            
+            const logsHTML = realSystemData.logs.slice(-50).reverse().map(log => `
+                <div style="background: rgba(55, 65, 81, 0.8); padding: 8px; margin: 4px 0; border-radius: 4px; display: flex; justify-content: space-between;">
+                    <div>
+                        <span style="color: ${getLogColor(log.type)};">[${log.timestamp}]</span>
+                        <span style="margin-right: 0.5rem;">${log.message}</span>
+                    </div>
+                    <span style="font-size: 0.7rem; color: #9ca3af;">${log.source}</span>
                 </div>
-            `;
+            `).join('');
             
-            document.getElementById('toast-container').appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+            container.innerHTML = logsHTML || '<div style="text-align: center; color: #6b7280;">هیچ لاگی وجود ندارد</div>';
         }
 
-        function updateAllDisplays() {
-            // Update all counters with REAL data
-            realSystem.stats.totalDocs = realSystem.documents.length;
-            realSystem.stats.totalOps = realSystem.activityLogs.length;
-            realSystem.stats.successOps = realSystem.activityLogs.filter(log => log.type === 'success').length;
-
-            document.getElementById('total-documents').textContent = realSystem.stats.totalDocs;
-            document.getElementById('total-operations').textContent = realSystem.stats.totalOps;
-            document.getElementById('successful-operations').textContent = realSystem.stats.successOps;
-            
-            // Update sidebar
-            document.getElementById('sidebar-docs').textContent = realSystem.stats.totalDocs;
-            document.getElementById('sidebar-operations').textContent = realSystem.stats.totalOps;
-            document.getElementById('sidebar-logs').textContent = realSystem.activityLogs.length;
-
-            const successRate = realSystem.stats.totalOps > 0 ? 
-                Math.round((realSystem.stats.successOps / realSystem.stats.totalOps) * 100) : 0;
-            document.getElementById('sidebar-success').textContent = successRate + '%';
-            document.getElementById('operations-progress').style.width = successRate + '%';
-
-            // Update charts
-            updateRealCharts();
+        function getLogColor(type) {
+            const colors = { info: '#3b82f6', success: '#10b981', warning: '#f59e0b', error: '#ef4444' };
+            return colors[type] || '#6b7280';
         }
 
-        function refreshAllStats() {
-            updateAllDisplays();
-            showToast('همه آمار از داده‌های واقعی بروزرسانی شد', 'success');
-            addLog('آمار سیستم بروزرسانی شد', 'info');
+        function updateDateTime() {
+            const now = new Date();
+            const element = document.getElementById('current-time');
+            if (element) {
+                element.textContent = now.toLocaleTimeString('fa-IR') + ' - ' + now.toLocaleDateString('fa-IR');
+            }
         }
 
-        function loadRealDocuments() {
-            // Load from real database
-            const dbData = localStorage.getItem('realLegalDatabase');
-            if (dbData) {
-                const parsed = JSON.parse(dbData);
-                realSystem.documents = [...realSystem.documents, ...(parsed.documents || [])];
+        async function downloadBackendReport(type) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/export/json`);
+                if (!response.ok) throw new Error('Export failed');
                 
-                // Remove duplicates
-                const seen = new Set();
-                realSystem.documents = realSystem.documents.filter(doc => {
-                    const key = doc.url || doc.title;
-                    if (seen.has(key)) return false;
-                    seen.add(key);
-                    return true;
-                });
-
-                localStorage.setItem('realDocuments', JSON.stringify(realSystem.documents));
-                updateAllDisplays();
-                showToast(`${realSystem.documents.length} سند واقعی بارگذاری شد`, 'success');
-                addLog(`${realSystem.documents.length} سند از پایگاه داده بارگذاری شد`, 'success');
-            } else {
-                showToast('پایگاه داده یافت نشد', 'error');
+                const data = await response.json();
+                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `backend-report-${type}-${Date.now()}.json`;
+                a.click();
+                
+                showRealToast('گزارش از بک‌اند دانلود شد', 'success');
+                addRealLog(`گزارش ${type} از بک‌اند دانلود شد`, 'success');
+                
+            } catch (error) {
+                showRealToast('خطا در دانلود گزارش از بک‌اند', 'error');
             }
         }
 
-        function initializeRealCharts() {
-            // Initialize real charts with Chart.js
-            if (typeof Chart === 'undefined') {
-                console.error('Chart.js not loaded');
-                return;
-            }
-
-            // Operations Chart
-            const opsCtx = document.getElementById('operations-chart');
-            if (opsCtx) {
-                realSystem.charts.operations = new Chart(opsCtx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'عملیات موفق',
-                            data: [],
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)'
-                        }, {
-                            label: 'عملیات ناموفق',
-                            data: [],
-                            borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'نمودار عملیات زنده',
-                                color: '#e2e8f0'
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { color: '#94a3b8' }
-                            },
-                            x: {
-                                ticks: { color: '#94a3b8' }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Success Chart
-            const successCtx = document.getElementById('success-chart');
-            if (successCtx) {
-                realSystem.charts.success = new Chart(successCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['موفق', 'ناموفق'],
-                        datasets: [{
-                            data: [0, 0],
-                            backgroundColor: ['#10b981', '#ef4444']
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'نرخ موفقیت',
-                                color: '#e2e8f0'
-                            }
-                        }
-                    }
-                });
-            }
-
-            console.log('📊 Real charts initialized');
+        function refreshLogs() {
+            updateLogsDisplay();
+            addRealLog('لاگ‌ها بروزرسانی شد', 'info');
         }
 
-        function updateRealCharts() {
-            if (!realSystem.charts.operations || !realSystem.charts.success) return;
-
-            // Update operations chart with real data
-            const now = new Date().toLocaleTimeString('fa-IR');
-            const successCount = realSystem.activityLogs.filter(log => log.type === 'success').length;
-            const errorCount = realSystem.activityLogs.filter(log => log.type === 'error').length;
-
-            // Operations chart
-            const opsChart = realSystem.charts.operations;
-            opsChart.data.labels.push(now);
-            opsChart.data.datasets[0].data.push(successCount);
-            opsChart.data.datasets[1].data.push(errorCount);
-
-            // Keep only last 10 data points
-            if (opsChart.data.labels.length > 10) {
-                opsChart.data.labels.shift();
-                opsChart.data.datasets[0].data.shift();
-                opsChart.data.datasets[1].data.shift();
+        function clearAllLogs() {
+            if (confirm('حذف همه لاگ‌ها؟')) {
+                realSystemData.logs = [];
+                updateLogsDisplay();
+                showRealToast('همه لاگ‌ها پاک شد', 'success');
             }
-
-            opsChart.update();
-
-            // Success chart
-            const successChart = realSystem.charts.success;
-            successChart.data.datasets[0].data = [successCount, errorCount];
-            successChart.update();
-
-            console.log('📊 Charts updated with real data');
         }
 
-        // Auto-update with real data
-        setInterval(() => {
-            if (realSystem.settings.realTimeUpdates) {
-                updateAllDisplays();
-            }
-        }, 10000);
+        // Start datetime updates
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
 
-        console.log('🚀 REAL Iranian Legal Archive System - NO FAKE FUNCTIONALITY!');
+        // Initialize system
+        console.log('🚀 REAL BACKEND-CONNECTED SYSTEM LOADING...');
+        console.log('✅ NO MOCK DATA - ALL BACKEND API CALLS');
+        console.log('🎯 AUTOMATIC BACKEND LOADING ON PAGE LOAD');
     </script>
 </body>
 </html>
