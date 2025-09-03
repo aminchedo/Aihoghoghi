@@ -1,21 +1,26 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   base: '/Aihoghoghi/',
-  plugins: [react()],
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
+    sourcemap: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          query: ['@tanstack/react-query'],
-          ai: ['@huggingface/inference'],
-          charts: ['chart.js', 'react-chartjs-2']
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ai-services': ['@huggingface/inference', '@xenova/transformers'],
+          'data-viz': ['chart.js', 'react-chartjs-2', 'd3'],
+          'ui-components': ['framer-motion', 'lucide-react', '@headlessui/react']
         }
       }
     }
@@ -23,17 +28,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:7860',
+        target: 'https://api.iranian-legal-archive.com',
         changeOrigin: true,
-        secure: false
-      },
-      '/ws': {
-        target: 'ws://127.0.0.1:7860',
-        ws: true
+        secure: true
       }
     }
   },
+  plugins: [react()],
   define: {
-    global: 'globalThis',
+    __DEV__: false,
+    __PROD__: true
   }
-})
+});
