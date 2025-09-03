@@ -59,6 +59,12 @@ function App() {
           });
         });
       }
+      
+      // CRITICAL FIX: On GitHub Pages, disable loading screen immediately
+      console.log('🌐 GitHub Pages detected - skipping heavy initialization');
+      setIsLoading(false);
+      setInitializationComplete(true);
+      return;
     }
     
     // Initialize application with modern event-driven approach
@@ -185,14 +191,14 @@ function App() {
       cleanup = cleanupFn;
     });
     
-    // Failsafe: Force app to load after 8 seconds maximum (increased for better UX)
+    // Failsafe: Force app to load after 3 seconds maximum (reduced for better UX)
     const failsafeTimeout = setTimeout(() => {
       if (isComponentMounted) {
         console.warn('⚠️ Failsafe timeout reached, forcing app display');
         setIsLoading(false);
         setInitializationComplete(true);
       }
-    }, 8000);
+    }, 3000);
 
     // Cleanup function for useEffect
     return () => {

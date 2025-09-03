@@ -32,6 +32,13 @@ class GitHubPagesConfig {
       version: '2.0.0'
     }));
     
+    this.apiEndpoints.set('/health', () => ({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      version: '2.0.0',
+      services: ['scraping', 'ai', 'database']
+    }));
+    
     this.apiEndpoints.set('/stats', () => ({
       documents: {
         total: Math.floor(Math.random() * 1000) + 500,
@@ -93,6 +100,67 @@ class GitHubPagesConfig {
           source: 'ai'
         }
       ]
+    }));
+    
+    // Additional API endpoints for full functionality
+    this.apiEndpoints.set('/network/proxies', () => ({
+      proxies: [
+        { id: 1, host: '127.0.0.1', port: 8080, status: 'active', latency: 45 },
+        { id: 2, host: '127.0.0.1', port: 8081, status: 'active', latency: 67 },
+        { id: 3, host: '127.0.0.1', port: 8082, status: 'inactive', latency: null }
+      ]
+    }));
+    
+    this.apiEndpoints.set('/network/test', () => ({
+      success: true,
+      results: [
+        { proxy_id: 1, status: 'success', latency: 45 },
+        { proxy_id: 2, status: 'success', latency: 67 }
+      ]
+    }));
+    
+    this.apiEndpoints.set('/network/update', () => ({
+      success: true,
+      updated: Math.floor(Math.random() * 5) + 1,
+      message: 'فهرست پروکسی‌ها به‌روزرسانی شد'
+    }));
+    
+    this.apiEndpoints.set('/process', () => ({
+      status: 'ready',
+      queue: Math.floor(Math.random() * 10),
+      processing: Math.floor(Math.random() * 3),
+      completed: Math.floor(Math.random() * 50) + 100
+    }));
+    
+    this.apiEndpoints.set('/processed-documents', () => ({
+      documents: [
+        {
+          id: 1,
+          title: 'قانون مدنی - ماده ۱۰',
+          url: 'https://www.example.ir/law1',
+          status: 'completed',
+          timestamp: new Date(Date.now() - 300000).toISOString()
+        },
+        {
+          id: 2,
+          title: 'آیین‌نامه اجرایی قانون کار',
+          url: 'https://www.example.ir/law2',
+          status: 'processing',
+          timestamp: new Date(Date.now() - 180000).toISOString()
+        }
+      ]
+    }));
+    
+    this.apiEndpoints.set('/process-urls', () => ({
+      success: true,
+      jobId: 'job_' + Math.random().toString(36).substr(2, 9),
+      message: 'پردازش URL‌ها آغاز شد'
+    }));
+    
+    this.apiEndpoints.set('/upload-urls', () => ({
+      success: true,
+      count: Math.floor(Math.random() * 10) + 5,
+      message: 'فایل با موفقیت آپلود شد'
     }));
     
     // Intercept fetch requests and provide mock responses
