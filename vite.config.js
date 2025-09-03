@@ -7,20 +7,14 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: true,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    },
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ai-services': ['@huggingface/inference', '@xenova/transformers'],
-          'data-viz': ['chart.js', 'react-chartjs-2', 'd3'],
-          'ui-components': ['framer-motion', 'lucide-react', '@headlessui/react']
+          'data-viz': ['chart.js', 'react-chartjs-2'],
+          'ui-components': ['framer-motion', 'lucide-react']
         }
       }
     }
