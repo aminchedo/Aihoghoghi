@@ -1,0 +1,255 @@
+{
+  "name": "iranian-legal-archive-backend",
+  "version": "2.0.0",
+  "description": "Production Backend for Iranian Legal Archive System with AI Analysis",
+  "main": "productionServer.js",
+  "scripts": {
+    "start": "node productionServer.js",
+    "dev": "nodemon productionServer.js",
+    "build": "echo 'No build step required for Node.js'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "deploy": "node deployment/deployProduction.js",
+    "deploy:staging": "NODE_ENV=staging node deployment/deployProduction.js",
+    "health": "node -e \"require('./monitoring/productionMonitoring.js').healthCheck()\"",
+    "ssl:status": "node -e \"require('./ssl/sslManager.js').getCertificateStatus()\"",
+    "ssl:renew": "node -e \"require('./ssl/sslManager.js').renewCertificate()\"",
+    "ai:status": "node -e \"require('./ai/persianBertService.js').healthCheck()\"",
+    "db:migrate": "node database/migrate.js",
+    "db:seed": "node database/seed.js",
+    "monitoring:start": "node monitoring/productionMonitoring.js",
+    "logs:view": "tail -f logs/combined.log",
+    "logs:error": "tail -f logs/error.log"
+  },
+  "keywords": [
+    "iranian",
+    "legal",
+    "archive",
+    "ai",
+    "bert",
+    "persian",
+    "production",
+    "backend",
+    "api"
+  ],
+  "author": "Iranian Legal Archive Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0",
+    "winston": "^3.11.0",
+    "winston-elasticsearch": "^0.17.7",
+    "ws": "^8.14.2",
+    "https": "^1.0.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "crypto": "^1.0.1",
+    "os": "^0.1.2",
+    "util": "^0.12.5",
+    "child_process": "^1.0.2",
+    "events": "^3.3.0",
+    "perf_hooks": "^0.0.1",
+    "@supabase/supabase-js": "^2.38.4",
+    "@xenova/transformers": "^2.8.0",
+    "pg": "^8.11.3",
+    "redis": "^4.6.10",
+    "elasticsearch": "^16.7.3",
+    "axios": "^1.6.2",
+    "joi": "^17.11.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.1",
+    "pdf-parse": "^1.1.1",
+    "mammoth": "^1.6.0",
+    "xlsx": "^0.18.5",
+    "csv-parser": "^3.0.0",
+    "uuid": "^9.0.1",
+    "moment": "^2.29.4",
+    "lodash": "^4.17.21",
+    "dotenv": "^16.3.1",
+    "config": "^3.3.11",
+    "ioredis": "^5.3.2",
+    "bull": "^4.12.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "handlebars": "^4.7.8",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "express-validator": "^7.0.1",
+    "express-slow-down": "^2.0.1",
+    "express-brute": "^1.0.1",
+    "hpp": "^0.2.3",
+    "xss-clean": "^0.1.4",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.1.5",
+    "express-slow-down": "^2.0.1",
+    "express-brute": "^1.0.1",
+    "express-validator": "^7.0.1",
+    "express-rate-limit": "^7.1.5",
+    "express-slow-down": "^2.0.1",
+    "express-brute": "^1.0.1",
+    "express-validator": "^7.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.55.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.1.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "ts-node": "^10.9.1",
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/morgan": "^1.9.9",
+    "@types/ws": "^8.5.10",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/multer": "^1.4.11",
+    "@types/uuid": "^9.0.7",
+    "@types/lodash": "^4.14.202"
+  },
+  "optionalDependencies": {
+    "canvas": "^2.11.2",
+    "node-gyp": "^10.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aminchedo/Aihoghoghi.git",
+    "directory": "src/backend"
+  },
+  "bugs": {
+    "url": "https://github.com/aminchedo/Aihoghoghi/issues"
+  },
+  "homepage": "https://github.com/aminchedo/Aihoghoghi#readme",
+  "config": {
+    "production": {
+      "port": 443,
+      "ssl": true,
+      "cors": {
+        "origin": [
+          "https://iranian-legal-archive.com",
+          "https://www.iranian-legal-archive.com",
+          "https://aminchedo.github.io"
+        ]
+      },
+      "rateLimit": {
+        "windowMs": 900000,
+        "max": 1000
+      },
+      "monitoring": {
+        "enabled": true,
+        "interval": 30000
+      }
+    },
+    "staging": {
+      "port": 3000,
+      "ssl": false,
+      "cors": {
+        "origin": "*"
+      },
+      "rateLimit": {
+        "windowMs": 900000,
+        "max": 100
+      },
+      "monitoring": {
+        "enabled": true,
+        "interval": 60000
+      }
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/?(*.)+(spec|test).js"
+    ],
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!**/node_modules/**",
+      "!**/coverage/**",
+      "!**/logs/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "env": {
+      "node": true,
+      "es2022": true,
+      "jest": true
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": "warn"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 80,
+    "tabWidth": 2
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "volumes": {
+    "postgres_data": null,
+    "redis_data": null,
+    "elasticsearch_data": null,
+    "ai_models": null,
+    "ai_cache": null,
+    "logs": null,
+    "uploads": null
+  },
+  "ports": {
+    "api": 3000,
+    "ai_service": 3001,
+    "database": 5432,
+    "redis": 6379,
+    "elasticsearch": 9200,
+    "prometheus": 9090,
+    "grafana": 3001
+  },
+  "healthChecks": {
+    "api": "/api/v1/system/health",
+    "ai": "/ai/health",
+    "database": "pg_isready",
+    "redis": "redis-cli ping",
+    "elasticsearch": "/_cluster/health"
+  }
+}
