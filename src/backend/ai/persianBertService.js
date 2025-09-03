@@ -61,10 +61,21 @@ class PersianBertService {
   async downloadModel() {
     const modelExists = await this.checkModelExists();
     if (!modelExists) {
-      console.log('📥 Downloading Persian BERT model...');
-      await this.downloadModelFiles();
+      console.log('📥 Persian BERT model not found locally');
+      
+      // Check if we have a Hugging Face token for downloading
+      if (this.huggingfaceToken && this.huggingfaceToken !== 'YOUR_HUGGINGFACE_API_TOKEN_HERE') {
+        console.log('🔑 Using Hugging Face token to download model...');
+        await this.downloadModelFiles();
+      } else {
+        console.log('⚠️  No Hugging Face token available. Please:');
+        console.log('   1. Set HUGGINGFACE_API_KEY in your .env file');
+        console.log('   2. Or run ./download-models.sh to download models locally');
+        console.log('   3. Or place models in the directory: ' + this.modelPath);
+        throw new Error('Persian BERT model not available and no token for download');
+      }
     } else {
-      console.log('✅ Model already exists locally');
+      console.log('✅ Model already exists locally at: ' + this.modelPath);
     }
   }
 
