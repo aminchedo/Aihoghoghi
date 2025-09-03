@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages with AI Backend
+name: Deploy to GitHub Pages (FIXED - No Infinite Loading)
 
 on:
   push:
@@ -102,16 +102,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
+      - name: Build project (OPTIMIZED)
         env:
-          HF_API_KEY: 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
-          VITE_HUGGINGFACE_TOKEN: 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
           GITHUB_PAGES: true
           NODE_ENV: production
         run: |
-          echo "🏗️ Building React frontend with AI integration..."
+          echo "🏗️ Building optimized React frontend (INFINITE LOADING FIXED)..."
           # Ensure clean build
           rm -rf dist/
+          
+          # Build with optimizations
           npm run build
           
           # Verify build output
