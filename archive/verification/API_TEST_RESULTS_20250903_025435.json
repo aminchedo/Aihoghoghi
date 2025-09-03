@@ -1,0 +1,487 @@
+{
+  "test_timestamp": "2025-09-03T02:54:35+00:00",
+  "tests": [
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/",
+      "method": "GET",
+      "full_url": "http://localhost:8000/",
+      "http_code": 000,
+      "response_time": 0.000580,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/api/health",
+      "method": "GET",
+      "full_url": "http://localhost:8000/api/health",
+      "http_code": 000,
+      "response_time": 0.000192,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/api/status",
+      "method": "GET",
+      "full_url": "http://localhost:8000/api/status",
+      "http_code": 000,
+      "response_time": 0.000158,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/health",
+      "method": "GET",
+      "full_url": "http://localhost:8000/health",
+      "http_code": 000,
+      "response_time": 0.000140,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/status",
+      "method": "GET",
+      "full_url": "http://localhost:8000/status",
+      "http_code": 000,
+      "response_time": 0.000155,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/",
+      "method": "GET",
+      "full_url": "http://localhost:5000/",
+      "http_code": 000,
+      "response_time": 0.000154,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/api/health",
+      "method": "GET",
+      "full_url": "http://localhost:5000/api/health",
+      "http_code": 000,
+      "response_time": 0.000151,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/api/status",
+      "method": "GET",
+      "full_url": "http://localhost:5000/api/status",
+      "http_code": 000,
+      "response_time": 0.000172,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/health",
+      "method": "GET",
+      "full_url": "http://localhost:5000/health",
+      "http_code": 000,
+      "response_time": 0.000120,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/status",
+      "method": "GET",
+      "full_url": "http://localhost:5000/status",
+      "http_code": 000,
+      "response_time": 0.000109,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/",
+      "method": "GET",
+      "full_url": "http://localhost:3000/",
+      "http_code": 000,
+      "response_time": 0.000158,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/api/health",
+      "method": "GET",
+      "full_url": "http://localhost:3000/api/health",
+      "http_code": 000,
+      "response_time": 0.000118,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/api/status",
+      "method": "GET",
+      "full_url": "http://localhost:3000/api/status",
+      "http_code": 000,
+      "response_time": 0.000123,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/health",
+      "method": "GET",
+      "full_url": "http://localhost:3000/health",
+      "http_code": 000,
+      "response_time": 0.000144,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/status",
+      "method": "GET",
+      "full_url": "http://localhost:3000/status",
+      "http_code": 000,
+      "response_time": 0.000120,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/",
+      "method": "GET",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/",
+      "http_code": 200,
+      "response_time": 0.017133,
+      "success": true,
+      "error": "",
+      "response_preview": "<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/Aihoghoghi/vite.svg" />
+    <meta name="viewport" content="width=devic"
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/api/health",
+      "method": "GET",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/api/health",
+      "http_code": 404,
+      "response_time": 0.031446,
+      "success": false,
+      "error": "HTTP 404",
+      "response_preview": "<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم آرشیو اسناد حقوقی ایران</title>"
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/api/status",
+      "method": "GET",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/api/status",
+      "http_code": 404,
+      "response_time": 0.029696,
+      "success": false,
+      "error": "HTTP 404",
+      "response_preview": "<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم آرشیو اسناد حقوقی ایران</title>"
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/health",
+      "method": "GET",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/health",
+      "http_code": 404,
+      "response_time": 0.028807,
+      "success": false,
+      "error": "HTTP 404",
+      "response_preview": "<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم آرشیو اسناد حقوقی ایران</title>"
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/status",
+      "method": "GET",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/status",
+      "http_code": 404,
+      "response_time": 0.036458,
+      "success": false,
+      "error": "HTTP 404",
+      "response_preview": "<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم آرشیو اسناد حقوقی ایران</title>"
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/api/analyze",
+      "method": "POST",
+      "full_url": "http://localhost:8000/api/analyze",
+      "http_code": 000,
+      "response_time": 0.000139,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/analyze",
+      "method": "POST",
+      "full_url": "http://localhost:8000/analyze",
+      "http_code": 000,
+      "response_time": 0.000111,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/api/process",
+      "method": "POST",
+      "full_url": "http://localhost:8000/api/process",
+      "http_code": 000,
+      "response_time": 0.000132,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:8000",
+      "endpoint": "/process",
+      "method": "POST",
+      "full_url": "http://localhost:8000/process",
+      "http_code": 000,
+      "response_time": 0.000103,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/api/analyze",
+      "method": "POST",
+      "full_url": "http://localhost:5000/api/analyze",
+      "http_code": 000,
+      "response_time": 0.000108,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/analyze",
+      "method": "POST",
+      "full_url": "http://localhost:5000/analyze",
+      "http_code": 000,
+      "response_time": 0.000151,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/api/process",
+      "method": "POST",
+      "full_url": "http://localhost:5000/api/process",
+      "http_code": 000,
+      "response_time": 0.000118,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:5000",
+      "endpoint": "/process",
+      "method": "POST",
+      "full_url": "http://localhost:5000/process",
+      "http_code": 000,
+      "response_time": 0.000108,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/api/analyze",
+      "method": "POST",
+      "full_url": "http://localhost:3000/api/analyze",
+      "http_code": 000,
+      "response_time": 0.000147,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/analyze",
+      "method": "POST",
+      "full_url": "http://localhost:3000/analyze",
+      "http_code": 000,
+      "response_time": 0.000114,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/api/process",
+      "method": "POST",
+      "full_url": "http://localhost:3000/api/process",
+      "http_code": 000,
+      "response_time": 0.000118,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "http://localhost:3000",
+      "endpoint": "/process",
+      "method": "POST",
+      "full_url": "http://localhost:3000/process",
+      "http_code": 000,
+      "response_time": 0.000106,
+      "success": false,
+      "error": "Connection failed",
+      "response_preview": ""
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/api/analyze",
+      "method": "POST",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/api/analyze",
+      "http_code": 405,
+      "response_time": 0.017424,
+      "success": false,
+      "error": "HTTP 405",
+      "response_preview": "<html>
+<head><title>405 Not Allowed</title></head>
+<body bgcolor="white">
+<center><h1>405 Not Allowed</h1></center>
+</body>
+</html>"
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/analyze",
+      "method": "POST",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/analyze",
+      "http_code": 405,
+      "response_time": 0.024830,
+      "success": false,
+      "error": "HTTP 405",
+      "response_preview": "<html>
+<head><title>405 Not Allowed</title></head>
+<body bgcolor="white">
+<center><h1>405 Not Allowed</h1></center>
+</body>
+</html>"
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/api/process",
+      "method": "POST",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/api/process",
+      "http_code": 405,
+      "response_time": 0.023231,
+      "success": false,
+      "error": "HTTP 405",
+      "response_preview": "<html>
+<head><title>405 Not Allowed</title></head>
+<body bgcolor="white">
+<center><h1>405 Not Allowed</h1></center>
+</body>
+</html>"
+    }
+    ,
+    {
+      "base_url": "https://aminchedo.github.io/Aihoghoghi",
+      "endpoint": "/process",
+      "method": "POST",
+      "full_url": "https://aminchedo.github.io/Aihoghoghi/process",
+      "http_code": 405,
+      "response_time": 0.018364,
+      "success": false,
+      "error": "HTTP 405",
+      "response_preview": "<html>
+<head><title>405 Not Allowed</title></head>
+<body bgcolor="white">
+<center><h1>405 Not Allowed</h1></center>
+</body>
+</html>"
+    }
+  ],
+  "summary": {
+    "total_tests": 36,
+    "successful_tests": 1,
+    "failed_tests": 35,
+    "success_rate_percent": 2
+  }
+}

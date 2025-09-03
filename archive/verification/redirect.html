@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ریدایرکت به داشبورد | سیستم آرشیو حقوقی ایران</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            direction: rtl;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .redirect-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .redirect-text {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .manual-link {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .manual-link:hover {
+            color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <h1>🏛️ سیستم آرشیو اسناد حقوقی ایران</h1>
+        <div class="spinner"></div>
+        <div class="redirect-text">در حال ریدایرکت به داشبورد...</div>
+        <p>اگر ریدایرکت خودکار کار نکرد، <a href="./index.html" class="manual-link">اینجا کلیک کنید</a></p>
+    </div>
+
+    <script>
+        // Auto redirect after 2 seconds
+        setTimeout(function() {
+            // Detect deployment environment
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const targetUrl = isGitHubPages 
+                ? window.location.origin + '/Aihoghoghi/' 
+                : window.location.origin + '/index.html';
+            
+            console.log('Redirecting to:', targetUrl);
+            window.location.href = targetUrl;
+        }, 2000);
+
+        // Also redirect immediately if user clicks anywhere
+        document.addEventListener('click', function() {
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const targetUrl = isGitHubPages 
+                ? window.location.origin + '/Aihoghoghi/' 
+                : window.location.origin + '/index.html';
+            
+            window.location.href = targetUrl;
+        });
+    </script>
+</body>
+</html>

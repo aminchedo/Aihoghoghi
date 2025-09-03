@@ -1,0 +1,6 @@
+name,url,description,language,stars_today
+dockur/windows,https://github.com/dockur/windows,Windows inside a Docker container.,Shell,N/A
+JetBrains/koog,https://github.com/JetBrains/koog,"Koog is the official Kotlin framework for building and running robust, scalable and production-ready...",Kotlin,N/A
+juspay/hyperswitch,https://github.com/juspay/hyperswitch,"An open source payments switch written in Rust to make payments fast, reliable and affordable",Rust,N/A
+QuentinFuxa/WhisperLiveKit,https://github.com/QuentinFuxa/WhisperLiveKit,"Real-time & local speech-to-text, translation, and speaker diarization. With server & web UI.",Python,N/A
+activepieces/activepieces,https://github.com/activepieces/activepieces,AI Agents & MCPs & AI Workflow Automation • (280+ MCP servers for AI agents) • AI Automation / AI Ag...,TypeScript,N/A

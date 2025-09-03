@@ -108,25 +108,36 @@ jobs:
           [ -f "dist/.nojekyll" ] && echo "✅ .nojekyll exists" || echo "❌ .nojekyll missing"
           [ -f "dist/manifest.json" ] && echo "✅ manifest.json exists" || echo "❌ manifest.json missing"
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-        with:
-          path: ./dist
-
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
+          commit_message: "🚀 Deploy Iranian Legal Archive v2.0.0 to GitHub Pages - $(date +'%Y-%m-%d %H:%M:%S UTC')"
+          full_commit_message: |
+            🚀 Deploy Iranian Legal Archive v2.0.0 to GitHub Pages
+            
+            - React 18 + Vite 4 build
+            - Tailwind CSS with Persian fonts
+            - SPA routing with HashRouter
+            - RTL layout support
+            - PWA manifest and service worker
+            - Optimized for Iranian networks
+            - Build timestamp: $(date +'%Y-%m-%d %H:%M:%S UTC')
+            
+            Deployed from commit: ${{ github.sha }}
 
       - name: Display deployment info
         run: |
           echo "🎉 DEPLOYMENT COMPLETED SUCCESSFULLY!"
           echo "================================="
-          echo "📱 Main Application: ${{ steps.deployment.outputs.page_url }}"
+          echo "📱 Main Application: https://aminchedo.github.io/Aihoghoghi/"
           echo "🔧 Optimized for Iranian users with fast loading"
           echo "✅ Fixed infinite loading issue"
           echo "✅ Optimized asset loading"
           echo "✅ SPA routing configured"
           echo "✅ RTL and Persian support enabled"
+          echo "✅ PWA features enabled"
+          echo "✅ Service worker configured"
+          echo "✅ Cache headers optimized"

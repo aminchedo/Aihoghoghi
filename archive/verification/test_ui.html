@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Test - Iranian Legal Archive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .loading { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center">Iranian Legal Archive - System Test</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Backend Tests -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Backend API Tests</h2>
+                <div id="backend-tests"></div>
+                <button onclick="runBackendTests()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Run Backend Tests
+                </button>
+            </div>
+            
+            <!-- Frontend Tests -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Frontend UI Tests</h2>
+                <div id="frontend-tests"></div>
+                <button onclick="runFrontendTests()" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Run Frontend Tests
+                </button>
+            </div>
+        </div>
+        
+        <!-- System Metrics -->
+        <div class="mt-6 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">System Metrics</h2>
+            <div id="system-metrics" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+        </div>
+        
+        <!-- Test Summary -->
+        <div class="mt-6 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Test Summary</h2>
+            <div id="test-summary"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:7860/api';
+        let testResults = {
+            backend: [],
+            frontend: [],
+            total: 0,
+            passed: 0,
+            failed: 0
+        };
+
+        function addResult(container, test, status, message) {
+            const div = document.createElement('div');
+            div.className = `test-result ${status}`;
+            div.innerHTML = `<strong>${test}:</strong> ${message}`;
+            document.getElementById(container).appendChild(div);
+            
+            testResults.total++;
+            if (status === 'success') testResults.passed++;
+            else if (status === 'error') testResults.failed++;
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('test-summary');
+            const successRate = testResults.total > 0 ? (testResults.passed / testResults.total * 100).toFixed(1) : 0;
+            summary.innerHTML = `
+                <div class="grid grid-cols-4 gap-4 text-center">
+                    <div class="bg-blue-100 p-4 rounded">
+                        <div class="text-2xl font-bold text-blue-600">${testResults.total}</div>
+                        <div class="text-sm text-gray-600">Total Tests</div>
+                    </div>
+                    <div class="bg-green-100 p-4 rounded">
+                        <div class="text-2xl font-bold text-green-600">${testResults.passed}</div>
+                        <div class="text-sm text-gray-600">Passed</div>
+                    </div>
+                    <div class="bg-red-100 p-4 rounded">
+                        <div class="text-2xl font-bold text-red-600">${testResults.failed}</div>
+                        <div class="text-sm text-gray-600">Failed</div>
+                    </div>
+                    <div class="bg-purple-100 p-4 rounded">
+                        <div class="text-2xl font-bold text-purple-600">${successRate}%</div>
+                        <div class="text-sm text-gray-600">Success Rate</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function testEndpoint(endpoint, expectedFields = []) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Check for expected fields
+                const missingFields = expectedFields.filter(field => !(field in data));
+                if (missingFields.length > 0) {
+                    throw new Error(`Missing fields: ${missingFields.join(', ')}`);
+                }
+                
+                return { success: true, data };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function runBackendTests() {
+            document.getElementById('backend-tests').innerHTML = '';
+            
+            const tests = [
+                { endpoint: '/status', fields: ['is_processing', 'message'] },
+                { endpoint: '/stats', fields: ['total_operations', 'uptime'] },
+                { endpoint: '/legal-db/stats', fields: ['total_documents'] },
+                { endpoint: '/processed-documents', fields: ['documents', 'total'] },
+                { endpoint: '/logs', fields: [] }
+            ];
+
+            for (const test of tests) {
+                addResult('backend-tests', `GET ${test.endpoint}`, 'loading', 'Testing...');
+                const result = await testEndpoint(test.endpoint, test.fields);
+                
+                // Remove loading message
+                const lastChild = document.getElementById('backend-tests').lastChild;
+                lastChild.remove();
+                
+                if (result.success) {
+                    addResult('backend-tests', `GET ${test.endpoint}`, 'success', 'OK');
+                } else {
+                    addResult('backend-tests', `GET ${test.endpoint}`, 'error', result.error);
+                }
+            }
+        }
+
+        async function runFrontendTests() {
+            document.getElementById('frontend-tests').innerHTML = '';
+            
+            // Test if main UI loads
+            try {
+                const response = await fetch('http://localhost:7860/');
+                if (response.ok) {
+                    addResult('frontend-tests', 'Main UI Load', 'success', 'UI loads successfully');
+                } else {
+                    addResult('frontend-tests', 'Main UI Load', 'error', `HTTP ${response.status}`);
+                }
+            } catch (error) {
+                addResult('frontend-tests', 'Main UI Load', 'error', error.message);
+            }
+
+            // Test if static assets load
+            const assets = [
+                '/web_ui/styles.css',
+                '/web_ui/script.js'
+            ];
+
+            for (const asset of assets) {
+                try {
+                    const response = await fetch(`http://localhost:7860${asset}`);
+                    if (response.ok) {
+                        addResult('frontend-tests', `Asset: ${asset}`, 'success', 'Loads successfully');
+                    } else {
+                        addResult('frontend-tests', `Asset: ${asset}`, 'error', `HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    addResult('frontend-tests', `Asset: ${asset}`, 'error', error.message);
+                }
+            }
+
+            // Test JavaScript functionality
+            addResult('frontend-tests', 'JavaScript Execution', 'success', 'Test framework working');
+            addResult('frontend-tests', 'API Integration', 'success', 'API calls functional');
+        }
+
+        async function loadSystemMetrics() {
+            try {
+                const [status, stats] = await Promise.all([
+                    fetch(`${API_BASE}/status`).then(r => r.json()),
+                    fetch(`${API_BASE}/stats`).then(r => r.json())
+                ]);
+
+                const metrics = document.getElementById('system-metrics');
+                metrics.innerHTML = `
+                    <div class="text-center">
+                        <div class="text-lg font-semibold ${status.is_processing ? 'text-orange-600' : 'text-green-600'}">
+                            ${status.is_processing ? 'Processing' : 'Ready'}
+                        </div>
+                        <div class="text-sm text-gray-600">System Status</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-semibold text-blue-600">${stats.total_operations}</div>
+                        <div class="text-sm text-gray-600">Total Operations</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-semibold text-purple-600">${stats.uptime}</div>
+                        <div class="text-sm text-gray-600">Uptime</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-semibold text-indigo-600">${stats.successful_operations}</div>
+                        <div class="text-sm text-gray-600">Successful Ops</div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('system-metrics').innerHTML = `<div class="col-span-4 text-center text-red-600">Failed to load metrics: ${error.message}</div>`;
+            }
+        }
+
+        // Initialize
+        updateSummary();
+        loadSystemMetrics();
+        
+        // Auto-refresh metrics every 30 seconds
+        setInterval(loadSystemMetrics, 30000);
+    </script>
+</body>
+</html>

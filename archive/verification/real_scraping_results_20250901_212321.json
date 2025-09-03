@@ -1,0 +1,100 @@
+{
+  "timestamp": "2025-09-01T21:23:21.147252",
+  "total_sites_tested": 4,
+  "successful_extractions": 2,
+  "failed_extractions": 2,
+  "results": [
+    {
+      "id": 1,
+      "site_name": "قوه قضائیه",
+      "url": "https://www.judiciary.ir",
+      "error": "Connection Error",
+      "success": false,
+      "extraction_successful": false,
+      "timestamp": "2025-09-01T21:23:07.610020"
+    },
+    {
+      "id": 2,
+      "site_name": "دولت الکترونیک",
+      "url": "https://www.dolat.ir",
+      "description": "پورتال دولت الکترونیک",
+      "status_code": 403,
+      "response_time": 543.8,
+      "content_length": 10854,
+      "timestamp": "2025-09-01T21:23:10.153974",
+      "success": false,
+      "extraction_successful": false,
+      "error": "HTTP 403"
+    },
+    {
+      "id": 3,
+      "site_name": "خبرگزاری ایرنا",
+      "url": "https://www.irna.ir",
+      "description": "خبرگزاری جمهوری اسلامی",
+      "status_code": 200,
+      "response_time": 2439.03,
+      "content_length": 4399,
+      "timestamp": "2025-09-01T21:23:14.593163",
+      "success": true,
+      "page_title": "",
+      "headings": [
+        {
+          "tag": "h2",
+          "text": "Transferring to the website..."
+        },
+        {
+          "tag": "h2",
+          "text": "Ø¯Ø± ïº£ïºÙ Ø§ï»§ïºï»ïºÙ ïºï»ª ïº³ïºï¯¾ïº ï»£ï»®Ø±Ø¯ ï»§ï»ïº® ï»«ïº´ïºï¯¿ïºª..."
+        }
+      ],
+      "links": [],
+      "extraction_successful": true
+    },
+    {
+      "id": 4,
+      "site_name": "خبرگزاری فارس",
+      "url": "https://www.farsnews.ir",
+      "description": "خبرگزاری فارس",
+      "status_code": 200,
+      "response_time": 2537.36,
+      "content_length": 341703,
+      "timestamp": "2025-09-01T21:23:19.132379",
+      "success": true,
+      "page_title": "پیشخوان | فارس",
+      "meta_description": "آخرین و مهمترین اخبار ایران و جهان را در خبرگزاری فارس بخوانید. خبرگزاری فارس، پربازدیدترین خبرگزاری کشور و معتبرترین مرجع خبری رسانه‌های ایران و جهان.",
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "پیشخوان"
+        },
+        {
+          "tag": "h2",
+          "text": "عضوی از فارس هستید؟"
+        },
+        {
+          "tag": "h2",
+          "text": "شانگهای؛ آلترناتیو شرقی در برابر تحریم‌ها و سلطه دلار"
+        }
+      ],
+      "links": [
+        {
+          "url": "/showcase",
+          "text": "پیشخوان"
+        },
+        {
+          "url": "/campaigns",
+          "text": "فارس من"
+        },
+        {
+          "url": "/tv",
+          "text": "فارس TV"
+        },
+        {
+          "url": "/search",
+          "text": "جستجو"
+        }
+      ],
+      "extraction_successful": true
+    }
+  ]
+}

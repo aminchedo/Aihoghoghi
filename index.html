@@ -1,24 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Aihoghoghi/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>سیستم آرشیو اسناد حقوقی ایران</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ سیستم آرشیو اسناد حقوقی ایران</title>
     
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="سیستم پیشرفته آرشیو اسناد حقوقی ایران با قابلیت تحلیل هوشمند، مدیریت پروکسی و پردازش بلادرنگ">
-    <meta name="keywords" content="آرشیو حقوقی، اسناد حقوقی ایران، تحلیل هوشمند، پردازش اسناد">
-    <meta name="author" content="تیم سیستم آرشیو حقوقی ایران">
+    <!-- Meta tags for SEO and social sharing -->
+    <meta name="description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی">
+    <meta name="keywords" content="اسناد حقوقی, آرشیو, تحلیل متن, هوش مصنوعی, ایران">
+    <meta name="author" content="Iranian Legal Archive Team">
     
-    <!-- Persian fonts with proper base path -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="سیستم آرشیو اسناد حقوقی ایران">
+    <meta property="og:description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی">
     
-    <!-- PWA manifest with correct path -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="/Aihoghoghi/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="آرشیو حقوقی">
+
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Theme color -->
-    <meta name="theme-color" content="#3b82f6" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'vazir': ['Vazirmatn', 'Tahoma', 'Arial', 'sans-serif'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite',
+                        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- GitHub Pages SPA routing support -->
     <script>
@@ -35,11 +74,38 @@
             }
         }(window.location))
     </script>
+</head>
+<body class="font-vazir bg-gray-50 dark:bg-gray-900">
+    <div id="root">
+        <!-- Loading screen while React loads -->
+        <div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+            <div class="text-center max-w-md mx-auto px-6">
+                <div class="relative">
+                    <div class="w-20 h-20 mx-auto mb-8">
+                        <div class="absolute inset-0 rounded-full border-4 border-blue-200 dark:border-gray-700"></div>
+                        <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 animate-spin"></div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
+                            🏛️ سیستم آرشیو اسناد حقوقی ایران
+                        </h2>
+                        <p class="text-base text-gray-600 dark:text-gray-300">
+                            در حال بارگذاری آرشیو حقوقی...
+                        </p>
+                    </div>
+                    
+                    <div class="mt-8 w-80 mx-auto">
+                        <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 rounded-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
+    <!-- Vite will inject the script tags here -->
     <script type="module" src="/src/main.jsx"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    
-  </body>
+</body>
 </html>
