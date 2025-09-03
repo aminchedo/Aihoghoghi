@@ -1,19 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import App from './App.jsx';
 import './App.css';
 
 // Import system integration service to ensure it's loaded
 import './services/systemIntegration.js';
 
-// Get base path from environment
-const basename = import.meta.env.MODE === 'production' ? '/Aihoghoghi' : '/';
-
-// Enhanced initialization for GitHub Pages
+// Enhanced initialization for GitHub Pages with HashRouter
 console.log('🚀 Iranian Legal Archive - Enhanced Startup');
 console.log('📍 Environment:', window.location.hostname.includes('github.io') ? 'GitHub Pages' : 'Local Development');
-console.log('🔧 Router basename:', basename);
+console.log('🔧 Router type: HashRouter (GitHub Pages compatible)');
 
 // Create root element
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -33,13 +30,13 @@ const renderApp = () => {
     
     root.render(
       <React.StrictMode>
-        <BrowserRouter basename={basename}>
+        <HashRouter>
           <App />
-        </BrowserRouter>
+        </HashRouter>
       </React.StrictMode>
     );
     
-    console.log('✅ React app rendered successfully with basename:', basename);
+    console.log('✅ React app rendered successfully with HashRouter');
     
     // Notify system integration that React is ready
     if (window.iranianLegalArchive?.systemIntegration) {

@@ -8,33 +8,31 @@
     <!-- Persian fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- GitHub Pages SPA routing fix - Standard Implementation -->
+    <!-- GitHub Pages HashRouter redirect -->
     <script>
-        // Single Page Apps for GitHub Pages
-        // MIT License
-        // https://github.com/rafgraph/spa-github-pages
-        (function(l) {
-            if (l.search[1] === '/' ) {
-                var decoded = l.search.slice(1).split('&').map(function(s) { 
-                    return s.replace(/~and~/g, '&')
-                }).join('?');
-                window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + decoded + l.hash
-                );
+        // Redirect to HashRouter URL for GitHub Pages compatibility
+        (function() {
+            var l = window.location;
+            var basePath = '/Aihoghoghi/';
+            
+            console.log('🔄 404.html redirect for HashRouter');
+            console.log('📍 Current path:', l.pathname);
+            
+            // Extract the route that was requested
+            var requestedRoute = l.pathname.replace(basePath, '');
+            
+            // Build HashRouter URL
+            var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + requestedRoute;
+            
+            if (l.search) {
+                redirectUrl += l.search;
             }
-        }(window.location))
-        
-        // Store the current path for redirect
-        var pathSegmentsToKeep = 1;
-        var l = window.location;
-        l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + 
-            '/?/' + 
-            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash
-        );
+            
+            console.log('🎯 Redirecting to HashRouter URL:', redirectUrl);
+            
+            // Immediate redirect to HashRouter URL
+            l.replace(redirectUrl);
+        })();
     </script>
     
     <style>
