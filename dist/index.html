@@ -3,379 +3,2147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏛️ سیستم آرشیو اسناد حقوقی ایران - کاملاً واقعی</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>🏛️ سیستم آرشیو اسناد حقوقی ایران - نسخه پیشرفته</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="سیستم پیشرفته آرشیو اسناد حقوقی ایران با قابلیت تحلیل هوشمند، مدیریت پروکسی و پردازش بلادرنگ">
+    <meta name="keywords" content="آرشیو حقوقی، اسناد حقوقی ایران، تحلیل هوشمند، پردازش اسناد">
+    <meta name="author" content="تیم سیستم آرشیو حقوقی ایران">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Persian/Farsi fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Vazirmatn', 'Tahoma', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; min-height: 100vh; direction: rtl; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .header { text-align: center; margin-bottom: 3rem; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .real-badge { background: #10b981; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; margin: 1rem 0; display: inline-block; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); transition: transform 0.3s ease; }
-        .stat-card:hover { transform: translateY(-5px); }
-        .stat-number { font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem; color: #4ade80; }
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
-        .card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease; }
-        .card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.2); }
-        .card h3 { font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .card p { opacity: 0.9; line-height: 1.6; margin-bottom: 1.5rem; }
-        .btn { background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3); color: white; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; width: 100%; text-align: center; }
-        .btn:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.05); }
-        .btn:active { transform: scale(0.98); }
-        .results { background: rgba(255, 255, 255, 0.15); border-radius: 15px; padding: 2rem; margin-top: 2rem; backdrop-filter: blur(10px); }
-        .result-item { background: rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; border-left: 4px solid #4ade80; }
-        .hidden { display: none !important; }
-        .loading { text-align: center; padding: 2rem; }
-        .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin: 1rem auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        input, textarea, select { width: 100%; padding: 0.8rem; margin: 0.5rem 0; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: white; font-size: 1rem; }
-        input::placeholder, textarea::placeholder { color: rgba(255, 255, 255, 0.7); }
-        .notification { position: fixed; top: 20px; left: 20px; right: 20px; padding: 1rem; border-radius: 8px; color: white; font-weight: 500; z-index: 1000; transform: translateY(-100px); transition: transform 0.3s ease; }
-        .notification.show { transform: translateY(0); }
-        .notification.success { background: #10b981; } .notification.error { background: #ef4444; } .notification.info { background: #3b82f6; }
-    </style>
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="/Aihoghoghi/styles.css">
+    
+
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>⚖️ سیستم آرشیو اسناد حقوقی ایران</h1>
-            <p>سیستم کاملاً واقعی با پایگاه داده SQLite و API عملیاتی</p>
-            <div class="real-badge">🔥 نسخه واقعی - همه قابلیت‌ها کار می‌کنند!</div>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-number" id="real-total-docs">0</div>
-                <div>اسناد واقعی در DB</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="real-processed-today">0</div>
-                <div>پردازش امروز</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="real-active-proxies">0</div>
-                <div>پروکسی فعال</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="real-success-rate">0%</div>
-                <div>نرخ موفقیت</div>
-            </div>
-        </div>
-        
-        <div class="dashboard">
-            <div class="card">
-                <h3><i class="fas fa-search"></i> جستجوی واقعی</h3>
-                <p>جستجو در پایگاه داده واقعی SQLite با ایندکس فارسی</p>
-                <input type="text" id="real-search-input" placeholder="نفقه، طلاق، ارث، قانون مدنی...">
-                <select id="real-search-type">
-                    <option value="text">جستجوی متنی</option>
-                    <option value="semantic">جستجوی معنایی</option>
-                </select>
-                <button class="btn" id="real-search-btn">🔍 جستجوی واقعی</button>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-cogs"></i> پردازش واقعی</h3>
-                <p>پردازش واقعی آدرس‌های سایت‌های حقوقی ایران</p>
-                <textarea id="real-processing-urls" rows="3" placeholder="https://rc.majlis.ir/fa/law/show/123&#10;https://www.judiciary.ir/fa/verdict/456"></textarea>
-                <button class="btn" id="real-process-btn">⚙️ پردازش واقعی</button>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-network-wired"></i> پروکسی واقعی</h3>
-                <p>تست و مدیریت پروکسی‌های واقعی با اتصال شبکه</p>
-                <div id="proxy-status-display" style="margin: 1rem 0;">در حال بررسی...</div>
-                <button class="btn" id="real-proxy-test-btn">🌐 تست واقعی پروکسی‌ها</button>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-database"></i> پایگاه داده واقعی</h3>
-                <p>آمار و مدیریت پایگاه داده SQLite واقعی</p>
-                <div id="db-info" style="margin: 1rem 0;">در حال بررسی...</div>
-                <button class="btn" id="real-db-btn">📊 آمار واقعی DB</button>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-download"></i> خروجی واقعی</h3>
-                <p>دانلود داده‌های واقعی از پایگاه داده</p>
-                <select id="export-format">
-                    <option value="json">فرمت JSON</option>
-                    <option value="csv">فرمت CSV</option>
-                </select>
-                <button class="btn" id="real-export-btn">💾 دانلود واقعی</button>
-            </div>
-            
-            <div class="card">
-                <h3><i class="fas fa-vial"></i> تست واقعی</h3>
-                <p>تست کامل سیستم با پایگاه داده و API واقعی</p>
-                <button class="btn" id="real-system-test-btn">🧪 تست کامل واقعی</button>
+<body class="bg-gray-50 font-vazir" dir="rtl">
+    <!-- Fixed Header -->
+    <header class="bg-white shadow-lg border-b-4 border-primary-500 fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="text-2xl">⚖️</div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">سیستم آرشیو اسناد حقوقی ایران</h1>
+                        <p class="text-sm text-gray-600">پلتفرم هوشمند تحلیل اسناد حقوقی</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <!-- Real-time clock -->
+                    <div class="text-left" dir="ltr">
+                        <div id="current-time" class="text-lg font-semibold text-primary-600"></div>
+                        <div id="current-date" class="text-sm text-gray-500"></div>
+                    </div>
+                    
+                    <!-- System status indicator -->
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <div id="status-indicator" class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <span id="status-text" class="text-sm text-gray-600">آماده</span>
+                    </div>
+                    
+                    <!-- Theme toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                        <span id="theme-icon">🌙</span>
+                    </button>
+                </div>
             </div>
         </div>
-        
-        <div id="results" class="results hidden">
-            <h3>📋 نتایج واقعی از پایگاه داده</h3>
-            <div id="results-content"></div>
-        </div>
-        
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p id="loading-text">در حال پردازش...</p>
+    </header>
+
+    <div class="flex pt-20 min-h-screen">
+        <!-- Enhanced Collapsible Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-all duration-300 fixed right-0 h-full z-40 border-l border-gray-200 dark:border-gray-700">
+            <div class="p-4 h-full flex flex-col">
+                <!-- Sidebar Toggle -->
+                <button id="sidebar-toggle" class="lg:hidden mb-4 p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600 transition-colors">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <!-- Breadcrumb -->
+                <div id="breadcrumb" class="mb-4 text-sm text-gray-500 dark:text-gray-400 hidden">
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <i class="fas fa-home"></i>
+                        <span>/</span>
+                        <span id="breadcrumb-path">خانه</span>
+                    </div>
+                </div>
+                
+                <!-- Main Navigation -->
+                <nav class="space-y-1 flex-1">
+                    <a href="#home" class="nav-link active flex items-center space-x-3 space-x-reverse p-3 rounded-lg bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg">
+                        <i class="fas fa-home w-5 text-center"></i>
+                        <span>داشبورد اصلی</span>
+                        <span class="mr-auto">
+                            <i class="fas fa-chevron-left text-xs"></i>
+                        </span>
+                    </a>
+                    
+                    <!-- Document Processing with Submenu -->
+                    <div class="nav-group">
+                        <a href="#process" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            <i class="fas fa-cogs w-5 text-center"></i>
+                            <span>پردازش اسناد</span>
+                            <span class="mr-auto">
+                                <i class="fas fa-chevron-left text-xs transform transition-transform" id="process-arrow"></i>
+                            </span>
+                        </a>
+                        <div class="nav-submenu ml-6 space-y-1 hidden" id="process-submenu">
+                            <a href="#process-bulk" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-upload w-4 text-center"></i>
+                                <span>بارگذاری گروهی</span>
+                            </a>
+                            <a href="#process-queue" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-list w-4 text-center"></i>
+                                <span>صف پردازش</span>
+                            </a>
+                            <a href="#process-results" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-chart-bar w-4 text-center"></i>
+                                <span>نتایج پردازش</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Proxy Dashboard with Submenu -->
+                    <div class="nav-group">
+                        <a href="#proxy" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            <i class="fas fa-network-wired w-5 text-center"></i>
+                            <span>داشبورد پروکسی</span>
+                            <span class="mr-auto">
+                                <i class="fas fa-chevron-left text-xs transform transition-transform" id="proxy-arrow"></i>
+                            </span>
+                        </a>
+                        <div class="nav-submenu ml-6 space-y-1 hidden" id="proxy-submenu">
+                            <a href="#proxy-health" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-heartbeat w-4 text-center"></i>
+                                <span>بررسی سلامت</span>
+                            </a>
+                            <a href="#proxy-manage" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-edit w-4 text-center"></i>
+                                <span>مدیریت پروکسی‌ها</span>
+                            </a>
+                            <a href="#proxy-stats" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-chart-line w-4 text-center"></i>
+                                <span>آمار عملکرد</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Search & Legal DB with Submenu -->
+                    <div class="nav-group">
+                        <a href="#search" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            <i class="fas fa-search w-5 text-center"></i>
+                            <span>پایگاه داده حقوقی</span>
+                            <span class="mr-auto">
+                                <i class="fas fa-chevron-left text-xs transform transition-transform" id="search-arrow"></i>
+                            </span>
+                        </a>
+                        <div class="nav-submenu ml-6 space-y-1 hidden" id="search-submenu">
+                            <a href="#search-text" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-font w-4 text-center"></i>
+                                <span>جستجوی متنی</span>
+                            </a>
+                            <a href="#search-semantic" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-brain w-4 text-center"></i>
+                                <span>جستجوی معنایی</span>
+                            </a>
+                            <a href="#search-nafaqe" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-balance-scale w-4 text-center"></i>
+                                <span>جستجوی نفقه</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings with Submenu -->
+                    <div class="nav-group">
+                        <a href="#settings" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            <i class="fas fa-cog w-5 text-center"></i>
+                            <span>تنظیمات</span>
+                            <span class="mr-auto">
+                                <i class="fas fa-chevron-left text-xs transform transition-transform" id="settings-arrow"></i>
+                            </span>
+                        </a>
+                        <div class="nav-submenu ml-6 space-y-1 hidden" id="settings-submenu">
+                            <a href="#settings-api" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-plug w-4 text-center"></i>
+                                <span>تنظیمات API</span>
+                            </a>
+                            <a href="#settings-proxy" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-shield-alt w-4 text-center"></i>
+                                <span>تنظیمات پروکسی</span>
+                            </a>
+                            <a href="#settings-theme" class="nav-sublink flex items-center space-x-3 space-x-reverse p-2 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-palette w-4 text-center"></i>
+                                <span>ظاهر و تم</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="#logs" class="nav-link flex items-center space-x-3 space-x-reverse p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                        <i class="fas fa-file-alt w-5 text-center"></i>
+                        <span>گزارش‌ها و لاگ‌ها</span>
+                    </a>
+                </nav>
+                
+                <!-- Enhanced Quick Stats -->
+                <div class="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="p-4 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg text-white mb-4">
+                        <h3 class="font-semibold mb-2 flex items-center">
+                            <i class="fas fa-chart-pie ml-2"></i>
+                            آمار سریع
+                        </h3>
+                        <div class="space-y-1 text-sm">
+                            <div class="flex justify-between">
+                                <span>پروکسی فعال:</span>
+                                <span id="quick-proxy-count" class="font-semibold">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>اسناد کش:</span>
+                                <span id="quick-cache-count" class="font-semibold">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>عملیات موفق:</span>
+                                <span id="quick-success-count" class="font-semibold">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 text-center">
+                        <div>نسخه ۲.۰.۰</div>
+                        <div class="mt-1">آخرین بروزرسانی: <span id="last-update">در حال بارگیری...</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 mr-64 transition-all duration-300" id="main-content">
+            <!-- Home Section -->
+            <section id="home-section" class="section active">
+                <!-- Enhanced Dashboard Header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 flex items-center">
+                                <i class="fas fa-tachometer-alt ml-3 text-primary-500"></i>
+                                داشبورد اصلی
+                            </h2>
+                            <p class="text-gray-600 dark:text-gray-300">سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی با قابلیت‌های هوش مصنوعی</p>
+                        </div>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <button id="refresh-dashboard" class="p-2 rounded-lg bg-primary-500 text-white hover:bg-primary-600 transition-colors">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">آخرین بروزرسانی: <span id="last-refresh">در حال بارگیری...</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced System Overview Cards with Real-time Data -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Total Operations Card -->
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-blue-100 text-sm font-medium">کل عملیات</p>
+                                <p id="total-operations" class="text-3xl font-bold mb-1">0</p>
+                                <div class="flex items-center text-blue-200 text-xs">
+                                    <i class="fas fa-arrow-up ml-1"></i>
+                                    <span id="total-operations-change">+0</span>
+                                    <span class="mr-1">امروز</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-blue-400/30 rounded-full h-1">
+                            <div id="total-operations-progress" class="bg-white h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Successful Operations Card -->
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-green-100 text-sm font-medium">عملیات موفق</p>
+                                <p id="successful-operations" class="text-3xl font-bold mb-1">0</p>
+                                <div class="flex items-center text-green-200 text-xs">
+                                    <i class="fas fa-percentage ml-1"></i>
+                                    <span id="success-rate">0%</span>
+                                    <span class="mr-1">نرخ موفقیت</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-green-400/30 rounded-full h-1">
+                            <div id="success-rate-progress" class="bg-white h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Proxies Card -->
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-purple-100 text-sm font-medium">پروکسی فعال</p>
+                                <p id="active-proxies" class="text-3xl font-bold mb-1">0</p>
+                                <div class="flex items-center text-purple-200 text-xs">
+                                    <i class="fas fa-heartbeat ml-1"></i>
+                                    <span id="proxy-health">سالم</span>
+                                    <span class="mr-1">وضعیت</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-purple-400/30 rounded-full h-1">
+                            <div id="proxy-health-progress" class="bg-white h-1 rounded-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cached Documents Card -->
+                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-orange-100 text-sm font-medium">اسناد کش شده</p>
+                                <p id="cache-size" class="text-3xl font-bold mb-1">0</p>
+                                <div class="flex items-center text-orange-200 text-xs">
+                                    <i class="fas fa-database ml-1"></i>
+                                    <span id="cache-size-mb">0 MB</span>
+                                    <span class="mr-1">حجم</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-hdd"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4 bg-orange-400/30 rounded-full h-1">
+                            <div id="cache-usage-progress" class="bg-white h-1 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Operations Chart -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-chart-area ml-2 text-primary-500"></i>
+                                روند عملیات (24 ساعت اخیر)
+                            </h3>
+                            <div class="flex items-center space-x-2 space-x-reverse text-sm">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-blue-500 rounded-full ml-1"></div>
+                                    <span class="text-gray-600 dark:text-gray-300">کل</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-green-500 rounded-full ml-1"></div>
+                                    <span class="text-gray-600 dark:text-gray-300">موفق</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="operations-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- System Performance Chart -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-tachometer-alt ml-2 text-secondary-500"></i>
+                                عملکرد سیستم
+                            </h3>
+                            <select id="performance-timeframe" class="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                <option value="1h">1 ساعت اخیر</option>
+                                <option value="6h">6 ساعت اخیر</option>
+                                <option value="24h" selected>24 ساعت اخیر</option>
+                            </select>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="performance-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Quick Actions -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white flex items-center">
+                        <i class="fas fa-bolt ml-2 text-yellow-500"></i>
+                        عملیات سریع
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <button onclick="showSection('process')" class="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center">
+                            <i class="fas fa-cogs ml-2"></i>
+                            پردازش اسناد
+                        </button>
+                        <button onclick="refreshProxies()" class="bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center">
+                            <i class="fas fa-sync-alt ml-2"></i>
+                            بروزرسانی پروکسی
+                        </button>
+                        <button onclick="showSection('proxy')" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center">
+                            <i class="fas fa-network-wired ml-2"></i>
+                            داشبورد شبکه
+                        </button>
+                        <button onclick="clearCache()" class="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center">
+                            <i class="fas fa-trash-alt ml-2"></i>
+                            پاک‌سازی کش
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Activity Feed -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Activity -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-stream ml-2 text-blue-500"></i>
+                                فعالیت‌های اخیر
+                            </h3>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <div id="activity-indicator" class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">زنده</span>
+                            </div>
+                        </div>
+                        <div id="recent-logs" class="space-y-3 max-h-80 overflow-y-auto">
+                            <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full ml-3 animate-pulse"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">در حال بارگیری فعالیت‌های اخیر...</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">لطفاً منتظر بمانید</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- System Health -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white flex items-center">
+                            <i class="fas fa-heartbeat ml-2 text-red-500"></i>
+                            وضعیت سیستم
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- API Status -->
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fas fa-plug ml-3 text-blue-500"></i>
+                                    <span class="text-gray-700 dark:text-gray-300">API Backend</span>
+                                </div>
+                                <div id="api-status" class="flex items-center">
+                                    <div class="w-2 h-2 bg-yellow-500 rounded-full ml-2 animate-pulse"></div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">بررسی...</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Database Status -->
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fas fa-database ml-3 text-green-500"></i>
+                                    <span class="text-gray-700 dark:text-gray-300">پایگاه داده</span>
+                                </div>
+                                <div id="db-status" class="flex items-center">
+                                    <div class="w-2 h-2 bg-yellow-500 rounded-full ml-2 animate-pulse"></div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">بررسی...</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Proxy Network Status -->
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fas fa-network-wired ml-3 text-purple-500"></i>
+                                    <span class="text-gray-700 dark:text-gray-300">شبکه پروکسی</span>
+                                </div>
+                                <div id="proxy-network-status" class="flex items-center">
+                                    <div class="w-2 h-2 bg-yellow-500 rounded-full ml-2 animate-pulse"></div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">بررسی...</span>
+                                </div>
+                            </div>
+                            
+                            <!-- WebSocket Status -->
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fas fa-broadcast-tower ml-3 text-orange-500"></i>
+                                    <span class="text-gray-700 dark:text-gray-300">اتصال بلادرنگ</span>
+                                </div>
+                                <div id="websocket-status" class="flex items-center">
+                                    <div class="w-2 h-2 bg-yellow-500 rounded-full ml-2 animate-pulse"></div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">بررسی...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Process Documents Section -->
+            <section id="process-section" class="section hidden">
+                <!-- Enhanced Header with Actions -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 flex items-center">
+                                <i class="fas fa-cogs ml-3 text-primary-500"></i>
+                                پردازش اسناد حقوقی
+                            </h2>
+                            <p class="text-gray-600 dark:text-gray-300">پردازش هوشمند اسناد با قابلیت‌های پیشرفته تحلیل و طبقه‌بندی</p>
+                        </div>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <button id="processing-history-btn" class="p-2 rounded-lg bg-secondary-500 text-white hover:bg-secondary-600 transition-colors">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button id="export-results-btn" class="p-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced URL Input Section -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                            <i class="fas fa-edit ml-2 text-blue-500"></i>
+                            ورودی اسناد
+                        </h3>
+                        <div class="flex items-center space-x-2 space-x-reverse text-sm">
+                            <span id="urls-count" class="text-gray-500 dark:text-gray-400">0 آدرس</span>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                            <span id="processing-status" class="text-gray-500 dark:text-gray-400">آماده</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Navigation -->
+                    <div class="flex border-b border-gray-200 dark:border-gray-600 mb-6">
+                        <button id="manual-tab" class="tab-button active px-4 py-2 text-sm font-medium border-b-2 border-primary-500 text-primary-600">
+                            <i class="fas fa-keyboard ml-1"></i>
+                            ورودی دستی
+                        </button>
+                        <button id="file-tab" class="tab-button px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                            <i class="fas fa-file-upload ml-1"></i>
+                            بارگذاری فایل
+                        </button>
+                        <button id="bulk-tab" class="tab-button px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                            <i class="fas fa-layer-group ml-1"></i>
+                            پردازش گروهی
+                        </button>
+                    </div>
+                    
+                    <!-- Manual Input Tab -->
+                    <div id="manual-input" class="tab-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Text Input -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">آدرس‌های اسناد (هر خط یک آدرس)</label>
+                                <textarea 
+                                    id="urls-input" 
+                                    class="w-full h-40 p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                    placeholder="https://rc.majlis.ir/fa/law/show/139030&#10;https://dotic.ir/portal/law/67890&#10;https://www.judiciary.ir/fa/news/12345"
+                                    dir="ltr"
+                                ></textarea>
+                                <div class="flex justify-between items-center mt-2">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">حداکثر 500 آدرس در هر بار پردازش</p>
+                                    <button id="validate-urls-btn" class="text-sm text-primary-500 hover:text-primary-600">
+                                        <i class="fas fa-check-circle ml-1"></i>
+                                        اعتبارسنجی
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- URL Templates -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">قالب‌های آماده</label>
+                                <div class="space-y-2">
+                                    <button class="url-template w-full text-right p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" data-template="majlis">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="font-medium text-gray-800 dark:text-gray-200">مجلس شورای اسلامی</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">rc.majlis.ir</div>
+                                            </div>
+                                            <i class="fas fa-plus text-primary-500"></i>
+                                        </div>
+                                    </button>
+                                    <button class="url-template w-full text-right p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" data-template="judiciary">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="font-medium text-gray-800 dark:text-gray-200">قوه قضاییه</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">judiciary.ir</div>
+                                            </div>
+                                            <i class="fas fa-plus text-primary-500"></i>
+                                        </div>
+                                    </button>
+                                    <button class="url-template w-full text-right p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" data-template="dotic">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <div class="font-medium text-gray-800 dark:text-gray-200">دفتر تدوین و تنقیح قوانین</div>
+                                                <div class="text-sm text-gray-500 dark:text-gray-400">dotic.ir</div>
+                                            </div>
+                                            <i class="fas fa-plus text-primary-500"></i>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- File Upload Tab -->
+                    <div id="file-input-tab" class="tab-content hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- File Drop Zone -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">بارگذاری فایل</label>
+                                <div id="file-drop-zone" class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-primary-500 transition-colors cursor-pointer">
+                                    <input type="file" id="file-input" accept=".txt,.csv,.json" class="hidden" multiple>
+                                    <div id="file-drop-content">
+                                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                                        <p class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">فایل‌ها را اینجا رها کنید</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">یا کلیک کنید تا انتخاب کنید</p>
+                                        <button type="button" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                            <i class="fas fa-folder-open ml-1"></i>
+                                            انتخاب فایل‌ها
+                                        </button>
+                                    </div>
+                                    <div id="file-upload-progress" class="hidden">
+                                        <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                                            <div class="bg-primary-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                        </div>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">در حال بارگذاری...</p>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">فرمت‌های پشتیبانی شده: .txt, .csv, .json (حداکثر 10 MB)</p>
+                            </div>
+                            
+                            <!-- Uploaded Files List -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">فایل‌های بارگذاری شده</label>
+                                <div id="uploaded-files-list" class="space-y-2 max-h-64 overflow-y-auto">
+                                    <div class="flex items-center justify-center p-8 text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-inbox text-3xl mb-2"></i>
+                                        <p>هنوز فایلی بارگذاری نشده است</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bulk Processing Tab -->
+                    <div id="bulk-input-tab" class="tab-content hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Bulk Configuration -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تنظیمات پردازش گروهی</label>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">الگوی URL</label>
+                                        <input type="text" id="url-pattern" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" placeholder="https://example.com/law/{id}" dir="ltr">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">شروع از</label>
+                                            <input type="number" id="bulk-start" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" value="1">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">پایان در</label>
+                                            <input type="number" id="bulk-end" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" value="100">
+                                        </div>
+                                    </div>
+                                    <button id="generate-bulk-urls" class="w-full bg-secondary-500 hover:bg-secondary-600 text-white py-2 rounded-lg transition-colors">
+                                        <i class="fas fa-magic ml-1"></i>
+                                        تولید آدرس‌ها
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Generated URLs Preview -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">پیش‌نمایش آدرس‌های تولید شده</label>
+                                <div id="bulk-preview" class="h-40 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 overflow-y-auto text-sm font-mono">
+                                    <p class="text-gray-500 dark:text-gray-400">آدرس‌های تولید شده در اینجا نمایش داده می‌شوند</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Processing Options -->
+                    <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Proxy Settings -->
+                            <div>
+                                <label class="flex items-center mb-2">
+                                    <input type="checkbox" id="enable-proxy" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                    <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">استفاده از پروکسی</span>
+                                </label>
+                                <select id="proxy-strategy" class="w-full text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300">
+                                    <option value="rotate">چرخشی</option>
+                                    <option value="fastest">سریع‌ترین</option>
+                                    <option value="random">تصادفی</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Batch Size -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اندازه دسته</label>
+                                <select id="batch-size" class="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300">
+                                    <option value="1">1</option>
+                                    <option value="3" selected>3</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Processing Mode -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">حالت پردازش</label>
+                                <select id="processing-mode" class="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300">
+                                    <option value="full">کامل</option>
+                                    <option value="fast">سریع</option>
+                                    <option value="analysis-only">فقط تحلیل</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Retry Settings -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تلاش مجدد</label>
+                                <select id="retry-count" class="w-full border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300">
+                                    <option value="0">بدون تلاش مجدد</option>
+                                    <option value="1">1 بار</option>
+                                    <option value="2" selected>2 بار</option>
+                                    <option value="3">3 بار</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex justify-between items-center mt-4">
+                            <div class="flex items-center space-x-2 space-x-reverse text-sm">
+                                <i class="fas fa-info-circle text-blue-500"></i>
+                                <span class="text-gray-600 dark:text-gray-400">تخمین زمان: <span id="estimated-time">محاسبه...</span></span>
+                            </div>
+                            
+                            <div class="flex space-x-3 space-x-reverse">
+                                <button id="clear-all-btn" onclick="clearAllInputs()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                    <i class="fas fa-trash-alt ml-1"></i>
+                                    پاک کردن همه
+                                </button>
+                                <button id="save-config-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                    <i class="fas fa-save ml-1"></i>
+                                    ذخیره تنظیمات
+                                </button>
+                                <button id="process-btn" onclick="processDocuments()" class="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-6 py-2 rounded-lg transition-all transform hover:scale-105 shadow-lg">
+                                    <i class="fas fa-play ml-1"></i>
+                                    شروع پردازش
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Progress Section -->
+                <div id="progress-section" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                            <i class="fas fa-tasks ml-2 text-blue-500"></i>
+                            پیشرفت پردازش
+                        </h3>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <button id="pause-processing" class="p-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 transition-colors">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button id="stop-processing" class="p-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Overall Progress -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span id="progress-text" class="text-sm font-medium text-gray-700 dark:text-gray-300">آماده سازی...</span>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <span id="progress-percentage" class="text-sm font-semibold text-primary-600">0%</span>
+                                <span id="progress-eta" class="text-xs text-gray-500 dark:text-gray-400">تخمین: --</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
+                            <div id="progress-bar" class="bg-gradient-to-r from-primary-500 to-secondary-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detailed Progress Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div class="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <div id="processed-count" class="text-2xl font-bold text-blue-600">0</div>
+                            <div class="text-xs text-blue-500">پردازش شده</div>
+                        </div>
+                        <div class="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                            <div id="success-count" class="text-2xl font-bold text-green-600">0</div>
+                            <div class="text-xs text-green-500">موفق</div>
+                        </div>
+                        <div class="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                            <div id="failed-count" class="text-2xl font-bold text-red-600">0</div>
+                            <div class="text-xs text-red-500">ناموفق</div>
+                        </div>
+                        <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div id="remaining-count" class="text-2xl font-bold text-gray-600 dark:text-gray-300">0</div>
+                            <div class="text-xs text-gray-500">باقی‌مانده</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Current Operation -->
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="flex items-center space-x-2 space-x-reverse">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">عملیات جاری:</span>
+                        </div>
+                        <div id="current-operation" class="text-sm text-gray-600 dark:text-gray-400 mt-1">در انتظار...</div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Results Section -->
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <!-- Document Results Table -->
+                    <div class="xl:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                    <i class="fas fa-table ml-2 text-green-500"></i>
+                                    نتایج پردازش
+                                </h3>
+                                <div class="flex items-center space-x-2 space-x-reverse">
+                                    <button id="export-table-btn" class="p-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors">
+                                        <i class="fas fa-file-export"></i>
+                                    </button>
+                                    <button id="refresh-table-btn" class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                    <button id="filter-toggle-btn" class="p-2 rounded-lg bg-gray-500 text-white hover:bg-gray-600 transition-colors">
+                                        <i class="fas fa-filter"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Search and Filter Bar -->
+                            <div id="table-filters" class="mt-4 hidden">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <input type="text" id="table-search" placeholder="جستجو در نتایج..." class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    <select id="status-filter" class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                        <option value="">همه وضعیت‌ها</option>
+                                        <option value="success">موفق</option>
+                                        <option value="failed">ناموفق</option>
+                                        <option value="processing">در حال پردازش</option>
+                                    </select>
+                                    <select id="source-filter" class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                        <option value="">همه منابع</option>
+                                        <option value="majlis">مجلس</option>
+                                        <option value="judiciary">قضاییه</option>
+                                        <option value="dotic">دفتر تدوین</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div id="documents-table-container" class="overflow-x-auto">
+                                <table id="documents-table" class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                                            <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">وضعیت</th>
+                                            <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">عنوان</th>
+                                            <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">منبع</th>
+                                            <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">تاریخ</th>
+                                            <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="documents-table-body">
+                                        <tr>
+                                            <td colspan="5" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                                                <i class="fas fa-inbox text-3xl mb-2 block"></i>
+                                                هنوز سندی پردازش نشده است
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div id="table-pagination" class="mt-4 flex items-center justify-between">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    نمایش <span id="table-showing-start">0</span> تا <span id="table-showing-end">0</span> از <span id="table-total">0</span> نتیجه
+                                </div>
+                                <div class="flex items-center space-x-2 space-x-reverse">
+                                    <button id="table-prev" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50" disabled>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                    <span id="table-page-info" class="text-sm text-gray-600 dark:text-gray-400">صفحه 1 از 1</span>
+                                    <button id="table-next" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analysis Results Panel -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-brain ml-2 text-purple-500"></i>
+                                تحلیل‌های هوشمند
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div id="analysis-results" class="space-y-4">
+                                <!-- Analysis Summary -->
+                                <div class="p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-2">خلاصه تحلیل</h4>
+                                    <div class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                                        <div>کل اسناد: <span id="analysis-total-docs" class="font-semibold">0</span></div>
+                                        <div>دسته‌بندی شده: <span id="analysis-classified" class="font-semibold">0</span></div>
+                                        <div>تحلیل معنایی: <span id="analysis-semantic" class="font-semibold">0</span></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Category Distribution -->
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-3">توزیع دسته‌بندی</h4>
+                                    <div class="h-48">
+                                        <canvas id="category-chart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Recent Insights -->
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-3">بینش‌های اخیر</h4>
+                                    <div id="recent-insights" class="space-y-2 max-h-32 overflow-y-auto">
+                                        <div class="text-center py-4 text-gray-500 dark:text-gray-400">
+                                            <i class="fas fa-lightbulb text-2xl mb-2 block"></i>
+                                            بینش‌ها پس از پردازش نمایش داده می‌شوند
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Proxy Dashboard Section -->
+            <section id="proxy-section" class="section hidden">
+                <!-- Enhanced Header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 flex items-center">
+                                <i class="fas fa-network-wired ml-3 text-primary-500"></i>
+                                داشبورد شبکه و پروکسی
+                            </h2>
+                            <p class="text-gray-600 dark:text-gray-300">نظارت بر عملکرد پروکسی‌ها، آمار شبکه و مدیریت اتصالات</p>
+                        </div>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <button id="test-all-proxies" class="p-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors">
+                                <i class="fas fa-heartbeat"></i>
+                            </button>
+                            <button id="add-proxy-btn" class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proxy Overview Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Total Proxies -->
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-blue-100 text-sm font-medium">کل پروکسی‌ها</p>
+                                <p id="total-proxies" class="text-3xl font-bold mb-1">0</p>
+                                <div class="flex items-center text-blue-200 text-xs">
+                                    <i class="fas fa-server ml-1"></i>
+                                    <span id="proxy-sources">0 منبع</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-server"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Proxies -->
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-green-100 text-sm font-medium">پروکسی فعال</p>
+                                <p id="active-proxies-count" class="text-3xl font-bold mb-1">0</p>
+                                <div class="flex items-center text-green-200 text-xs">
+                                    <i class="fas fa-check-circle ml-1"></i>
+                                    <span id="active-percentage">0%</span>
+                                    <span class="mr-1">فعال</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Average Response Time -->
+                    <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-yellow-100 text-sm font-medium">زمان پاسخ میانگین</p>
+                                <p id="avg-response-time" class="text-3xl font-bold mb-1">0ms</p>
+                                <div class="flex items-center text-yellow-200 text-xs">
+                                    <i class="fas fa-clock ml-1"></i>
+                                    <span id="response-trend">بدون تغییر</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Failed Proxies -->
+                    <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <p class="text-red-100 text-sm font-medium">پروکسی خراب</p>
+                                <p id="failed-proxies-count" class="text-3xl font-bold mb-1">0</p>
+                                <div class="flex items-center text-red-200 text-xs">
+                                    <i class="fas fa-exclamation-triangle ml-1"></i>
+                                    <span id="failed-percentage">0%</span>
+                                    <span class="mr-1">خراب</span>
+                                </div>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts and Analytics -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Proxy Performance Chart -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-chart-line ml-2 text-blue-500"></i>
+                                عملکرد پروکسی‌ها
+                            </h3>
+                            <select id="proxy-chart-timeframe" class="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                <option value="1h">1 ساعت اخیر</option>
+                                <option value="6h">6 ساعت اخیر</option>
+                                <option value="24h" selected>24 ساعت اخیر</option>
+                            </select>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="proxy-performance-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Proxy Distribution Chart -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                            <i class="fas fa-globe ml-2 text-green-500"></i>
+                            توزیع جغرافیایی
+                        </h3>
+                        <div class="h-64">
+                            <canvas id="proxy-distribution-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proxy Management Panel -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-cogs ml-2 text-purple-500"></i>
+                                مدیریت پروکسی‌ها
+                            </h3>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <button id="bulk-test-btn" class="px-3 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors text-sm">
+                                    <i class="fas fa-flask ml-1"></i>
+                                    تست گروهی
+                                </button>
+                                <button id="update-proxies-btn" class="px-3 py-2 bg-secondary-500 text-white rounded-lg hover:bg-secondary-600 transition-colors text-sm">
+                                    <i class="fas fa-sync-alt ml-1"></i>
+                                    بروزرسانی
+                                </button>
+                                <button id="import-proxies-btn" class="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm">
+                                    <i class="fas fa-file-import ml-1"></i>
+                                    وارد کردن
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Proxy Filters -->
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <input type="text" id="proxy-search" placeholder="جستجوی پروکسی..." class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            <select id="proxy-status-filter" class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                <option value="">همه وضعیت‌ها</option>
+                                <option value="active">فعال</option>
+                                <option value="inactive">غیرفعال</option>
+                                <option value="testing">در حال تست</option>
+                                <option value="failed">خراب</option>
+                            </select>
+                            <select id="proxy-country-filter" class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                <option value="">همه کشورها</option>
+                                <option value="IR">ایران</option>
+                                <option value="US">آمریکا</option>
+                                <option value="DE">آلمان</option>
+                                <option value="FR">فرانسه</option>
+                            </select>
+                            <select id="proxy-type-filter" class="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                <option value="">همه انواع</option>
+                                <option value="http">HTTP</option>
+                                <option value="https">HTTPS</option>
+                                <option value="socks4">SOCKS4</option>
+                                <option value="socks5">SOCKS5</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Proxy List Table -->
+                    <div class="p-6">
+                        <div id="proxy-table-container" class="overflow-x-auto">
+                            <table id="proxy-table" class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">
+                                            <input type="checkbox" id="select-all-proxies" class="rounded">
+                                        </th>
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">وضعیت</th>
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">آدرس پروکسی</th>
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">نوع</th>
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">کشور</th>
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">زمان پاسخ</th>
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">آخرین تست</th>
+                                        <th class="text-right py-3 px-2 font-medium text-gray-700 dark:text-gray-300">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="proxy-table-body">
+                                    <tr>
+                                        <td colspan="8" class="text-center py-8 text-gray-500 dark:text-gray-400">
+                                            <i class="fas fa-server text-3xl mb-2 block"></i>
+                                            در حال بارگیری فهرست پروکسی‌ها...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div id="proxy-pagination" class="mt-4 flex items-center justify-between">
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                نمایش <span id="proxy-showing-start">0</span> تا <span id="proxy-showing-end">0</span> از <span id="proxy-total">0</span> پروکسی
+                            </div>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <button id="proxy-prev" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50" disabled>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <span id="proxy-page-info" class="text-sm text-gray-600 dark:text-gray-400">صفحه 1 از 1</span>
+                                <button id="proxy-next" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">⚙️ تنظیمات سیستم</h2>
+                    <p class="text-gray-600">پیکربندی سیستم و تنظیمات پیشرفته</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- DNS Settings -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🌐 تنظیمات DNS</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">استراتژی DNS</label>
+                                <select id="dns-strategy" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option value="hybrid">ترکیبی (پیشنهادی)</option>
+                                    <option value="doh">DNS over HTTPS</option>
+                                    <option value="standard">استاندارد</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="auto-dns-switch" checked class="rounded border-gray-300 text-primary-600">
+                                    <span class="mr-2">تعویض خودکار DNS</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Model Settings -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold mb-4">🧠 تنظیمات مدل هوش مصنوعی</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">مدل طبقه‌بندی</label>
+                                <select id="classification-model" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                    <option value="primary">اصلی (BERT پارسی)</option>
+                                    <option value="fallback">پشتیبان</option>
+                                    <option value="lightweight">سبک</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="preload-models" checked class="rounded border-gray-300 text-primary-600">
+                                    <span class="mr-2">پیش‌بارگذاری مدل‌ها</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cache Management -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+                    <h3 class="text-xl font-semibold mb-4">💾 مدیریت کش</h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600">تعداد اسناد کش شده: <span id="cache-count-settings">-</span></p>
+                            <p class="text-gray-600">آخرین بروزرسانی: <span id="cache-last-update">-</span></p>
+                        </div>
+                        <button onclick="clearCache()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🗑️ پاک کردن کش
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Legal Database Section -->
+            <section id="legal-db-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">🗄️ پایگاه داده حقوقی</h2>
+                    <p class="text-gray-600">مدیریت و جستجو در مجموعه اسناد حقوقی استخراج شده از منابع معتبر</p>
+                </div>
+
+                <!-- Database Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-indigo-100">کل اسناد</p>
+                                <p id="legal-db-total" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">📄</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-teal-100">منابع فعال</p>
+                                <p id="legal-db-sources" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🏛️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-pink-100">دسته‌بندی‌ها</p>
+                                <p id="legal-db-categories" class="text-2xl font-bold">0</p>
+                            </div>
+                            <div class="text-3xl opacity-80">🏷️</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database Management -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">🔧 مدیریت پایگاه داده</h3>
+                        <div class="flex space-x-3 space-x-reverse">
+                            <button onclick="searchNafaqeDefinition()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                🔍 جستجوی نفقه
+                            </button>
+                            <button onclick="populateLegalDatabase()" class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                📚 پر کردن پایگاه داده
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Source Statistics -->
+                        <div>
+                            <h4 class="font-semibold mb-3">📊 آمار منابع</h4>
+                            <div id="legal-sources-stats" class="space-y-2">
+                                <p class="text-gray-500">در حال بارگذاری...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Category Statistics -->
+                        <div>
+                            <h4 class="font-semibold mb-3">🏷️ آمار دسته‌بندی‌ها</h4>
+                            <div id="legal-categories-stats" class="space-y-2">
+                                <p class="text-gray-500">در حال بارگذاری...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Search -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">🔍 جستجوی پیشرفته</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">جستجو در متن</label>
+                            <input 
+                                type="text" 
+                                id="legal-search-input" 
+                                placeholder="نفقه، طلاق، قانون مدنی..."
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                            >
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">منبع</label>
+                            <select id="legal-source-filter" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option value="">همه منابع</option>
+                                <option value="مجلس شورای اسلامی">مجلس شورای اسلامی</option>
+                                <option value="پورتال ملی قوانین">پورتال ملی قوانین</option>
+                                <option value="قوه قضاییه">قوه قضاییه</option>
+                                <option value="کانون وکلای دادگستری">کانون وکلای دادگستری</option>
+                                <option value="روزنامه رسمی">روزنامه رسمی</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">دسته‌بندی</label>
+                            <select id="legal-category-filter" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option value="">همه دسته‌ها</option>
+                                <option value="قانون">قانون</option>
+                                <option value="دادنامه">دادنامه</option>
+                                <option value="رویه_قضایی">رویه قضایی</option>
+                                <option value="نفقه_و_حقوق_خانواده">نفقه و حقوق خانواده</option>
+                                <option value="آگهی_قانونی">آگهی قانونی</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button onclick="searchLegalDocuments()" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg transition-colors">
+                            🔍 جستجو
+                        </button>
+                        <button onclick="clearLegalSearch()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            🗑️ پاک کردن
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">📋 نتایج جستجو</h3>
+                        <div class="text-sm text-gray-500">
+                            <span id="legal-search-count">0</span> سند یافت شد
+                        </div>
+                    </div>
+                    
+                    <div id="legal-documents-results" class="space-y-4 max-h-96 overflow-y-auto">
+                        <div class="text-center py-8 text-gray-500">
+                            <div class="text-4xl mb-4">📚</div>
+                            <p>برای مشاهده اسناد، جستجو کنید یا پایگاه داده را پر کنید</p>
+                            <button onclick="loadAllLegalDocuments()" class="mt-4 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+                                📄 نمایش همه اسناد
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Search & Legal DB Section -->
+            <section id="search-section" class="section hidden">
+                <!-- Enhanced Header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 flex items-center">
+                                <i class="fas fa-search ml-3 text-primary-500"></i>
+                                جستجو و پایگاه داده حقوقی
+                            </h2>
+                            <p class="text-gray-600 dark:text-gray-300">جستجوی پیشرفته در اسناد حقوقی با قابلیت‌های معنایی و فیلتر هوشمند</p>
+                        </div>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <button id="advanced-search-toggle" class="p-2 rounded-lg bg-secondary-500 text-white hover:bg-secondary-600 transition-colors">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            <button id="search-history-btn" class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-history"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Interface -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                            <i class="fas fa-search-plus ml-2 text-blue-500"></i>
+                            جستجوی پیشرفته
+                        </h3>
+                        <div class="flex items-center space-x-2 space-x-reverse">
+                            <button id="text-search-btn" class="search-type-btn active px-3 py-2 text-sm rounded-lg bg-blue-500 text-white">
+                                <i class="fas fa-font ml-1"></i>
+                                متنی
+                            </button>
+                            <button id="semantic-search-btn" class="search-type-btn px-3 py-2 text-sm rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                <i class="fas fa-brain ml-1"></i>
+                                معنایی
+                            </button>
+                            <button id="nafaqe-search-btn" class="search-type-btn px-3 py-2 text-sm rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                <i class="fas fa-balance-scale ml-1"></i>
+                                نفقه
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Search Bar -->
+                    <div class="relative mb-6">
+                        <div class="flex items-center">
+                            <div class="relative flex-1">
+                                <input type="text" id="main-search-input" 
+                                       placeholder="جستجو در اسناد حقوقی... (مثال: قانون مدنی، نفقه، ارث)"
+                                       class="w-full p-4 pl-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-lg">
+                                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <button id="main-search-btn" class="mr-3 px-6 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all transform hover:scale-105 shadow-lg">
+                                <i class="fas fa-search ml-2"></i>
+                                جستجو
+                            </button>
+                        </div>
+                        
+                        <!-- Search Suggestions -->
+                        <div id="search-suggestions" class="absolute top-full left-0 right-0 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-10 hidden">
+                            <div class="p-2">
+                                <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">پیشنهادات:</div>
+                                <div class="space-y-1">
+                                    <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded text-sm">قانون مدنی</button>
+                                    <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded text-sm">احکام نفقه</button>
+                                    <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded text-sm">قوانین ارث</button>
+                                    <button class="w-full text-right p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded text-sm">مقررات خانواده</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Filters -->
+                    <div id="advanced-filters" class="hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">منبع</label>
+                                <select id="source-filter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100">
+                                    <option value="">همه منابع</option>
+                                    <option value="majlis">مجلس شورای اسلامی</option>
+                                    <option value="judiciary">قوه قضاییه</option>
+                                    <option value="dotic">دفتر تدوین قوانین</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">نوع سند</label>
+                                <select id="document-type-filter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100">
+                                    <option value="">همه انواع</option>
+                                    <option value="law">قانون</option>
+                                    <option value="regulation">مقررات</option>
+                                    <option value="verdict">رأی</option>
+                                    <option value="circular">بخشنامه</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تاریخ از</label>
+                                <input type="date" id="date-from-filter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تاریخ تا</label>
+                                <input type="date" id="date-to-filter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100">
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4 space-x-2 space-x-reverse">
+                            <button id="clear-filters-btn" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                                <i class="fas fa-times ml-1"></i>
+                                پاک کردن فیلترها
+                            </button>
+                            <button id="apply-filters-btn" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
+                                <i class="fas fa-filter ml-1"></i>
+                                اعمال فیلترها
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <!-- Results List -->
+                    <div class="xl:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                    <i class="fas fa-list-ul ml-2 text-green-500"></i>
+                                    نتایج جستجو
+                                </h3>
+                                <div class="flex items-center space-x-2 space-x-reverse">
+                                    <span id="search-results-count" class="text-sm text-gray-500 dark:text-gray-400">0 نتیجه</span>
+                                    <select id="results-sort" class="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                        <option value="relevance">مرتبط‌ترین</option>
+                                        <option value="date">جدیدترین</option>
+                                        <option value="title">عنوان</option>
+                                        <option value="source">منبع</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div id="search-results-container">
+                                <div class="text-center py-12 text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-search text-4xl mb-4"></i>
+                                    <h4 class="text-lg font-medium mb-2">آماده برای جستجو</h4>
+                                    <p class="text-sm">عبارت مورد نظر خود را در کادر بالا وارد کنید</p>
+                                    <div class="mt-4 flex flex-wrap justify-center gap-2">
+                                        <button class="quick-search-btn px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm hover:bg-blue-200">قانون مدنی</button>
+                                        <button class="quick-search-btn px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm hover:bg-green-200">نفقه</button>
+                                        <button class="quick-search-btn px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm hover:bg-purple-200">ارث</button>
+                                        <button class="quick-search-btn px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm hover:bg-yellow-200">خانواده</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div id="search-pagination" class="mt-6 flex items-center justify-between hidden">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                    نمایش <span id="search-showing-start">0</span> تا <span id="search-showing-end">0</span> از <span id="search-total">0</span> نتیجه
+                                </div>
+                                <div class="flex items-center space-x-2 space-x-reverse">
+                                    <button id="search-prev" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50" disabled>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                    <span id="search-page-info" class="text-sm text-gray-600 dark:text-gray-400">صفحه 1 از 1</span>
+                                    <button id="search-next" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Search Analytics & Insights -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-chart-pie ml-2 text-purple-500"></i>
+                                تحلیل نتایج
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div id="search-analytics" class="space-y-6">
+                                <!-- Search Stats -->
+                                <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-3">آمار جستجو</h4>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-300">کل نتایج:</span>
+                                            <span id="analytics-total" class="font-semibold">0</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-300">زمان جستجو:</span>
+                                            <span id="analytics-time" class="font-semibold">0ms</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600 dark:text-gray-300">دقت نتایج:</span>
+                                            <span id="analytics-accuracy" class="font-semibold">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Source Distribution -->
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-3">توزیع منابع</h4>
+                                    <div class="h-48">
+                                        <canvas id="search-sources-chart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Recent Searches -->
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-3">جستجوهای اخیر</h4>
+                                    <div id="recent-searches" class="space-y-2 max-h-32 overflow-y-auto">
+                                        <div class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
+                                            هنوز جستجویی انجام نشده است
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Saved Searches -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h4 class="font-semibold text-gray-800 dark:text-white">جستجوهای ذخیره شده</h4>
+                                        <button id="save-current-search" class="text-xs px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50" disabled>
+                                            <i class="fas fa-save ml-1"></i>
+                                            ذخیره
+                                        </button>
+                                    </div>
+                                    <div id="saved-searches" class="space-y-1 max-h-24 overflow-y-auto">
+                                        <div class="text-center py-2 text-gray-500 dark:text-gray-400 text-sm">
+                                            جستجویی ذخیره نشده است
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Settings Section -->
+            <section id="settings-section" class="section hidden">
+                <!-- Enhanced Header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 flex items-center">
+                                <i class="fas fa-cog ml-3 text-primary-500"></i>
+                                تنظیمات سیستم
+                            </h2>
+                            <p class="text-gray-600 dark:text-gray-300">پیکربندی سیستم، تنظیمات API و مدیریت کانفیگ</p>
+                        </div>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <button id="export-settings-btn" class="p-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button id="import-settings-btn" class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                            <button id="reset-settings-btn" class="p-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tabs -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg mb-8">
+                    <div class="flex border-b border-gray-200 dark:border-gray-700">
+                        <button id="api-settings-tab" class="settings-tab-btn active px-6 py-4 text-sm font-medium border-b-2 border-primary-500 text-primary-600">
+                            <i class="fas fa-plug ml-1"></i>
+                            تنظیمات API
+                        </button>
+                        <button id="proxy-settings-tab" class="settings-tab-btn px-6 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                            <i class="fas fa-shield-alt ml-1"></i>
+                            تنظیمات پروکسی
+                        </button>
+                        <button id="theme-settings-tab" class="settings-tab-btn px-6 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                            <i class="fas fa-palette ml-1"></i>
+                            ظاهر و تم
+                        </button>
+                        <button id="advanced-settings-tab" class="settings-tab-btn px-6 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                            <i class="fas fa-cogs ml-1"></i>
+                            پیشرفته
+                        </button>
+                    </div>
+                    
+                    <!-- API Settings Tab -->
+                    <div id="api-settings-content" class="settings-tab-content p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- API Configuration -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-server ml-2 text-blue-500"></i>
+                                    پیکربندی API
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">آدرس پایه API</label>
+                                        <div class="flex">
+                                            <input type="text" id="api-base-url" value="http://127.0.0.1:7860/api" 
+                                                   class="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-r-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
+                                                   dir="ltr">
+                                            <button id="test-api-connection" class="px-4 py-3 bg-blue-500 text-white rounded-l-lg hover:bg-blue-600 transition-colors">
+                                                <i class="fas fa-plug"></i>
+                                            </button>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">آدرس کامل API بدون slash انتهایی</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Timeout درخواست (ثانیه)</label>
+                                        <input type="number" id="api-timeout" value="30" min="5" max="120"
+                                               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تعداد تلاش مجدد</label>
+                                        <select id="api-retry-count" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                            <option value="0">بدون تلاش مجدد</option>
+                                            <option value="1">1 بار</option>
+                                            <option value="2" selected>2 بار</option>
+                                            <option value="3">3 بار</option>
+                                            <option value="5">5 بار</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Connection Status -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-wifi ml-2 text-green-500"></i>
+                                    وضعیت اتصال
+                                </h4>
+                                <div class="space-y-4">
+                                    <div id="api-connection-status" class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">وضعیت API</span>
+                                            <div id="api-status-indicator" class="flex items-center">
+                                                <div class="w-2 h-2 bg-yellow-500 rounded-full ml-2 animate-pulse"></div>
+                                                <span class="text-sm">در حال بررسی...</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                                            آخرین بررسی: <span id="last-api-check">-</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                        <h5 class="font-medium text-blue-800 dark:text-blue-300 mb-2">آمار عملکرد</h5>
+                                        <div class="space-y-1 text-sm text-blue-700 dark:text-blue-400">
+                                            <div class="flex justify-between">
+                                                <span>کل درخواست‌ها:</span>
+                                                <span id="total-requests">0</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>درخواست‌های موفق:</span>
+                                                <span id="successful-requests">0</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span>میانگین زمان پاسخ:</span>
+                                                <span id="avg-api-response">0ms</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Proxy Settings Tab -->
+                    <div id="proxy-settings-content" class="settings-tab-content p-6 hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Proxy Configuration -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-network-wired ml-2 text-purple-500"></i>
+                                    پیکربندی پروکسی
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="flex items-center mb-3">
+                                            <input type="checkbox" id="enable-proxy-global" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">فعال‌سازی سیستم پروکسی</span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">استراتژی انتخاب پروکسی</label>
+                                        <select id="proxy-selection-strategy" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                            <option value="round-robin">چرخشی (Round Robin)</option>
+                                            <option value="fastest" selected>سریع‌ترین</option>
+                                            <option value="random">تصادفی</option>
+                                            <option value="least-used">کمترین استفاده</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">فاصله زمانی تست سلامت (دقیقه)</label>
+                                        <input type="number" id="health-check-interval" value="5" min="1" max="60"
+                                               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">حداکثر زمان انتظار پروکسی (ثانیه)</label>
+                                        <input type="number" id="proxy-timeout" value="10" min="3" max="60"
+                                               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Proxy Sources -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-list ml-2 text-orange-500"></i>
+                                    منابع پروکسی
+                                </h4>
+                                <div class="space-y-4">
+                                    <div class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="font-medium text-gray-700 dark:text-gray-300">منابع خودکار</span>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="auto-proxy-sources" checked class="rounded border-gray-300 text-primary-600">
+                                                <span class="mr-2 text-sm">فعال</span>
+                                            </label>
+                                        </div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">بروزرسانی خودکار از منابع معتبر</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">منابع سفارشی (یک خط برای هر منبع)</label>
+                                        <textarea id="custom-proxy-sources" 
+                                                  class="w-full h-24 p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                                  placeholder="https://api.proxyscrape.com/v2/?request=get&amp;format=textplain&#10;https://www.proxy-list.download/api/v1/get?type=http"
+                                                  dir="ltr"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Theme Settings Tab -->
+                    <div id="theme-settings-content" class="settings-tab-content p-6 hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Appearance -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-paint-brush ml-2 text-pink-500"></i>
+                                    ظاهر و رنگ‌بندی
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تم رنگی</label>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <button id="light-theme-btn" class="theme-option p-4 border-2 border-gray-300 rounded-lg hover:border-primary-500 transition-colors">
+                                                <div class="w-full h-8 bg-gradient-to-r from-white to-gray-100 rounded mb-2"></div>
+                                                <span class="text-sm font-medium">تم روشن</span>
+                                            </button>
+                                            <button id="dark-theme-btn" class="theme-option p-4 border-2 border-gray-300 rounded-lg hover:border-primary-500 transition-colors">
+                                                <div class="w-full h-8 bg-gradient-to-r from-gray-800 to-gray-900 rounded mb-2"></div>
+                                                <span class="text-sm font-medium">تم تاریک</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">فونت اصلی</label>
+                                        <select id="font-family" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                            <option value="vazirmatn" selected>Vazirmatn</option>
+                                            <option value="tahoma">Tahoma</option>
+                                            <option value="iranians">IRANSans</option>
+                                            <option value="yekan">Yekan</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اندازه فونت</label>
+                                        <input type="range" id="font-size-slider" min="12" max="18" value="14" 
+                                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            <span>کوچک</span>
+                                            <span id="font-size-value">14px</span>
+                                            <span>بزرگ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- UI Preferences -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-user-cog ml-2 text-indigo-500"></i>
+                                    تنظیمات رابط کاربری
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" id="enable-animations" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">فعال‌سازی انیمیشن‌ها</span>
+                                        </label>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">انیمیشن‌ها و ترنزیشن‌های نرم</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" id="enable-sound" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">صدای اعلان‌ها</span>
+                                        </label>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">پخش صدا برای اعلان‌های مهم</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" id="auto-save" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">ذخیره خودکار</span>
+                                        </label>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">ذخیره خودکار تنظیمات و داده‌ها</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">فاصله زمانی بروزرسانی خودکار (ثانیه)</label>
+                                        <input type="number" id="auto-refresh-interval" value="30" min="10" max="300"
+                                               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Settings Tab -->
+                    <div id="advanced-settings-content" class="settings-tab-content p-6 hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Performance -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-tachometer-alt ml-2 text-red-500"></i>
+                                    عملکرد و کارایی
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">حداکثر اتصالات همزمان</label>
+                                        <input type="number" id="max-concurrent" value="5" min="1" max="20"
+                                               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">اندازه کش (MB)</label>
+                                        <input type="number" id="cache-size-limit" value="100" min="10" max="1000"
+                                               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" id="enable-compression" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">فشرده‌سازی داده‌ها</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Security -->
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                    <i class="fas fa-shield-alt ml-2 text-green-500"></i>
+                                    امنیت و حریم خصوصی
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" id="enable-ssl-verification" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">تأیید گواهی SSL</span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" id="clear-data-on-exit" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300">پاک‌سازی داده‌ها هنگام خروج</span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User Agent سفارشی</label>
+                                        <textarea id="custom-user-agent" 
+                                                  class="w-full h-20 p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                                  placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                                                  dir="ltr"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Actions -->
+                    <div class="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 rounded-b-xl">
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-info-circle ml-1"></i>
+                                تنظیمات به صورت خودکار ذخیره می‌شوند
+                            </div>
+                            <div class="flex space-x-3 space-x-reverse">
+                                <button id="test-all-settings" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors">
+                                    <i class="fas fa-vial ml-1"></i>
+                                    تست همه تنظیمات
+                                </button>
+                                <button id="save-settings-btn" class="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
+                                    <i class="fas fa-save ml-1"></i>
+                                    ذخیره تنظیمات
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Export Section -->
+            <section id="export-section" class="section hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">📤 خروجی اسناد</h2>
+                    <p class="text-gray-600">دانلود و خروجی‌گیری از اسناد پردازش شده</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">💾 فرمت‌های خروجی</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="exportDocuments('json')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📋</div>
+                            <div class="font-semibold">JSON</div>
+                            <div class="text-sm opacity-90">فرمت ساختاریافته</div>
+                        </button>
+                        
+                        <button onclick="exportDocuments('csv')" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📊</div>
+                            <div class="font-semibold">CSV</div>
+                            <div class="text-sm opacity-90">جدول اکسل</div>
+                        </button>
+                        
+                        <button onclick="exportDocuments('txt')" class="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg transition-colors">
+                            <div class="text-2xl mb-2">📝</div>
+                            <div class="font-semibold">TXT</div>
+                            <div class="text-sm opacity-90">متن ساده</div>
+                        </button>
+                    </div>
+                    
+                    <!-- Export History -->
+                    <div class="mt-6">
+                        <h4 class="font-semibold mb-3">📚 تاریخچه خروجی</h4>
+                        <div id="export-history" class="space-y-2 max-h-32 overflow-y-auto">
+                            <p class="text-gray-500">هنوز خروجی‌ای ایجاد نشده است</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Logs Section -->
+            <section id="logs-section" class="section hidden">
+                <!-- Enhanced Header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-2 flex items-center">
+                                <i class="fas fa-file-alt ml-3 text-primary-500"></i>
+                                گزارش‌ها و لاگ‌های سیستم
+                            </h2>
+                            <p class="text-gray-600 dark:text-gray-300">نظارت بر فعالیت‌های سیستم، خطاها و عملیات انجام شده</p>
+                        </div>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <button id="refresh-logs" class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button id="export-logs" class="p-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button id="clear-logs" class="p-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log Filters -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">سطح لاگ</label>
+                            <select id="log-level-filter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                <option value="">همه سطوح</option>
+                                <option value="ERROR">خطا</option>
+                                <option value="WARNING">هشدار</option>
+                                <option value="INFO">اطلاعات</option>
+                                <option value="DEBUG">اشکال‌زدایی</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">تعداد نمایش</label>
+                            <select id="log-limit-filter" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                                <option value="50">50 مورد اخیر</option>
+                                <option value="100" selected>100 مورد اخیر</option>
+                                <option value="200">200 مورد اخیر</option>
+                                <option value="500">500 مورد اخیر</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">جستجو در لاگ‌ها</label>
+                            <input type="text" id="log-search" placeholder="جستجو..." class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                        </div>
+                        <div class="flex items-end">
+                            <button id="apply-log-filters" class="w-full px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
+                                <i class="fas fa-filter ml-1"></i>
+                                اعمال فیلتر
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs Display -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                                <i class="fas fa-stream ml-2 text-blue-500"></i>
+                                لاگ‌های زنده
+                            </h3>
+                            <div class="flex items-center space-x-2 space-x-reverse">
+                                <div id="logs-live-indicator" class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">بروزرسانی زنده</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div id="logs-container" class="space-y-2 max-h-96 overflow-y-auto">
+                            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                                <p>در حال بارگیری لاگ‌ها...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-8 text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <p class="text-lg font-semibold">در حال پردازش...</p>
+            <p id="loading-message" class="text-gray-600">لطفاً صبر کنید</p>
         </div>
     </div>
 
-    <script src="/Aihoghoghi/real-database-api.js"></script>
-    
-    <script>
-        // Wait for real API to load
-        function waitForRealAPI() {
-            if (window.realDatabaseAPI) {
-                setTimeout(initializeRealInterface, 1000); // Wait for API init
-            } else {
-                setTimeout(waitForRealAPI, 100);
-            }
-        }
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="fixed top-24 left-4 z-50 space-y-2"></div>
 
-        document.addEventListener('DOMContentLoaded', waitForRealAPI);
-
-        function initializeRealInterface() {
-            console.log('🚀 Initializing REAL interface...');
-            bindRealEvents();
-            updateRealStats();
-            showNotification('سیستم واقعی با پایگاه داده SQLite آماده است! 🎉', 'success');
-        }
-
-        function bindRealEvents() {
-            document.getElementById('real-search-btn')?.addEventListener('click', performRealSearch);
-            document.getElementById('real-process-btn')?.addEventListener('click', processRealDocs);
-            document.getElementById('real-proxy-test-btn')?.addEventListener('click', testRealProxies);
-            document.getElementById('real-db-btn')?.addEventListener('click', showRealDBStats);
-            document.getElementById('real-export-btn')?.addEventListener('click', exportRealData);
-            document.getElementById('real-system-test-btn')?.addEventListener('click', runRealTest);
-            document.getElementById('real-search-input')?.addEventListener('keypress', e => { if (e.key === 'Enter') performRealSearch(); });
-            console.log('✅ All REAL events bound to actual API');
-        }
-
-        function updateRealStats() {
-            if (!window.realDatabaseAPI) return;
-            const stats = window.realDatabaseAPI.getRealStats();
-            document.getElementById('real-total-docs').textContent = stats.totalDocuments;
-            document.getElementById('real-processed-today').textContent = stats.processedToday;
-            document.getElementById('real-active-proxies').textContent = stats.activeProxies;
-            document.getElementById('real-success-rate').textContent = stats.successRate + '%';
-            document.getElementById('proxy-status-display').innerHTML = `✅ ${stats.activeProxies}/${stats.totalProxies} فعال`;
-            document.getElementById('db-info').innerHTML = `✅ ${stats.totalDocuments} سند واقعی`;
-        }
-
-        async function performRealSearch() {
-            const input = document.getElementById('real-search-input');
-            const type = document.getElementById('real-search-type');
-            if (!input?.value.trim()) return showNotification('عبارت جستجو را وارد کنید', 'error');
-            
-            showLoading(`جستجوی واقعی در پایگاه داده: "${input.value}"`);
-            const results = window.realDatabaseAPI.searchDocuments(input.value, type.value);
-            
-            setTimeout(() => {
-                hideLoading();
-                if (results.results.length > 0) {
-                    showResults(`
-                        <div class="result-item">
-                            <h4>🔍 نتایج واقعی از پایگاه داده (${results.total} نتیجه)</h4>
-                            <p><strong>منبع:</strong> پایگاه داده واقعی SQLite</p>
-                            <p><strong>زمان جستجو:</strong> ${results.searchTime}ms</p>
-                            ${results.results.map(doc => `
-                                <div style="background: rgba(255,255,255,0.1); padding: 1rem; margin: 0.5rem 0; border-radius: 8px; border-left: 4px solid #10b981;">
-                                    <h6 style="color: #4ade80;">${doc.title}</h6>
-                                    <p><strong>منبع:</strong> ${doc.source}</p>
-                                    <p><strong>دسته:</strong> ${doc.category.replace(/_/g, ' ')}</p>
-                                    <p><strong>محتوا:</strong> ${doc.content.substring(0, 150)}...</p>
-                                    <p><strong>امتیاز:</strong> ${doc.relevanceScore}</p>
-                                    <p><strong>کلیدواژه:</strong> ${doc.keywords.join('، ')}</p>
-                                    <a href="${doc.url}" target="_blank" style="color: #4ade80;">🔗 منبع اصلی</a>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `);
-                    showNotification(`${results.total} نتیجه واقعی یافت شد!`, 'success');
-                } else {
-                    showResults(`<div class="result-item"><h4>❌ نتیجه‌ای یافت نشد</h4><p>برای "${input.value}" در پایگاه داده واقعی نتیجه‌ای وجود ندارد.</p></div>`);
-                }
-            }, 800);
-        }
-
-        async function processRealDocs() {
-            const textarea = document.getElementById('real-processing-urls');
-            if (!textarea?.value.trim()) return showNotification('آدرس‌ها را وارد کنید', 'error');
-            
-            const urls = textarea.value.split('\n').filter(u => u.trim());
-            showLoading(`پردازش واقعی ${urls.length} آدرس...`);
-            
-            const results = await window.realDatabaseAPI.processDocuments(urls);
-            const success = results.successful;
-            
-            hideLoading();
-            showResults(`
-                <div class="result-item">
-                    <h4>⚙️ پردازش واقعی کامل شد</h4>
-                    <p><strong>منبع:</strong> سیستم واقعی پردازش</p>
-                    <p><strong>موفق:</strong> ${success}/${urls.length}</p>
-                    <p><strong>نرخ موفقیت:</strong> ${results.success_rate}%</p>
-                    ${results.results.map(r => `
-                        <div style="background: rgba(255,255,255,0.1); padding: 1rem; margin: 0.5rem 0; border-radius: 8px; border-left: 4px solid ${r.status === 'success' ? '#10b981' : '#ef4444'};">
-                            <p><strong>URL:</strong> ${r.url}</p>
-                            <p><strong>وضعیت:</strong> ${r.status === 'success' ? '✅ موفق' : '❌ ناموفق'}</p>
-                            ${r.document ? `
-                                <p><strong>عنوان:</strong> ${r.document.title}</p>
-                                <p><strong>منبع:</strong> ${r.document.source}</p>
-                                <p><strong>کلمات:</strong> ${r.document.word_count}</p>
-                            ` : `<p><strong>خطا:</strong> ${r.error}</p>`}
-                        </div>
-                    `).join('')}
-                </div>
-            `);
-            updateRealStats();
-            showNotification(`${success} سند واقعی به پایگاه داده اضافه شد!`, 'success');
-        }
-
-        async function testRealProxies() {
-            showLoading('تست واقعی پروکسی‌ها...');
-            const results = await window.realDatabaseAPI.testProxies();
-            
-            hideLoading();
-            showResults(`
-                <div class="result-item">
-                    <h4>🌐 تست واقعی پروکسی‌ها</h4>
-                    <p><strong>منبع:</strong> سیستم واقعی پروکسی</p>
-                    <p><strong>فعال:</strong> ${results.active_proxies}/${results.total_proxies}</p>
-                    <p><strong>نرخ موفقیت:</strong> ${results.success_rate}%</p>
-                    ${results.results.map(p => `
-                        <div style="background: rgba(255,255,255,0.1); padding: 1rem; margin: 0.5rem 0; border-radius: 8px; border-left: 4px solid ${p.status === 'active' ? '#10b981' : '#ef4444'};">
-                            <p><strong>پروکسی:</strong> ${p.proxy}</p>
-                            <p><strong>وضعیت:</strong> ${p.status === 'active' ? '✅ فعال' : '❌ خراب'}</p>
-                            <p><strong>کشور:</strong> ${p.country}</p>
-                            ${p.response_time ? `<p><strong>سرعت:</strong> ${p.response_time}ms</p>` : ''}
-                            ${p.error ? `<p><strong>خطا:</strong> ${p.error}</p>` : ''}
-                        </div>
-                    `).join('')}
-                </div>
-            `);
-            updateRealStats();
-            showNotification(`${results.active_proxies} پروکسی واقعی فعال است!`, 'success');
-        }
-
-        function showRealDBStats() {
-            const stats = window.realDatabaseAPI.getRealStats();
-            const categories = window.realDatabaseAPI.cache.get('categories') || [];
-            
-            showResults(`
-                <div class="result-item">
-                    <h4>📊 آمار واقعی پایگاه داده SQLite</h4>
-                    <p><strong>فایل DB:</strong> real_legal_archive.db</p>
-                    <p><strong>کل اسناد:</strong> ${stats.totalDocuments}</p>
-                    <p><strong>ایندکس جستجو:</strong> ${stats.searchIndexSize} کلیدواژه</p>
-                    <p><strong>حجم:</strong> ${Math.round(stats.databaseSize / 1024)} KB</p>
-                    <h5>دسته‌بندی‌های واقعی:</h5>
-                    ${categories.map(cat => `
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.1); margin: 0.3rem 0; border-radius: 5px;">
-                            <span>${cat.name.replace(/_/g, ' ')}</span>
-                            <span style="color: #4ade80;">${cat.count}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `);
-            showNotification('آمار واقعی از پایگاه داده نمایش داده شد', 'success');
-        }
-
-        function exportRealData() {
-            const format = document.getElementById('export-format').value;
-            showLoading(`آماده‌سازی داده‌های واقعی (${format})...`);
-            
-            setTimeout(() => {
-                const data = window.realDatabaseAPI.exportRealData(format);
-                const blob = new Blob([data], { type: format === 'json' ? 'application/json' : 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `real-legal-data-${Date.now()}.${format}`;
-                a.click();
-                URL.revokeObjectURL(url);
-                
-                hideLoading();
-                showResults(`
-                    <div class="result-item">
-                        <h4>💾 خروجی واقعی داده‌ها</h4>
-                        <p><strong>فرمت:</strong> ${format.toUpperCase()}</p>
-                        <p><strong>منبع:</strong> پایگاه داده واقعی</p>
-                        <p><strong>حجم:</strong> ${Math.round(data.length / 1024)} KB</p>
-                        <p><strong>وضعیت:</strong> ✅ دانلود موفق</p>
-                    </div>
-                `);
-                showNotification(`داده‌های واقعی در فرمت ${format} دانلود شد!`, 'success');
-            }, 1000);
-        }
-
-        async function runRealTest() {
-            showLoading('تست واقعی جامع سیستم...');
-            
-            const tests = ['پایگاه داده SQLite', 'جستجوی فارسی', 'پروکسی شبکه', 'پردازش اسناد'];
-            for (let i = 0; i < tests.length; i++) {
-                document.getElementById('loading-text').textContent = `تست ${tests[i]}...`;
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            }
-            
-            const stats = window.realDatabaseAPI.getRealStats();
-            
-            hideLoading();
-            showResults(`
-                <div class="result-item">
-                    <h4>🧪 تست واقعی کامل شد</h4>
-                    <p><strong>منبع:</strong> سیستم واقعی با SQLite</p>
-                    <p>✅ پایگاه داده: ${stats.totalDocuments} سند واقعی</p>
-                    <p>✅ جستجو: ${stats.searchIndexSize} کلیدواژه ایندکس شده</p>
-                    <p>✅ پروکسی: ${stats.activeProxies} فعال از ${stats.totalProxies}</p>
-                    <p>✅ نرخ موفقیت: ${stats.successRate}%</p>
-                    <p><strong>وضعیت:</strong> <span style="color: #4ade80;">✅ سیستم کاملاً واقعی و عملیاتی</span></p>
-                </div>
-            `);
-            showNotification('تست واقعی موفق! همه سیستم‌ها با پایگاه داده واقعی کار می‌کنند', 'success');
-        }
-
-        function showLoading(text) {
-            document.getElementById('loading-text').textContent = text;
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('results').classList.add('hidden');
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').classList.add('hidden');
-        }
-
-        function showResults(content) {
-            document.getElementById('results-content').innerHTML = content;
-            document.getElementById('results').classList.remove('hidden');
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>${message}</span>
-                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
-                </div>
-            `;
-            document.body.appendChild(notification);
-            setTimeout(() => notification.classList.add('show'), 100);
-            setTimeout(() => { notification.classList.remove('show'); setTimeout(() => notification.remove(), 300); }, 4000);
-        }
-
-        // Auto-update every 30 seconds
-        setInterval(() => { if (window.realDatabaseAPI) updateRealStats(); }, 30000);
-
-        console.log('🚀 REAL Legal Archive System - ALL FUNCTIONALITY IS GENUINE!');
-    </script>
+    <!-- JavaScript -->
+    <script src="/Aihoghoghi/assets/js/script.js"></script>
 </body>
 </html>
