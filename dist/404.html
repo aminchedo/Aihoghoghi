@@ -3,14 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صفحه یافت نشد - سیستم آرشیو اسناد حقوقی ایران</title>
+    <title>سیستم آرشیو اسناد حقوقی ایران</title>
+    
+    <!-- Persian fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- GitHub Pages SPA routing fix -->
+    <script>
+        // GitHub Pages SPA routing fix
+        (function(l) {
+            if (l.search[1] === '/' ) {
+                var decoded = l.search.slice(1).split('&').map(function(s) { 
+                    return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                    l.pathname.slice(0, -1) + decoded + l.hash
+                );
+            }
+        }(window.location))
+    </script>
+    
     <style>
-        body {
-            font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+        body { 
+            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -19,56 +38,66 @@
             text-align: center;
         }
         .container {
-            max-width: 500px;
             padding: 2rem;
+            max-width: 500px;
         }
-        .error-code {
-            font-size: 6rem;
-            font-weight: bold;
+        .icon {
+            font-size: 4rem;
             margin-bottom: 1rem;
-            opacity: 0.8;
         }
-        .error-message {
+        .title {
             font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .subtitle {
             margin-bottom: 2rem;
-        }
-        .back-button {
-            padding: 1rem 2rem;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-            font-weight: 500;
+            opacity: 0.9;
             font-size: 1rem;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
         }
-        .back-button:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
+        .loading {
+            margin-top: 1rem;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="error-code">404</div>
-        <div class="error-message">صفحه مورد نظر یافت نشد</div>
-        <p style="margin-bottom: 2rem; opacity: 0.9;">
-            ممکن است صفحه منتقل شده یا حذف شده باشد
-        </p>
-        <a href="/Aihoghoghi/" class="back-button">🏠 بازگشت به صفحه اصلی</a>
+        <div class="icon">⚖️</div>
+        <h1 class="title">سیستم آرشیو اسناد حقوقی ایران</h1>
+        <p class="subtitle">در حال بارگذاری اپلیکیشن...</p>
+        <div class="loading">
+            لطفاً منتظر بمانید
+            <div class="spinner"></div>
+        </div>
     </div>
     
+    <!-- Load the React app -->
+    <div id="root"></div>
+    <script type="module" src="/Aihoghoghi/assets/index.js"></script>
+    <link rel="stylesheet" href="/Aihoghoghi/assets/index.css">
+    
+    <!-- Fallback script to redirect to main app if assets don't load -->
     <script>
-        // Redirect SPA routes to main app
-        const path = window.location.pathname;
-        if (path.includes('/Aihoghoghi/') && path !== '/Aihoghoghi/') {
-            // Store the intended path and redirect to main app
-            sessionStorage.setItem('intended_path', path);
-            window.location.href = '/Aihoghoghi/';
-        }
+        setTimeout(function() {
+            if (!document.getElementById('root').hasChildNodes()) {
+                window.location.href = '/Aihoghoghi/';
+            }
+        }, 5000);
     </script>
 </body>
 </html>

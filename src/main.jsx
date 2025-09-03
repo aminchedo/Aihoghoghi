@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import './App.css';
 
 // Import system integration service to ensure it's loaded
 import './services/systemIntegration.js';
 
+// Get base path from environment
+const basename = import.meta.env.MODE === 'production' ? '/Aihoghoghi' : '/';
+
 // Enhanced initialization for GitHub Pages
 console.log('🚀 Iranian Legal Archive - Enhanced Startup');
 console.log('📍 Environment:', window.location.hostname.includes('github.io') ? 'GitHub Pages' : 'Local Development');
+console.log('🔧 Router basename:', basename);
 
 // Create root element
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -18,11 +23,13 @@ const renderApp = () => {
   try {
     root.render(
       <React.StrictMode>
-        <App />
+        <BrowserRouter basename={basename}>
+          <App />
+        </BrowserRouter>
       </React.StrictMode>
     );
     
-    console.log('✅ React app rendered successfully');
+    console.log('✅ React app rendered successfully with basename:', basename);
     
     // Notify system integration that React is ready
     if (window.iranianLegalArchive?.systemIntegration) {

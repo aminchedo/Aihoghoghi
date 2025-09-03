@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
@@ -309,7 +309,6 @@ function App() {
       <ThemeProvider>
         <ConfigProvider>
           <NotificationProvider>
-            <Router basename="/Aihoghoghi">
               <ErrorBoundary>
                 <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-vazir" dir="rtl">
                   {/* Service initialization warning banner */}
@@ -383,7 +382,6 @@ function App() {
 
                 </div>
               </ErrorBoundary>
-            </Router>
           </NotificationProvider>
         </ConfigProvider>
       </ThemeProvider>

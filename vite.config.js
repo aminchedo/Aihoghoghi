@@ -4,6 +4,7 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // CRITICAL: Set base path for GitHub Pages
   base: '/Aihoghoghi/',
   plugins: [react()],
   resolve: {
@@ -47,9 +48,10 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false, // Disable sourcemaps for production
     assetsDir: 'assets',
+    // Ensure proper asset paths
     rollupOptions: {
       output: {
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+        assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
         // Manual chunks for better loading (only if modules exist)
