@@ -48,6 +48,8 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false, // Disable sourcemaps for production
     assetsDir: 'assets',
+    // Copy 404.html for GitHub Pages SPA routing
+    copyPublicDir: true,
     // Ensure proper asset paths
     rollupOptions: {
       output: {

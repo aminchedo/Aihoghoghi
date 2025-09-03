@@ -10,7 +10,8 @@
     
     <!-- GitHub Pages SPA routing fix -->
     <script>
-        // GitHub Pages SPA routing fix
+        // Single Page App for GitHub Pages
+        // https://github.com/rafgraph/spa-github-pages
         (function(l) {
             if (l.search[1] === '/' ) {
                 var decoded = l.search.slice(1).split('&').map(function(s) { 
@@ -21,6 +22,18 @@
                 );
             }
         }(window.location))
+        
+        // Immediate redirect for SPA routes
+        var pathSegmentsToKeep = 1;
+        var l = window.location;
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + 
+            '/?/' + 
+            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+        );
     </script>
     
     <style>
@@ -86,18 +99,10 @@
         </div>
     </div>
     
-    <!-- Load the React app -->
-    <div id="root"></div>
-    <script type="module" src="/Aihoghoghi/assets/index.js"></script>
-    <link rel="stylesheet" href="/Aihoghoghi/assets/index.css">
-    
-    <!-- Fallback script to redirect to main app if assets don't load -->
+    <!-- Redirect to main app immediately -->
     <script>
-        setTimeout(function() {
-            if (!document.getElementById('root').hasChildNodes()) {
-                window.location.href = '/Aihoghoghi/';
-            }
-        }, 5000);
+        // Redirect to main app for SPA handling
+        window.location.href = '/Aihoghoghi/';
     </script>
 </body>
 </html>
