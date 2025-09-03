@@ -1,0 +1,37 @@
+# AI Model Manager for Persian BERT models
+FROM python:3.12-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash app && \
+    mkdir -p /app && \
+    chown -R app:app /app
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy model manager script
+COPY production/model_manager.py .
+
+# Create necessary directories
+RUN mkdir -p /app/models /app/logs && \
+    chown -R app:app /app
+
+# Switch to non-root user
+USER app
+
+# Expose port for model management API
+EXPOSE 8001
+
+# Start the model manager
+CMD ["python", "model_manager.py"]
