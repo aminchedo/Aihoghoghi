@@ -1,0 +1,185 @@
+# #UNUSED - Archived Wed Sep  3 04:54:56 AM UTC 2025
+{
+  "test_type": "smart_proxy_scraping",
+  "timestamp": "2025-09-01T21:44:39.716814",
+  "total_sites": 5,
+  "successful_extractions": 3,
+  "dns_servers_used": [
+    "178.22.122.100",
+    "185.51.200.2",
+    "10.202.10.202",
+    "10.202.10.102",
+    "178.216.248.40",
+    "185.55.226.26",
+    "185.55.225.25"
+  ],
+  "results": [
+    {
+      "site_name": "قوه قضائیه ایران",
+      "url": "https://www.judiciary.ir",
+      "priority": "high",
+      "success": false,
+      "response_time": 29508.44,
+      "error": "All smart proxy attempts failed"
+    },
+    {
+      "site_name": "دولت الکترونیک",
+      "url": "https://www.dolat.ir",
+      "priority": "high",
+      "success": false,
+      "response_time": 52297.12,
+      "error": "All smart proxy attempts failed"
+    },
+    {
+      "url": "https://rc.majlis.ir",
+      "status_code": 200,
+      "content_length": 1407,
+      "extraction_time": "2025-09-01T21:44:33.929907",
+      "main_content": "Ñ\u0010\u0000 >¯Ó÷w/Ó5)\\åþ8zÒ\u000eá(F<\u0018x\u0007ô\u0012R¼¥M­ìùµMö/Ëê¿LúsìwGúÿ:\u0012*\u0015B\"Ç¿··}QÁ¤ù6ÄµBâhÔ[´Þy\fç;¦\u0013¤õï®\u0004\u0001fhF\u0015£3g^¥Uäo¾Ã\u0002»îö\u001c¾b\n%4>\u000e\u000eô³'úyðÚ8þæ<ÉîBS[M£¬=ÝJº\u0003¥p¶·ÉÜ¨Ýï;\\aPµ¡. h¬0Ø\u0013\"\u000eêÔÁ:Jw×ásg\u000e8»ë1\u0010O\tásÐúnRÎê«âÓ\u001cÖöA\u001eâi·µHy\\pnÁéY\u0012i\u0000úF£ä\u001e\u0010ü±g\u001b$.ær\u0019cÂðýà)Ç¦ëå¬\u001fëø¢©Ê\n1:Ë±=_\u0010U9CåÎííP&¢%þ²È`¬\u000beîÿ,\u0000¥\u0014LÌ¼Yßvv\u000b\u000f½Ï\u0015\u0005ÿªXM>õ¯ëßa_ìòåÿO°þÖ®¾µËÏvõyà1vùÆ®~]þ¹(²¿þkÿék¿ØÕ/ëß×¿Â®¾µ«\u0017vù\u000bìêG»üË.?Û_ÿÀ\u000füc{aôM«)|YZ\b\u001e^æ\u00125?AÌ\u0011±}ò+RùðÆáQ\r0ÊPO2µ\r±røÃ\bÑEwÁ¸VÎìP\u0003\u0016üÌÈfIyYÏ\nÙfbÝìU\u0017\n¾áà\u0013\u0011ubå0Q\u0003ÌnÏ¯3K­>øû\u0011óÆÀ+EQêCsUëÎ\u0005\u0006^\n\bXÔt®çXXÔ@+\u0012\bðh\f<øsE\rK\u0010»Ìé¤4M\b\u0015hT©\f\u0013µ\u0005/\u0014xÚ\tµa\u0001a\u0002 \u000e\u000433wþ\u0003k~\"3óÎae´÷$\u001eþ|e(ë\u0014ºÌç÷t\u0014ã\u0005)ë¸²ÐÍ<«\u0005²\u0017ËcL\u001d\u0000\u001f\u0019Ì\u0012eWée\u001d'\u001c¢Ä ë&lnZð\u0018\"\u001f'è³-å÷]Õae4\u001d\u0007ád³ü~'¤\u001aeÐ,É\u0011ñ-m.ª,ÊÓ\u0013\u0002Í\t(¥µ¦iµªj@åOtÈL\u0011ÒC#ùòTUh#M2ÆÐDdà\u0005}\u0013C-z\u001b]ë^£+Ó}±ªÙÑæ\u0006¼\u001a½u¥$*bTu´\u0010~:²ÞA³ÞAÐAÖeÐ\u0001\u0003yNoÀHýä]õªëe\f©\t~ÄëkUjO\u0000\u001eD+%\u0003I^\u0013ú½\u0012]²&!LöÇ\u001cy\tÞíÏêÒ,è.9{GÝE^-Al©ÌßÅÔ\u001eîQ¬\u000bI':¬\u0005¢«í¼0e#\r?f\u000bÔá¤\"O\u000fÍTq(ôFåëI ð¦þ_\u0000\ry5ô¹\u001bµ\u0010òªïná\u0011TlA<\u0019ûÖà\u0012\u001aò*{Ãbxfà|Ún§ð\u000fd{§\u000eænidmµ9X\bPsh³GF`Auü\u0016xÕëO\u0018\u0013¨mØ6«Î«ÂÓÆÂ»à6xÅE=\u0011¤Mfö\u0006ÂÂñÃ\u0002\u000b\u001a\u001aöÇ·£AÁxâòÑ\u001fÈN©Q\"\u001a\"Ð2£ÍçyiB\t¯8i¿Ó\f}e¢fl\fft?Ê\u0000Uø~\u0011\u0006r¯\u0019¤\u0019\u001e¡-VFÛG\u0002AÁ}è\u0012HHk¸$GHVÓ¢!Ü·ÅNêTäÙ\u001e\u0012òª7v§q¼êéáÈ\u001dÖk\u001f\u0015Çîx$Åc×nXÈ¼='\u001fÐ\u0012\u001ex5\u0016XtZØ¨sH)×ÓÇr1Ð·\tÐ\u0012)´#\u0010ÒÌL(\"á¦\u0007*§\u001dö¡¨ô½UºLÏ}Àh\u0000\u0016\f\u0013å\n ÀÔº\u0010qÒ¥¡Û¬=BPxÞª0&ütï¯y8©lÏcG.D|\u0007;«HGX\u0000\u001abo@'\u0019t[!^¥\u001d'WÃ\u0003\tCULË;¥GÐÄ\u0007´6¹rñÄ¡<}\u000b`fhÿÏ§\u0018 \u0002gTÕ>°¥½^\u000bWfæu\u0005úºTÂi$UwæIÙI\nR\b|ÔÏ\u000f§\u001d7V\u001a\rÐ\"5éÿ\u000b¶0è3².=!1w[òº3Î}",
+      "word_count": 73,
+      "headings": [],
+      "links": [],
+      "legal_analysis": {},
+      "legal_relevance_score": 0,
+      "site_name": "مرکز پژوهش‌های مجلس",
+      "priority": "medium",
+      "response_time": 21274.79,
+      "success": true
+    },
+    {
+      "url": "https://irancode.ir",
+      "status_code": 200,
+      "content_length": 50806,
+      "extraction_time": "2025-09-01T21:44:36.868532",
+      "title": "صفحه اصلي ایران کد®",
+      "main_content": "صفحه اصلي ایران کد® درباره ايران کد محصولات دفاتر نمايندگي ها عضويت ارتباط با ما كاربردها قوانین و مقررات سایت ورود به سيستم درباره ایران‌کد معرفي ايران كد استانداردسازی داده‌ها خدمات ایران‌کد برخي مفاهيم ايران كد کد ملّی کالا ساختار ملّی طبقه‌بندی کالای ایران‌کد کاتالوگ الکترونیکی ایران‌کد برخی مفاهیم فنی ایران‌کد قوانین پشتیبان مصوبه‌های هیأت دولت مصوبه‌های مجلس محصولات پورتال اطلاعاتی سیستم مشترکین اطلاعاتی بسته شرکتی نرم‌افزارهای  موبایل سامانه تایید اصالت کالا دفاتر نمایندگی‌ها فهرست شركت هاي نماينده مركز ملي عضویت ایجاد  عضویت و رهگیری درخواست مدارک لازم برای عضویت راهنمای عضویت ارتباط با ما نظر سنجی ارسال پیام آدرس‌ و شماره‌های تماس انتقادات و پيشنهادات کاربردها مدیریت زنجیره تأمین مدیریت روابط با مشتریان مدیریت ارتباط با تأمین‌کنندگان در حال دريافت اطلاعات... English درختواره ایران کد محصول تامين كننده كاتالوگ تناظرات کدهای بین المللی جستجو ساخت ایران select نام محصول کد محصول ( کد ملی شماره فنی با علامت بدون علامت حداقل یکی از واژه ها جستجوی دقیق جستجو توليد كننده select نام تامين كننده كد تامين كننده حداقل یکی از واژه ها جستجوی دقیق جستجو ساخت ایران select حداقل یکی از واژه ها جستجوی دقیق جستجو همه select کد عنوان حداقل یکی از واژه ها جستجوی دقیق اطلاعیه سایر اطلاعیه ها اطلاعیه مهم سامانه ثامن نحوه تکمیل فرم های عضویت و ویرایش پرتال ایرانکد حداقل یکی از گزینه ها را انتخاب نمایید Terms of Service and Privacy  -  Important Disclaimer Copyright © 2012 IRANCODE - All rights reserved صفحه اصلي | قوانين استفاده از سایت | ارتباط با ما",
+      "word_count": 250,
+      "headings": [],
+      "links": [
+        {
+          "url": "http://irancode.ir/Content/TermIranCode.pdf",
+          "text": "قوانین و مقررات سایت"
+        },
+        {
+          "url": "http://mcs.irancode.ir/Account/Login",
+          "text": "ورود به سيستم"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/IrancodeIntroduction",
+          "text": "معرفي ايران كد"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/DataStandardization",
+          "text": "استانداردسازی داده‌ها"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/Services",
+          "text": "خدمات ایران‌کد"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/ProductNationalCode",
+          "text": "کد ملّی کالا"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/IrancodeStructure",
+          "text": "ساختار ملّی طبقه‌بندی کالای ایران‌کد"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/Catalog",
+          "text": "کاتالوگ الکترونیکی ایران‌کد"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/Concepts",
+          "text": "برخی مفاهیم فنی ایران‌کد"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/GovernmentContracts",
+          "text": "مصوبه‌های هیأت دولت"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/parliamentContracts",
+          "text": "مصوبه‌های مجلس"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/Portal",
+          "text": "پورتال اطلاعاتی"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/InfoSystem",
+          "text": "سیستم مشترکین اطلاعاتی"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/CompanyPacket",
+          "text": "بسته شرکتی"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/MobileSoftware",
+          "text": "نرم‌افزارهای  موبایل"
+        },
+        {
+          "url": "http://ets.gs1ir.org",
+          "text": "سامانه تایید اصالت کالا"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Colleagues/Colleagues",
+          "text": "فهرست شركت هاي نماينده مركز ملي"
+        },
+        {
+          "url": "http://mcs.irancode.ir/Account/Login",
+          "text": "ایجاد  عضویت و رهگیری درخواست"
+        },
+        {
+          "url": "https://irancode.ir/CMS/Home/RequiredDocument",
+          "text": "مدارک لازم برای عضویت"
+        },
+        {
+          "url": "../../Content/Ozviyat_Takmil_Formha.wmv",
+          "text": "راهنمای عضویت"
+        }
+      ],
+      "legal_analysis": {
+        "اداری": {
+          "total_matches": 2,
+          "keywords": [
+            {
+              "keyword": "مصوبه",
+              "count": 2
+            }
+          ]
+        }
+      },
+      "legal_relevance_score": 20,
+      "site_name": "ایران کد",
+      "priority": "medium",
+      "response_time": 2926.42,
+      "success": true
+    },
+    {
+      "url": "https://www.sabteahval.ir",
+      "status_code": 200,
+      "content_length": 292648,
+      "extraction_time": "2025-09-01T21:44:39.715957",
+      "title": "Site was not found!",
+      "main_content": "Site was not found! We need your permission to access device motion data. Grant Permission Ø³Ø§ÛØª Ø¯Ø± Ø­Ø§Ù Ø¨Ù Ø±ÙØ²Ø±Ø³Ø§ÙÛ ÙÛâØ¨Ø§Ø´Ø¯ Error 30001 Site not found Performance & security by CloudGuard",
+      "word_count": 32,
+      "headings": [
+        {
+          "tag": "h1",
+          "text": "Ø³Ø§ÛØª  Ø¯Ø± Ø­Ø§Ù Ø¨Ù Ø±ÙØ²Ø±Ø³Ø§ÙÛ ÙÛâØ¨Ø§Ø´Ø¯"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://cloudguard.ir",
+          "text": "CloudGuard"
+        }
+      ],
+      "legal_analysis": {},
+      "legal_relevance_score": 0,
+      "site_name": "سازمان ثبت اسناد",
+      "priority": "medium",
+      "response_time": 2837.53,
+      "success": true
+    }
+  ]
+}
