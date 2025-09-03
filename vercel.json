@@ -1,44 +1,27 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "main.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/main.py"
-    },
-    {
-      "src": "/home",
-      "dest": "/main.py"
-    },
-    {
-      "src": "/pages",
-      "dest": "/main.py"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/main.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/main.py"
-    }
-  ],
   "functions": {
-    "main.py": {
+    "api/main.py": {
+      "runtime": "@vercel/python",
       "maxDuration": 60
     }
   },
-  "regions": ["iad1"],
+  "routes": [
+    {
+      "src": "/api/health",
+      "dest": "/api/main.py"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/main.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/main.py"
+    }
+  ],
   "env": {
+    "PYTHON_VERSION": "3.11",
     "PYTHONPATH": "/var/task"
-  }
+  },
+  "regions": ["iad1"]
 }
