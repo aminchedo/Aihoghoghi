@@ -1,7 +1,8 @@
 {
+  "version": 2,
   "functions": {
     "api/main.py": {
-      "runtime": "@vercel/python",
+      "runtime": "python3.12",
       "maxDuration": 60
     }
   },
@@ -13,15 +14,7 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/main.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/main.py"
     }
   ],
-  "env": {
-    "PYTHON_VERSION": "3.11",
-    "PYTHONPATH": "/var/task"
-  },
   "regions": ["iad1"]
 }
