@@ -20,10 +20,9 @@ import {
   Filter
 } from 'lucide-react';
 
-// Services
-import { smartScrapingService } from '../../services/smartScrapingService';
-import { realTimeMetricsService } from '../../services/realTimeMetricsService';
-import { legalDocumentService } from '../../services/legalDocumentService';
+// Contexts
+import { useSystem } from '../../contexts/SystemContext';
+import { useWebSocket } from '../../contexts/WebSocketContext';
 
 // Components
 import LoadingSpinner from '../ui/LoadingSpinner';

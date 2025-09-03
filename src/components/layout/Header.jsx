@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { 
   Menu, 
   Search, 
@@ -14,28 +14,35 @@ import {
   Activity,
   Zap,
   RefreshCw
-} from 'lucide-react';
+} from 'lucide-react'
 
-// Services
-import { realTimeMetricsService } from '../../services/realTimeMetricsService';
+// Contexts
+import { useSystem } from '../../contexts/SystemContext'
+import { useWebSocket } from '../../contexts/WebSocketContext'
 
 const Header = ({ onMenuClick }) => {
-  const [theme, setTheme] = useState('system');
-  const [notifications, setNotifications] = useState([]);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [metrics, setMetrics] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [theme, setTheme] = useState('system')
+  const [notifications, setNotifications] = useState([])
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const [currentTime, setCurrentTime] = useState(new Date())
+  
+  // Get system state from contexts
+  const { metrics, connectionStatus, systemHealth, loadSystemMetrics } = useSystem()
+  const { isConnected, lastMessage } = useWebSocket()
 
-  // Subscribe to metrics
+  // Listen for WebSocket messages to create notifications
   useEffect(() => {
-    const unsubscribe = realTimeMetricsService.subscribe((newMetrics) => {
-      setMetrics(newMetrics);
-    });
-    
-    setMetrics(realTimeMetricsService.getMetrics());
-    return unsubscribe;
-  }, []);
+    if (lastMessage) {
+      const notification = {
+        id: Date.now(),
+        message: lastMessage.message || 'بروزرسانی سیستم',
+        type: lastMessage.type || 'info',
+        timestamp: new Date()
+      }
+      setNotifications(prev => [notification, ...prev.slice(0, 9)])
+    }
+  }, [lastMessage])
 
   // Update time every second
   useEffect(() => {

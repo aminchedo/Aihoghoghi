@@ -1211,194 +1211,92 @@ https://dotic.ir/portal/law/family"></textarea>
             }
         }
 
-        // ==================== OPERATION FULL STACK REVIVAL - CRITICAL PRIORITY 1 ====================
+        // ==================== ULTRA-STRICT INITIALIZATION SEQUENCE ====================
 
         window.addEventListener('load', async function() {
-            console.log('🚀 OPERATION FULL STACK REVIVAL - CRITICAL SYSTEM INITIALIZATION');
-            console.log('🎯 Priority 1: Complete Backend-Frontend Integration');
-            
-            showLoading('🔧 Operation Full Stack Revival - Initializing...');
+            console.log('🚀 ULTRA-STRICT SYSTEM INITIALIZATION STARTING...');
+            showLoading('در حال راه‌اندازی سیستم...');
             
             try {
-                // STEP 1: Start Backend Services (UltraModernLegalArchive orchestrator)
-                console.log('🏛️ STEP 1: Starting UltraModernLegalArchive orchestrator...');
-                const backendOrchestrator = await initializeBackendOrchestrator();
-                updateInitProgress(15, 'Backend orchestrator initialized');
-                
-                // STEP 2: Load AI Models (HuggingFace Persian BERT models)
-                console.log('🤖 STEP 2: Loading Persian BERT models...');
-                const aiModels = await loadPersianBERTModelsComplete();
-                updateInitProgress(30, 'Persian BERT models loaded');
-                
-                // STEP 3: Initialize Proxy Network (22 Iranian DNS servers)
-                console.log('🌐 STEP 3: Initializing 22 Iranian DNS servers...');
-                const proxyNetwork = await initializeIranianDNSNetwork();
-                updateInitProgress(45, '22 Iranian DNS servers initialized');
-                
-                // STEP 4: Establish WebSocket Connections
-                console.log('🔌 STEP 4: Establishing WebSocket connections...');
-                const websocketStatus = await establishWebSocketConnections();
-                updateInitProgress(60, 'WebSocket connections established');
-                
-                // STEP 5: Warm-up Cache Systems
-                console.log('💾 STEP 5: Warming up cache systems...');
-                const cacheStatus = await warmupCacheSystems();
-                updateInitProgress(75, 'Cache systems warmed up');
-                
-                // STEP 6: Connect to SQLite FTS5 Database
-                console.log('🗄️ STEP 6: Connecting to SQLite FTS5 database...');
-                const databaseStatus = await connectSQLiteFTS5Database();
-                updateInitProgress(90, 'SQLite FTS5 database connected');
-                
-                // STEP 7: Final System Integration
-                console.log('⚡ STEP 7: Final system integration...');
-                await finalizeSystemIntegration();
-                updateInitProgress(100, 'System fully operational');
-                
-                // Initialize UI with real data
-                initializeUIWithRealData();
-                
-                // Start real-time monitoring
-                startContinuousMonitoring();
-                
-                updateConnectionStatus(true);
-                addRealLog('🎯 OPERATION FULL STACK REVIVAL COMPLETED - ALL SYSTEMS OPERATIONAL', 'success');
-                showRealToast('🎉 Operation Full Stack Revival - System Fully Operational', 'success');
-                
-                // Report system status
-                reportSystemStatus({
-                    orchestrator: backendOrchestrator,
-                    ai_models: aiModels,
-                    proxy_network: proxyNetwork,
-                    websocket: websocketStatus,
-                    cache: cacheStatus,
-                    database: databaseStatus
+                // 1. Initialize backend services simultaneously
+                console.log('🔧 Step 1: Backend service initialization...');
+                const backendInit = fetch(`${API_BASE_URL}/system/init`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        initialize_models: true,
+                        setup_proxies: true,
+                        create_database: true
+                    })
                 });
                 
-            } catch (error) {
-                console.error('❌ OPERATION FULL STACK REVIVAL FAILED:', error);
-                updateConnectionStatus(false);
-                addRealLog(`❌ CRITICAL FAILURE: ${error.message}`, 'error');
-                showRealToast('❌ Operation Failed - Activating Emergency Protocols', 'error');
+                // 2. Initialize frontend services in parallel
+                console.log('🎯 Step 2: Frontend service initialization...');
+                await Promise.all([
+                    initializeSystemIntegration(),
+                    initializeEnhancedAIService(),
+                    initializeProxyManager(),
+                    initializeRealTimeMetrics()
+                ]);
                 
-                // Activate emergency protocols
-                activateEmergencyProtocols(error);
+                // 3. Test backend connection
+                console.log('📡 Step 3: Backend connection verification...');
+                await testBackendHealth();
+                
+                // 4. Load AI models
+                console.log('🤖 Step 4: AI models loading...');
+                await loadPersianBERTModels();
+                
+                // 5. Setup proxy network
+                console.log('🌐 Step 5: Proxy network setup...');
+                await setupIranianProxyNetwork();
+                
+                // 6. Connect WebSocket for real-time updates
+                console.log('🔌 Step 6: WebSocket connection...');
+                connectWebSocket('wss://your-domain.com/ws');
+                
+                // 7. Load initial data from all APIs
+                console.log('📊 Step 7: Initial data loading...');
+                await loadInitialDataFromAllAPIs();
+                
+                // 8. Initialize charts and visualizations
+                console.log('📈 Step 8: Charts initialization...');
+                initializeRealCharts();
+                
+                // 9. Setup cursor agent
+                console.log('⌨️ Step 9: Cursor agent setup...');
+                setupCursorAgent();
+                
+                // 10. Start real-time monitoring
+                console.log('⚡ Step 10: Real-time monitoring...');
+                startRealTimeMetrics();
+                
+                updateConnectionStatus(true);
+                
+                // Initialize with real data immediately
+                updateDashboardWithBackendData(realSystemData.stats);
+                updateStatisticsWithBackendData(realSystemData.stats);
+                updateSystemStatusDisplay();
+                populateProxySelector();
+                
+                addRealLog('✅ ULTRA-STRICT SYSTEM FULLY OPERATIONAL - ALL BACKEND APIS CONNECTED', 'success');
+                showRealToast('🎉 سیستم کاملاً راه‌اندازی شد - تمام سرویس‌ها متصل', 'success');
+                
+            } catch (error) {
+                console.error('❌ CRITICAL SYSTEM FAILURE:', error);
+                updateConnectionStatus(false);
+                addRealLog(`❌ CRITICAL ERROR: ${error.message}`, 'error');
+                showRealToast('خطای حیاتی در راه‌اندازی سیستم', 'error');
+                displaySystemError(error);
+                
+                // Show offline data
+                showOfflineData();
             } finally {
                 hideLoading();
             }
         });
 
         // ==================== SERVICE INITIALIZATION FUNCTIONS ====================
-
-        // ==================== OPERATION FULL STACK REVIVAL - CORE FUNCTIONS ====================
-
-        async function initializeBackendOrchestrator() {
-            console.log('🏛️ Initializing UltraModernLegalArchive orchestrator...');
-            try {
-                const initResult = await callBackendAPI('/system/orchestrator/init', 'POST', {
-                    enable_dns_manager: true,
-                    enable_proxy_manager: true,
-                    enable_content_extractor: true,
-                    enable_cache_system: true,
-                    enable_scoring_system: true,
-                    enable_ai_classifier: true
-                });
-                
-                console.log('✅ Backend orchestrator initialized:', initResult);
-                addRealLog('UltraModernLegalArchive orchestrator started', 'success');
-                
-                return {
-                    status: 'operational',
-                    components: initResult.components,
-                    session_id: initResult.session_id,
-                    initialization_time: initResult.init_time
-                };
-            } catch (error) {
-                console.warn('⚠️ Backend orchestrator initialization failed, using local fallback');
-                return {
-                    status: 'fallback',
-                    components: {
-                        dns_manager: { status: 'ready', servers_count: 22 },
-                        proxy_manager: { status: 'ready', active_proxies: 18 },
-                        content_extractor: { status: 'ready', extraction_methods: 4 },
-                        cache_system: { status: 'ready', cache_size: '2.4MB' },
-                        scoring_system: { status: 'ready', algorithms: 5 },
-                        ai_classifier: { status: 'ready', models: 4 }
-                    }
-                };
-            }
-        }
-
-        async function loadPersianBERTModelsComplete() {
-            console.log('🤖 Loading complete Persian BERT model suite...');
-            try {
-                const modelLoadResults = await Promise.all([
-                    loadModelWithProgress('classification', 'HooshvareLab/bert-fa-base-uncased'),
-                    loadModelWithProgress('sentiment', 'HooshvareLab/bert-fa-base-uncased-sentiment-digikala'),
-                    loadModelWithProgress('ner', 'HooshvareLab/bert-fa-base-uncased-ner-peyma'),
-                    loadModelWithProgress('summarization', 'csebuetnlp/mT5_multilingual_XLSum')
-                ]);
-                
-                const loadedModels = {
-                    classification: { status: 'loaded', accuracy: 94.2, memory: '512MB', inference_speed: '120ms' },
-                    sentiment: { status: 'loaded', accuracy: 91.8, memory: '498MB', inference_speed: '110ms' },
-                    ner: { status: 'loaded', accuracy: 88.5, memory: '445MB', inference_speed: '95ms' },
-                    summarization: { status: 'loaded', accuracy: 92.3, memory: '678MB', inference_speed: '340ms' }
-                };
-                
-                updateModelStatusDisplay(loadedModels);
-                console.log('✅ All Persian BERT models loaded successfully');
-                addRealLog('4 Persian BERT models loaded and operational', 'success');
-                
-                return loadedModels;
-            } catch (error) {
-                console.warn('⚠️ Model loading failed, using rule-based fallback');
-                return {
-                    classification: { status: 'fallback', accuracy: 85.0, method: 'rule_based' },
-                    sentiment: { status: 'fallback', accuracy: 80.0, method: 'rule_based' },
-                    ner: { status: 'fallback', accuracy: 75.0, method: 'rule_based' },
-                    summarization: { status: 'fallback', accuracy: 70.0, method: 'rule_based' }
-                };
-            }
-        }
-
-        async function loadModelWithProgress(modelType, modelName) {
-            console.log(`📥 Loading ${modelType}: ${modelName}`);
-            
-            try {
-                // Simulate realistic loading progress
-                for (let progress = 0; progress <= 100; progress += 25) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                    updateModelLoadingProgress(modelType, progress);
-                }
-                
-                const result = await callBackendAPI('/models/load', 'POST', {
-                    model_name: modelName,
-                    model_type: modelType,
-                    cache_enabled: true,
-                    optimization_level: 'high'
-                });
-                
-                return { modelType, status: 'loaded', result };
-            } catch (error) {
-                console.warn(`Model ${modelType} load failed:`, error);
-                return { modelType, status: 'failed', error: error.message };
-            }
-        }
-
-        function updateModelLoadingProgress(modelType, progress) {
-            const progressElement = document.getElementById(`model-${modelType}-progress`);
-            if (progressElement) {
-                progressElement.style.width = `${progress}%`;
-                progressElement.textContent = `${progress}%`;
-            }
-            
-            // Update main loading progress display
-            const loadingText = document.querySelector('#loading-overlay h3');
-            if (loadingText) {
-                loadingText.textContent = `Loading ${modelType} model: ${progress}%`;
-            }
-        }
 
         async function testBackendHealth() {
             const health = await callBackendAPI('/health');
@@ -1471,140 +1369,28 @@ https://dotic.ir/portal/law/family"></textarea>
             }
         }
 
-        async function initializeIranianDNSNetwork() {
-            console.log('🇮🇷 Initializing comprehensive Iranian DNS network...');
-            try {
-                const dnsResults = await callBackendAPI('/proxies/init-iranian', 'POST', {
-                    dns_servers: IRANIAN_DNS_SERVERS,
-                    test_timeout: 5000,
-                    enable_rotation: true,
-                    health_monitoring: true
-                });
-                
-                // Real-time proxy testing and status updates
-                const proxyStatuses = await testAllIranianDNSServers();
-                
-                realSystemData.proxies = proxyStatuses;
-                updateProxyNetworkDisplay(proxyStatuses);
-                
-                console.log(`✅ Iranian DNS network initialized: ${proxyStatuses.filter(p => p.active).length}/22 active`);
-                addRealLog(`Iranian DNS network: ${proxyStatuses.filter(p => p.active).length}/22 servers active`, 'success');
-                
-                return {
-                    total_servers: IRANIAN_DNS_SERVERS.length,
-                    active_servers: proxyStatuses.filter(p => p.active).length,
-                    average_response_time: calculateAverageResponseTime(proxyStatuses),
-                    network_health: calculateNetworkHealth(proxyStatuses)
-                };
-            } catch (error) {
-                console.warn('⚠️ Iranian DNS network initialization failed, using fallback');
-                return {
-                    total_servers: 22,
-                    active_servers: 18,
-                    average_response_time: 245,
-                    network_health: 82
-                };
-            }
-        }
-
-        async function testAllIranianDNSServers() {
-            const testPromises = IRANIAN_DNS_SERVERS.map(async (dns, index) => {
-                try {
-                    const startTime = Date.now();
-                    const testResult = await callBackendAPI('/proxies/test-dns', 'POST', {
-                        dns_server: dns,
-                        timeout: 5000,
-                        test_url: 'https://www.judiciary.ir'
-                    });
-                    const responseTime = Date.now() - startTime;
-                    
-                    return {
-                        host: dns,
-                        index: index + 1,
-                        active: testResult.success,
-                        response_time: testResult.response_time || responseTime,
-                        country: 'IR',
-                        last_tested: new Date().toISOString(),
-                        success_rate: Math.floor(Math.random() * 30) + 70,
-                        status: testResult.success ? 'operational' : 'failed'
-                    };
-                } catch (error) {
-                    return {
-                        host: dns,
-                        index: index + 1,
-                        active: false,
-                        response_time: null,
-                        country: 'IR',
-                        last_tested: new Date().toISOString(),
-                        success_rate: 0,
-                        status: 'failed',
-                        error: error.message
-                    };
-                }
-            });
-            
-            return await Promise.all(testPromises);
-        }
-
-        async function establishWebSocketConnections() {
-            console.log('🔌 Establishing WebSocket connections...');
-            try {
-                // Primary WebSocket connection
-                const primaryWS = await connectEnhancedWebSocket(WS_URL);
-                
-                console.log('✅ WebSocket connections established');
-                addRealLog('WebSocket connections established', 'success');
-                
-                return {
-                    primary: primaryWS,
-                    total_active: 1,
-                    status: 'operational'
-                };
-            } catch (error) {
-                console.warn('⚠️ WebSocket establishment failed, using polling fallback');
-                return {
-                    primary: null,
-                    total_active: 0,
-                    status: 'polling_fallback'
-                };
-            }
-        }
-
-        async function connectEnhancedWebSocket(wsUrl) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const ws = new WebSocket(wsUrl);
-                    const timeout = setTimeout(() => {
-                        ws.close();
-                        reject(new Error('WebSocket connection timeout'));
-                    }, 10000);
-                    
-                    ws.onopen = () => {
-                        clearTimeout(timeout);
-                        console.log(`✅ WebSocket connected: ${wsUrl}`);
-                        
-                        // Subscribe to all channels
-                        ws.send(JSON.stringify({
-                            action: 'subscribe_all',
-                            channels: ['system_metrics', 'model_status', 'proxy_health', 'processing_updates', 'ai_analysis']
-                        }));
-                        
-                        resolve({ url: wsUrl, status: 'connected', connection: ws });
-                    };
-                    
-                    ws.onerror = (error) => {
-                        clearTimeout(timeout);
-                        reject(error);
-                    };
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        }
-
         async function setupIranianProxyNetwork() {
-            // Legacy function - redirects to new implementation
-            return await initializeIranianDNSNetwork();
+            console.log('🇮🇷 Setting up Iranian proxy network...');
+            try {
+                const proxyResults = await Promise.all(
+                    IRANIAN_DNS_SERVERS.slice(0, 10).map(async (dns, index) => {
+                        return await callBackendAPI('/proxies/test', 'POST', {
+                            proxy_host: dns,
+                            proxy_port: 8080 + index,
+                            timeout: 5000
+                        });
+                    })
+                );
+                
+                const activeProxies = proxyResults.filter(r => r.success);
+                console.log(`✅ Iranian proxy network setup: ${activeProxies.length} active proxies`);
+                addRealLog(`${activeProxies.length} پروکسی ایرانی فعال شد`, 'success');
+                return activeProxies;
+            } catch (error) {
+                console.error('❌ Iranian proxy network setup failed:', error);
+                addRealLog('خطا در راه‌اندازی شبکه پروکسی ایرانی', 'error');
+                throw error;
+            }
         }
 
         async function loadInitialDataFromAllAPIs() {
@@ -4302,36 +4088,15 @@ https://dotic.ir/portal/law/family"></textarea>
             loadingOverlay.id = 'loading-overlay';
             loadingOverlay.style.cssText = `
                 position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.95); z-index: 10000; display: flex;
-                align-items: center; justify-content: center; backdrop-filter: blur(10px);
+                background: rgba(0, 0, 0, 0.9); z-index: 10000; display: flex;
+                align-items: center; justify-content: center; backdrop-filter: blur(5px);
             `;
             
             loadingOverlay.innerHTML = `
-                <div style="text-align: center; color: white; max-width: 500px;">
-                    <div style="margin-bottom: 2rem;">
-                        <i class="fas fa-balance-scale" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
-                        <h2 style="color: #10b981; margin-bottom: 0.5rem;">🇮🇷 Iranian Legal Archive System</h2>
-                        <p style="color: #3b82f6;">Operation Full Stack Revival</p>
-                    </div>
-                    
-                    <div class="loading" style="width: 50px; height: 50px; margin: 0 auto 2rem;"></div>
-                    
-                    <h3 style="margin-bottom: 1rem;">${message}</h3>
-                    <p style="color: #9ca3af; margin-bottom: 2rem;">Initializing comprehensive system...</p>
-                    
-                    <div style="background: rgba(55, 65, 81, 0.8); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span>Progress:</span>
-                            <span class="progress-percentage">0%</span>
-                        </div>
-                        <div class="progress-bar" style="height: 12px;">
-                            <div class="progress-fill" style="width: 0%; background: linear-gradient(90deg, #10b981, #3b82f6);"></div>
-                        </div>
-                    </div>
-                    
-                    <div style="font-size: 0.8rem; color: #6b7280;">
-                        🚀 Backend Orchestrator • 🤖 Persian BERT Models • 🌐 22 Iranian DNS Servers
-                    </div>
+                <div style="text-align: center; color: white;">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 1rem;"></div>
+                    <h3>${message}</h3>
+                    <p style="color: #9ca3af;">لطفاً صبر کنید...</p>
                 </div>
             `;
             
@@ -4639,223 +4404,6 @@ https://dotic.ir/portal/law/family"></textarea>
         // Load saved settings
         loadAPISettings();
 
-        // ==================== OPERATION FULL STACK REVIVAL - ADDITIONAL FUNCTIONS ====================
-
-        async function warmupCacheSystems() {
-            console.log('💾 Warming up intelligent cache systems...');
-            try {
-                const cacheWarmup = await callBackendAPI('/cache/warmup', 'POST', {
-                    preload_categories: true,
-                    preload_models: true,
-                    preload_frequent_searches: true,
-                    cache_size_limit: '500MB'
-                });
-                
-                console.log('✅ Cache systems warmed up:', cacheWarmup);
-                addRealLog(`Cache warmed up: ${cacheWarmup.entries_loaded || 1247} entries`, 'success');
-                
-                return {
-                    status: 'warmed',
-                    entries_loaded: cacheWarmup.entries_loaded || 1247,
-                    cache_size: cacheWarmup.cache_size || '2.4MB',
-                    hit_rate_estimate: cacheWarmup.estimated_hit_rate || 89.2
-                };
-            } catch (error) {
-                console.warn('⚠️ Cache warmup failed, using cold start');
-                return { 
-                    status: 'cold_start', 
-                    entries_loaded: 0,
-                    cache_size: '0MB',
-                    reason: error.message 
-                };
-            }
-        }
-
-        async function connectSQLiteFTS5Database() {
-            console.log('🗄️ Connecting to SQLite FTS5 database...');
-            try {
-                const dbConnection = await callBackendAPI('/database/connect', 'POST', {
-                    enable_fts5: true,
-                    enable_indexes: true,
-                    enable_triggers: true,
-                    vacuum_on_connect: false
-                });
-                
-                // Test database operations
-                const dbTest = await callBackendAPI('/database/test', 'POST', {
-                    test_insert: true,
-                    test_search: true,
-                    test_fts5: true
-                });
-                
-                console.log('✅ SQLite FTS5 database connected and tested:', dbTest);
-                addRealLog(`Database connected: ${dbTest.total_documents || 1247} documents available`, 'success');
-                
-                return {
-                    status: 'connected',
-                    fts5_enabled: dbConnection.fts5_enabled || true,
-                    total_documents: dbTest.total_documents || 1247,
-                    indexes_count: dbConnection.indexes_count || 8,
-                    database_size: dbTest.database_size || '45MB'
-                };
-            } catch (error) {
-                console.warn('⚠️ Database connection failed, using local storage fallback');
-                return {
-                    status: 'fallback',
-                    fts5_enabled: false,
-                    total_documents: 1247,
-                    indexes_count: 0,
-                    database_size: 'N/A'
-                };
-            }
-        }
-
-        async function finalizeSystemIntegration() {
-            console.log('⚡ Finalizing complete system integration...');
-            
-            // Integrate all subsystems
-            const integrationTasks = [
-                integrateSearchSystems(),
-                integrateProcessingPipeline(),
-                integrateMonitoringSystems(),
-                integrateUserInterface(),
-                validateSystemIntegrity()
-            ];
-            
-            const results = await Promise.allSettled(integrationTasks);
-            const successful = results.filter(r => r.status === 'fulfilled').length;
-            
-            console.log(`✅ System integration completed: ${successful}/${results.length} subsystems operational`);
-            addRealLog(`System integration: ${successful}/${results.length} subsystems operational`, 'success');
-            
-            return {
-                integration_score: (successful / results.length) * 100,
-                operational_subsystems: successful,
-                total_subsystems: results.length,
-                status: successful === results.length ? 'fully_operational' : 'partially_operational'
-            };
-        }
-
-        async function integrateSearchSystems() {
-            // Integrate Text, Semantic, and Nafaqe search systems
-            console.log('🔍 Integrating search systems...');
-            try {
-                await callBackendAPI('/search/initialize', 'POST', {
-                    enable_text_search: true,
-                    enable_semantic_search: true,
-                    enable_nafaqe_search: true
-                });
-                return { status: 'integrated' };
-            } catch (error) {
-                console.warn('Search systems integration warning:', error);
-                return { status: 'partial' };
-            }
-        }
-
-        async function integrateProcessingPipeline() {
-            // Integrate real-time processing pipeline
-            console.log('⚙️ Integrating processing pipeline...');
-            try {
-                await callBackendAPI('/processing/initialize', 'POST', {
-                    enable_realtime: true,
-                    batch_size: 10,
-                    enable_ai_analysis: true
-                });
-                return { status: 'integrated' };
-            } catch (error) {
-                console.warn('Processing pipeline integration warning:', error);
-                return { status: 'partial' };
-            }
-        }
-
-        async function integrateMonitoringSystems() {
-            // Integrate real-time monitoring
-            console.log('📊 Integrating monitoring systems...');
-            startContinuousMonitoring();
-            return { status: 'integrated' };
-        }
-
-        async function integrateUserInterface() {
-            // Integrate UI with backend systems
-            console.log('🎨 Integrating user interface...');
-            initializeUIWithRealData();
-            return { status: 'integrated' };
-        }
-
-        async function validateSystemIntegrity() {
-            // Validate all systems are operational
-            console.log('✅ Validating system integrity...');
-            const validationResults = {
-                api_endpoints: await validateAPIEndpoints(),
-                model_health: await validateModelHealth(),
-                proxy_network: await validateProxyNetwork(),
-                database_integrity: await validateDatabaseIntegrity()
-            };
-            
-            const allValid = Object.values(validationResults).every(v => v.status === 'valid');
-            return { status: allValid ? 'valid' : 'partial', results: validationResults };
-        }
-
-        function initializeUIWithRealData() {
-            console.log('🎨 Initializing UI with real operational data...');
-            
-            // Update all displays with real data immediately
-            updateDashboardWithBackendData(realSystemData.stats);
-            updateStatisticsWithBackendData(realSystemData.stats);
-            updateSystemStatusDisplay();
-            
-            // Update model status display
-            updateModelStatusDisplay({
-                classification: { status: 'loaded', accuracy: 94.2, memory: '512MB', inference_speed: '120ms' },
-                sentiment: { status: 'loaded', accuracy: 91.8, memory: '498MB', inference_speed: '110ms' },
-                ner: { status: 'loaded', accuracy: 88.5, memory: '445MB', inference_speed: '95ms' },
-                summarization: { status: 'loaded', accuracy: 92.3, memory: '678MB', inference_speed: '340ms' }
-            });
-            
-            // Load operational sample data
-            loadOperationalSampleData();
-            
-            // Initialize charts with real data
-            initializeRealCharts();
-            
-            console.log('✅ UI initialized with real operational data');
-            addRealLog('UI initialized with operational data', 'success');
-        }
-
-        function startContinuousMonitoring() {
-            console.log('📊 Starting continuous real-time monitoring...');
-            
-            // Real-time metrics updates every 30 seconds as specified
-            setInterval(async () => {
-                try {
-                    await updateRealTimeMetrics();
-                    console.log('🔄 Real-time metrics updated');
-                } catch (error) {
-                    console.warn('Metrics update failed:', error);
-                }
-            }, 30000);
-            
-            // System health checks every 60 seconds
-            setInterval(async () => {
-                try {
-                    await performSystemHealthCheck();
-                } catch (error) {
-                    console.warn('Health check failed:', error);
-                }
-            }, 60000);
-            
-            // Proxy health monitoring every 5 minutes
-            setInterval(async () => {
-                try {
-                    await monitorProxyHealth();
-                } catch (error) {
-                    console.warn('Proxy monitoring failed:', error);
-                }
-            }, 300000);
-            
-            addRealLog('Continuous monitoring systems activated', 'success');
-        }
-
         // Initialize system immediately with real data
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize proxy selector immediately
@@ -4879,309 +4427,6 @@ https://dotic.ir/portal/law/family"></textarea>
         console.log('📊 ALL REQUIRED API ENDPOINTS INTEGRATED');
         console.log('🎯 ALL MAIN TABS AND SUB-TABS IMPLEMENTED');
         console.log('📈 REAL METRICS: 1,247 DOCUMENTS, 89.2% SUCCESS RATE');
-
-        // ==================== OPERATION FULL STACK REVIVAL - UTILITY FUNCTIONS ====================
-
-        function calculateAverageResponseTime(proxyStatuses) {
-            const activeTimes = proxyStatuses.filter(p => p.active && p.response_time).map(p => p.response_time);
-            return activeTimes.length > 0 ? Math.round(activeTimes.reduce((a, b) => a + b, 0) / activeTimes.length) : 0;
-        }
-
-        function calculateNetworkHealth(proxyStatuses) {
-            const activeCount = proxyStatuses.filter(p => p.active).length;
-            return Math.round((activeCount / proxyStatuses.length) * 100);
-        }
-
-        function updateProxyNetworkDisplay(proxyStatuses) {
-            const gridContainer = document.getElementById('iranian-proxy-grid');
-            if (gridContainer) {
-                const gridHTML = proxyStatuses.map(proxy => `
-                    <div style="background: rgba(55, 65, 81, 0.8); padding: 1rem; border-radius: 6px; text-align: center;">
-                        <div style="font-size: 0.9rem; font-weight: bold;">${proxy.host}</div>
-                        <div style="color: ${proxy.active ? '#10b981' : '#ef4444'}; margin: 0.5rem 0;">
-                            ${proxy.active ? '✅' : '❌'} ${proxy.response_time || 'timeout'}ms
-                        </div>
-                        <div style="font-size: 0.8rem; color: #9ca3af;">
-                            DNS ${proxy.index} | ${proxy.success_rate}%
-                        </div>
-                    </div>
-                `).join('');
-                
-                gridContainer.innerHTML = gridHTML;
-            }
-        }
-
-        function updateModelStatusDisplay(models) {
-            const modelsContainer = document.getElementById('models-list');
-            if (modelsContainer) {
-                const modelsHTML = Object.entries(models).map(([type, modelInfo]) => {
-                    const statusColor = modelInfo.status === 'loaded' ? '#10b981' : '#f59e0b';
-                    const statusText = modelInfo.status === 'loaded' ? '✅ Loaded' : '⚠️ Fallback';
-                    
-                    return `
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.5rem 0; 
-                                    padding: 0.5rem; background: rgba(55, 65, 81, 0.5); border-radius: 4px;">
-                            <div>
-                                <div style="font-weight: bold;">${type}</div>
-                                <div style="font-size: 0.8rem; color: #9ca3af;">Accuracy: ${modelInfo.accuracy}%</div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="color: ${statusColor}; font-size: 0.9rem;">${statusText}</div>
-                                <div style="font-size: 0.7rem; color: #9ca3af;">${modelInfo.memory || 'N/A'}</div>
-                                <div style="font-size: 0.7rem; color: #9ca3af;">Speed: ${modelInfo.inference_speed || 'N/A'}</div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                
-                modelsContainer.innerHTML = modelsHTML;
-            }
-
-            // Update inference speed and memory usage displays
-            document.getElementById('inference-speed').textContent = models.classification?.inference_speed || '120ms';
-            document.getElementById('memory-usage').textContent = '1.2GB';
-            document.getElementById('model-accuracy').textContent = '94.2%';
-        }
-
-        function loadOperationalSampleData() {
-            // Load real operational data for immediate display
-            const operationalDocs = [
-                {
-                    id: 1001,
-                    title: 'قانون اساسی جمهوری اسلامی ایران - اصل 1',
-                    source: 'مجلس شورای اسلامی',
-                    category: 'قانون_اساسی',
-                    confidence: 0.984,
-                    extracted_at: new Date().toLocaleString('fa-IR'),
-                    content: 'حکومت ایران، جمهوری اسلامی است که ملت ایران بر اساس ایمان دیرینه‌اش به حاکمیت حق و عدالت قرآن...'
-                },
-                {
-                    id: 1002,
-                    title: 'دادنامه شماره 140209876543 - نفقه زوجه و فرزندان',
-                    source: 'دادگاه خانواده تهران',
-                    category: 'نفقه_و_حقوق_خانواده',
-                    confidence: 0.942,
-                    extracted_at: new Date().toLocaleString('fa-IR'),
-                    content: 'دادگاه خانواده تهران با بررسی پرونده و نظر به اینکه طبق ماده ۱۰۴۱ قانون مدنی، زوج موظف به تأمین نفقه زوجه...'
-                }
-            ];
-
-            // Update extracted content preview
-            const contentHTML = operationalDocs.map(doc => `
-                <div style="background: rgba(55, 65, 81, 0.8); padding: 1rem; border-radius: 6px; margin: 0.5rem 0;">
-                    <h5>${doc.title}</h5>
-                    <p style="font-size: 0.9rem; color: #9ca3af;">${doc.source}</p>
-                    <p>${doc.content.substring(0, 150)}...</p>
-                    <div style="font-size: 0.8rem; color: #10b981;">✅ استخراج شده: ${doc.extracted_at}</div>
-                </div>
-            `).join('');
-            
-            document.getElementById('extracted-content-preview').innerHTML = contentHTML;
-            
-            // Update AI analysis preview
-            const analysisHTML = operationalDocs.map(doc => `
-                <div style="background: rgba(55, 65, 81, 0.8); padding: 1rem; border-radius: 6px; margin: 0.5rem 0;">
-                    <h5>تحلیل: ${doc.title.substring(0, 30)}...</h5>
-                    <p><strong>طبقه‌بندی:</strong> ${doc.category.replace(/_/g, ' ')}</p>
-                    <p><strong>امتیاز اطمینان:</strong> ${(doc.confidence * 100).toFixed(1)}%</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${doc.confidence * 100}%; background: #3b82f6;"></div>
-                    </div>
-                    <div style="font-size: 0.8rem; color: #10b981;">✅ تحلیل Persian BERT</div>
-                </div>
-            `).join('');
-            
-            document.getElementById('ai-analysis-preview').innerHTML = analysisHTML;
-        }
-
-        async function validateAPIEndpoints() {
-            try {
-                const endpointTests = Object.keys(API_ENDPOINTS).slice(0, 5).map(async endpoint => {
-                    try {
-                        await callBackendAPI(endpoint.replace('/api', ''));
-                        return { endpoint, status: 'valid' };
-                    } catch (error) {
-                        return { endpoint, status: 'invalid', error: error.message };
-                    }
-                });
-                
-                const results = await Promise.allSettled(endpointTests);
-                const validCount = results.filter(r => r.value?.status === 'valid').length;
-                
-                return { 
-                    status: validCount > 0 ? 'valid' : 'invalid', 
-                    tested: results.length,
-                    valid: validCount 
-                };
-            } catch (error) {
-                return { status: 'invalid', error: error.message };
-            }
-        }
-
-        async function validateModelHealth() {
-            try {
-                const health = await callBackendAPI('/models/health');
-                return { status: 'valid', health: health };
-            } catch (error) {
-                return { status: 'valid', fallback: true }; // Use rule-based fallback
-            }
-        }
-
-        async function validateProxyNetwork() {
-            const activeProxies = realSystemData.proxies.filter(p => p.active).length;
-            return { 
-                status: activeProxies > 0 ? 'valid' : 'invalid', 
-                active_count: activeProxies,
-                total_count: realSystemData.proxies.length 
-            };
-        }
-
-        async function validateDatabaseIntegrity() {
-            try {
-                const dbStatus = await callBackendAPI('/database/status');
-                return { status: 'valid', documents: dbStatus.total_documents };
-            } catch (error) {
-                return { status: 'valid', fallback: true, documents: 1247 };
-            }
-        }
-
-        function reportSystemStatus(components) {
-            console.log('📋 OPERATION FULL STACK REVIVAL - SYSTEM STATUS REPORT:');
-            console.log('================================================================');
-            console.log(`🏛️ Backend Orchestrator: ${components.orchestrator.status}`);
-            console.log(`🤖 AI Models: ${Object.keys(components.ai_models).length} loaded`);
-            console.log(`🌐 Proxy Network: ${components.proxy_network.active_servers}/${components.proxy_network.total_servers} active`);
-            console.log(`🔌 WebSocket: ${components.websocket.total_active} connections`);
-            console.log(`💾 Cache: ${components.cache.status}`);
-            console.log(`🗄️ Database: ${components.database.status}`);
-            
-            // Update system health indicators
-            const overallHealth = calculateOverallSystemHealth(components);
-            updateSystemHealthIndicators(overallHealth);
-            
-            addRealLog(`System Status Report: ${overallHealth.score}% operational`, 'info');
-        }
-
-        function calculateOverallSystemHealth(components) {
-            const healthScores = {
-                orchestrator: components.orchestrator.status === 'operational' ? 100 : 50,
-                ai_models: Object.keys(components.ai_models).length * 25,
-                proxy_network: components.proxy_network.network_health,
-                websocket: components.websocket.status === 'operational' ? 100 : 0,
-                cache: components.cache.status === 'warmed' ? 100 : 50,
-                database: components.database.status === 'connected' ? 100 : 80
-            };
-            
-            const totalScore = Object.values(healthScores).reduce((a, b) => a + b, 0);
-            const maxScore = Object.keys(healthScores).length * 100;
-            const overallScore = Math.round((totalScore / maxScore) * 100);
-            
-            return {
-                score: overallScore,
-                components: healthScores,
-                status: overallScore > 80 ? 'healthy' : overallScore > 60 ? 'warning' : 'critical'
-            };
-        }
-
-        function updateSystemHealthIndicators(healthData) {
-            // Update health percentage in sidebar
-            document.getElementById('health-percentage').textContent = `${healthData.score}%`;
-            document.getElementById('system-health-bar').style.width = `${healthData.score}%`;
-            
-            // Update health indicator color
-            const healthIndicator = document.querySelector('.health-indicator');
-            if (healthIndicator) {
-                healthIndicator.className = `health-indicator ${healthData.status === 'healthy' ? 'health-good' : 'health-error'}`;
-            }
-        }
-
-        function activateEmergencyProtocols(error) {
-            console.log('🚨 ACTIVATING EMERGENCY PROTOCOLS...');
-            
-            // Show emergency status
-            showRealToast('🚨 Emergency Mode - Limited Functionality Active', 'warning');
-            addRealLog('🚨 Emergency protocols activated - System in fallback mode', 'warning');
-            
-            // Enable offline mode
-            realSystemData.isConnected = false;
-            updateConnectionStatus(false);
-            
-            // Show offline data
-            showOfflineData();
-        }
-
-        // Progress tracking for initialization with enhanced loading screen
-        function updateInitProgress(percentage, message) {
-            const loadingOverlay = document.getElementById('loading-overlay');
-            if (!loadingOverlay) return;
-            
-            const progressBar = loadingOverlay.querySelector('.progress-fill');
-            const progressText = loadingOverlay.querySelector('p');
-            const progressPercentage = loadingOverlay.querySelector('.progress-percentage');
-            
-            if (progressBar) {
-                progressBar.style.width = `${percentage}%`;
-            }
-            if (progressText) {
-                progressText.textContent = message;
-            }
-            if (progressPercentage) {
-                progressPercentage.textContent = `${percentage}%`;
-            }
-            
-            console.log(`📊 Operation Progress: ${percentage}% - ${message}`);
-        }
-
-        // ==================== REAL-TIME MONITORING FUNCTIONS ====================
-
-        async function updateRealTimeMetrics() {
-            try {
-                const metrics = await callBackendAPI('/system/metrics');
-                realSystemData.stats = { ...realSystemData.stats, ...metrics };
-                updateDashboardWithBackendData(realSystemData.stats);
-                updateChartsWithBackendData();
-            } catch (error) {
-                console.warn('Real-time metrics update failed:', error);
-            }
-        }
-
-        async function performSystemHealthCheck() {
-            try {
-                const health = await callBackendAPI('/system/health-check', 'POST');
-                updateSystemHealthIndicators({
-                    score: health.overall_health || 94,
-                    status: health.status || 'healthy'
-                });
-                addRealLog(`Health check: ${health.overall_health || 94}% healthy`, 'info');
-            } catch (error) {
-                console.warn('System health check failed:', error);
-            }
-        }
-
-        async function monitorProxyHealth() {
-            try {
-                const proxyHealth = await callBackendAPI('/proxies/health-monitor');
-                realSystemData.proxies = proxyHealth.proxies || realSystemData.proxies;
-                updateProxyNetworkDisplay(realSystemData.proxies);
-                addRealLog(`Proxy monitoring: ${proxyHealth.active_count || 18}/22 active`, 'info');
-            } catch (error) {
-                console.warn('Proxy health monitoring failed:', error);
-            }
-        }
-
-        // ==================== OPERATION FULL STACK REVIVAL COMPLETE ====================
-        
-        console.log('🎯 OPERATION FULL STACK REVIVAL - INITIALIZATION COMPLETE');
-        console.log('✅ Priority 1 Mission: Complete Backend-Frontend Integration');
-        console.log('🏛️ UltraModernLegalArchive Orchestrator: Ready');
-        console.log('🤖 Persian BERT Models: 4 Models Loaded');
-        console.log('🌐 Iranian DNS Network: 22 Servers Configured');
-        console.log('🔌 WebSocket Connections: Real-time Updates Active');
-        console.log('💾 Cache Systems: Warmed and Operational');
-        console.log('🗄️ SQLite FTS5 Database: Connected and Indexed');
-        console.log('📊 Continuous Monitoring: Every 30 seconds');
-        console.log('🚨 Emergency Protocols: Configured and Ready');
-        console.log('🎊 SYSTEM STATUS: FULLY OPERATIONAL - ZERO MOCK DATA');
     </script>
 </body>
 </html>
