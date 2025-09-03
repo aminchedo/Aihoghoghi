@@ -1853,12 +1853,12 @@
     <div id="toast-container" style="position: fixed; top: 20px; left: 20px; z-index: 3000;"></div>
 
     <script>
-        // COMPREHENSIVE REAL SYSTEM - ALL FUNCTIONALITY IMPLEMENTED
+        // REAL BACKEND API INTEGRATION - NO MOCK DATA
         class RealLegalArchiveSystem {
             constructor() {
                 this.config = {
-                    apiBaseUrl: 'http://127.0.0.1:7860/api',
-                    wsUrl: 'ws://127.0.0.1:7860/ws',
+                    apiBaseUrl: 'http://127.0.0.1:8000/api',  // Real backend server
+                    wsUrl: 'ws://127.0.0.1:8000/ws/updates',
                     version: '3.0.0',
                     maxConcurrentRequests: 5,
                     requestTimeout: 30000,
@@ -1870,28 +1870,201 @@
                     currentSubSection: 'overview',
                     isProcessing: false,
                     isScraping: false,
-                    documents: new Map(),
-                    proxies: new Map(),
+                    documents: [],
+                    proxies: [],
                     searchResults: [],
                     logs: [],
                     settings: this.loadSettings(),
                     websocket: null,
                     charts: {},
-                    realTimeData: {
-                        totalOps: 0,
-                        successOps: 0,
-                        totalDocs: 0,
-                        activePx: 0,
-                        queueLength: 0,
-                        apiHealth: 95,
-                        cpuUsage: 45,
-                        memoryUsage: 67,
-                        activeConnections: 23
-                    }
+                    realTimeData: {}
                 };
                 
                 this.init();
             }
+
+            async init() {
+                try {
+                    console.log('🚀 Connecting to REAL backend APIs...');
+                    await this.testBackendConnection();
+                    await this.initializeUI();
+                    await this.initializeCharts();
+                    await this.connectWebSocket();
+                    await this.loadAllDataFromBackend();
+                    this.startRealTimeUpdates();
+                    this.showToast('سیستم به بک‌اند واقعی متصل شد', 'success');
+                } catch (error) {
+                    console.error('Backend connection failed:', error);
+                    this.showToast('خطا در اتصال به بک‌اند', 'error');
+                    this.fallbackToOfflineMode();
+                }
+            }
+
+            async testBackendConnection() {
+                try {
+                    const response = await fetch(`${this.config.apiBaseUrl}/health`);
+                    if (!response.ok) throw new Error('API health check failed');
+                    const health = await response.json();
+                    console.log('✅ Backend connection verified:', health);
+                    return health;
+                } catch (error) {
+                    console.error('❌ Backend connection failed:', error);
+                    throw error;
+                }
+            }
+
+            async loadAllDataFromBackend() {
+                try {
+                    // Load real statistics from backend
+                    await this.loadRealStats();
+                    
+                    // Load real documents
+                    await this.loadRealDocuments();
+                    
+                    // Load real categories
+                    await this.loadRealCategories();
+                    
+                    // Test real proxies
+                    await this.loadRealProxies();
+                    
+                    console.log('✅ All data loaded from real backend');
+                } catch (error) {
+                    console.error('❌ Failed to load backend data:', error);
+                    throw error;
+                }
+            }
+
+            async loadRealStats() {
+                try {
+                    const response = await fetch(`${this.config.apiBaseUrl}/stats`);
+                    if (!response.ok) throw new Error('Failed to fetch stats');
+                    
+                    const stats = await response.json();
+                    this.state.realTimeData = stats;
+                    this.updateDashboardWithRealData(stats);
+                    
+                    console.log('📊 Real stats loaded:', stats);
+                } catch (error) {
+                    console.error('❌ Stats loading failed:', error);
+                    throw error;
+                }
+            }
+
+            async loadRealDocuments() {
+                try {
+                    // Use search endpoint to get all documents
+                    const response = await fetch(`${this.config.apiBaseUrl}/search`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            query: '',
+                            search_type: 'text',
+                            limit: 100
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to fetch documents');
+                    
+                    const result = await response.json();
+                    this.state.documents = result.results || [];
+                    this.updateDocumentDisplays();
+                    
+                    console.log('📄 Real documents loaded:', this.state.documents.length);
+                } catch (error) {
+                    console.error('❌ Document loading failed:', error);
+                    throw error;
+                }
+            }
+
+            async loadRealCategories() {
+                try {
+                    const response = await fetch(`${this.config.apiBaseUrl}/categories`);
+                    if (!response.ok) throw new Error('Failed to fetch categories');
+                    
+                    const result = await response.json();
+                    this.state.categories = result.categories || [];
+                    
+                    console.log('📂 Real categories loaded:', this.state.categories.length);
+                } catch (error) {
+                    console.error('❌ Category loading failed:', error);
+                }
+            }
+
+            async loadRealProxies() {
+                try {
+                    const response = await fetch(`${this.config.apiBaseUrl}/proxy/test`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ test_all: true })
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to test proxies');
+                    
+                    const result = await response.json();
+                    this.state.proxies = result.proxies || [];
+                    this.updateProxyDisplays();
+                    
+                    console.log('🌐 Real proxies tested:', this.state.proxies.length);
+                } catch (error) {
+                    console.error('❌ Proxy testing failed:', error);
+                }
+            }
+
+            async connectWebSocket() {
+                try {
+                    this.state.websocket = new WebSocket(this.config.wsUrl);
+                    
+                    this.state.websocket.onopen = () => {
+                        console.log('🔌 WebSocket connected to real backend');
+                        this.updateSystemStatus('online');
+                    };
+                    
+                    this.state.websocket.onmessage = (event) => {
+                        const data = JSON.parse(event.data);
+                        this.handleRealTimeUpdate(data);
+                    };
+                    
+                    this.state.websocket.onerror = (error) => {
+                        console.error('❌ WebSocket error:', error);
+                        this.updateSystemStatus('offline');
+                    };
+                    
+                    this.state.websocket.onclose = () => {
+                        console.log('🔌 WebSocket disconnected');
+                        this.updateSystemStatus('offline');
+                        // Attempt to reconnect
+                        setTimeout(() => this.connectWebSocket(), 5000);
+                    };
+                    
+                } catch (error) {
+                    console.error('❌ WebSocket connection failed:', error);
+                    this.updateSystemStatus('offline');
+                }
+            }
+
+            handleRealTimeUpdate(data) {
+                if (data.type === 'stats_update') {
+                    this.state.realTimeData = data.data;
+                    this.updateAllDisplays();
+                    this.updateCharts();
+                    console.log('📊 Real-time stats updated from backend');
+                }
+            }
+
+            updateSystemStatus(status) {
+                const statusElement = document.getElementById('system-status');
+                const healthIndicator = document.querySelector('.health-indicator');
+                
+                if (statusElement) {
+                    statusElement.textContent = status === 'online' ? 'آنلاین' : 'آفلاین';
+                    statusElement.className = status === 'online' ? 'status-online' : 'status-offline';
+                }
+                
+                if (healthIndicator) {
+                    healthIndicator.className = `health-indicator ${status === 'online' ? 'health-good' : 'health-error'}`;
+                }
+            }
+        }
 
             async init() {
                 try {
