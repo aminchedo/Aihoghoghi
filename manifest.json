@@ -1,35 +1,27 @@
 {
-  "name": "Iranian Legal Archive System",
-  "short_name": "Legal Archive",
-  "description": "Advanced Iranian Legal Document Archive System with AI-powered analysis",
-  "start_url": "./",
+  "name": "سیستم آرشیو اسناد حقوقی ایران",
+  "short_name": "آرشیو حقوقی",
+  "description": "سیستم پیشرفته آرشیو اسناد حقوقی ایران با قابلیت تحلیل هوشمند",
+  "start_url": "/Aihoghoghi/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
-  "orientation": "portrait-primary",
-  "lang": "fa",
-  "dir": "rtl",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%233b82f6'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='white'>🏛️</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%233b82f6'/><text x='256' y='350' font-size='280' text-anchor='middle' fill='white'>🏛️</text></svg>",
-      "sizes": "512x512",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>",
+      "sizes": "512x512", 
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["productivity", "utilities", "legal"],
-  "screenshots": [
-    {
-      "src": "https://via.placeholder.com/1280x720/3b82f6/ffffff?text=Iranian+Legal+Archive+Dashboard",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "Main Dashboard"
-    }
-  ]
+  "categories": ["legal", "productivity", "education"],
+  "lang": "fa",
+  "dir": "rtl"
 }
