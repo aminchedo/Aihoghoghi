@@ -1,0 +1,85 @@
+{
+  "test_timestamp": "2025-09-03T02:53:52+00:00",
+  "base_url": "https://aminchedo.github.io/Aihoghoghi/",
+  "tests": [
+    {
+      "test_name": "main_page",
+      "url": "https://aminchedo.github.io/Aihoghoghi/",
+      "http_code": 200,
+      "response_time": 0.031521,
+      "content_length": 1549,
+      "success": true,
+      "error": ""
+    }
+    ,
+    {
+      "test_name": "404_page",
+      "url": "https://aminchedo.github.io/Aihoghoghi/404.html",
+      "http_code": 200,
+      "response_time": 0.043872,
+      "content_length": 3184,
+      "success": true,
+      "error": ""
+    }
+    ,
+    {
+      "test_name": "assets_directory",
+      "url": "https://aminchedo.github.io/Aihoghoghi/assets/",
+      "http_code": 404,
+      "response_time": 0.030877,
+      "content_length": 0,
+      "success": false,
+      "error": "HTTP 404"
+    }
+    ,
+    {
+      "test_name": "spa_route_dashboard",
+      "url": "https://aminchedo.github.io/Aihoghoghi/dashboard",
+      "http_code": 404,
+      "response_time": 0.030482,
+      "content_length": 3184,
+      "success": false,
+      "error": "HTTP 404"
+    }
+    ,
+    {
+      "test_name": "spa_route_process",
+      "url": "https://aminchedo.github.io/Aihoghoghi/process",
+      "http_code": 404,
+      "response_time": 0.035674,
+      "content_length": 3184,
+      "success": false,
+      "error": "HTTP 404"
+    }
+    ,
+    {
+      "test_name": "spa_route_search",
+      "url": "https://aminchedo.github.io/Aihoghoghi/search",
+      "http_code": 404,
+      "response_time": 0.035361,
+      "content_length": 3184,
+      "success": false,
+      "error": "HTTP 404"
+    }
+    ,
+    {
+      "test_name": "spa_route_proxy",
+      "url": "https://aminchedo.github.io/Aihoghoghi/proxy",
+      "http_code": 404,
+      "response_time": 0.031151,
+      "content_length": 3184,
+      "success": false,
+      "error": "HTTP 404"
+    }
+    ,
+    {
+      "test_name": "spa_route_settings",
+      "url": "https://aminchedo.github.io/Aihoghoghi/settings",
+      "http_code": 404,
+      "response_time": 0.027198,
+      "content_length": 3184,
+      "success": false,
+      "error": "HTTP 404"
+    }
+  ]
+}
