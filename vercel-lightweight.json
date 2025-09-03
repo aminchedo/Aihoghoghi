@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "main-vercel-lightweight.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/main-vercel-lightweight.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/main-vercel-lightweight.py"
+    }
+  ],
+  "functions": {
+    "main-vercel-lightweight.py": {
+      "maxDuration": 30,
+      "memory": 512
+    }
+  },
+  "regions": ["iad1"],
+  "env": {
+    "PYTHONPATH": "/var/task",
+    "NODE_ENV": "production"
+  }
+}

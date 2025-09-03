@@ -66,42 +66,89 @@ const renderApp = () => {
   }
 };
 
-// Modern Promise-based initialization
+// Modern Promise-based initialization with timeout and fallback
 const initializeAndRender = async () => {
   try {
-    console.log('⏳ Waiting for services to initialize...');
+    console.log('⏳ Starting app initialization...');
     
-    // Wait for system integration service to be available
-    let serviceWaitAttempts = 0;
-    while (!window.iranianLegalArchive?.systemIntegration && serviceWaitAttempts < 50) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      serviceWaitAttempts++;
-    }
+    // Check if we're on GitHub Pages
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     
-    if (!window.iranianLegalArchive?.systemIntegration) {
-      console.warn('⚠️ System integration service not available, rendering app anyway');
+    if (isGitHubPages) {
+      console.log('🌐 GitHub Pages detected - using lightweight initialization');
+      // On GitHub Pages, render immediately without waiting for heavy services
       renderApp();
+      
+      // Initialize services in background after render
+      setTimeout(() => {
+        initializeServicesInBackground();
+      }, 100);
       return;
     }
     
-    // Use the system integration initialization
-    const startTime = Date.now();
-    await window.iranianLegalArchive.systemIntegration.initialize();
-    const initTime = Date.now() - startTime;
+    // For local development, try to initialize services with timeout
+    const initPromise = initializeServicesWithTimeout();
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Service initialization timeout')), 5000)
+    );
     
-    console.log(`✅ System integrated successfully in ${initTime}ms`);
+    try {
+      await Promise.race([initPromise, timeoutPromise]);
+      console.log('✅ Services initialized successfully');
+    } catch (error) {
+      console.warn('⚠️ Service initialization failed or timed out, rendering app anyway:', error.message);
+    }
+    
     renderApp();
     
   } catch (error) {
-    console.error('❌ Service initialization failed:', error);
-    
-    // Render app anyway with error state
+    console.error('❌ App initialization failed:', error);
     renderApp();
+  }
+};
+
+// Initialize services with timeout for local development
+const initializeServicesWithTimeout = async () => {
+  // Wait for system integration service to be available (max 2 seconds)
+  let serviceWaitAttempts = 0;
+  while (!window.iranianLegalArchive?.systemIntegration && serviceWaitAttempts < 20) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    serviceWaitAttempts++;
+  }
+  
+  if (window.iranianLegalArchive?.systemIntegration) {
+    const startTime = Date.now();
+    await window.iranianLegalArchive.systemIntegration.initialize();
+    const initTime = Date.now() - startTime;
+    console.log(`✅ System integrated in ${initTime}ms`);
+  }
+};
+
+// Initialize services in background for GitHub Pages
+const initializeServicesInBackground = async () => {
+  try {
+    console.log('🔄 Initializing services in background...');
     
-    // Dispatch error event for React components to handle
-    window.dispatchEvent(new CustomEvent('servicesInitializationError', {
-      detail: { error: error.message, timestamp: new Date().toISOString() }
-    }));
+    // Wait for system integration service (non-blocking)
+    let attempts = 0;
+    while (!window.iranianLegalArchive?.systemIntegration && attempts < 10) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      attempts++;
+    }
+    
+    if (window.iranianLegalArchive?.systemIntegration) {
+      await window.iranianLegalArchive.systemIntegration.initialize();
+      console.log('✅ Background services initialized');
+      
+      // Notify React components that services are ready
+      window.dispatchEvent(new CustomEvent('servicesReady', {
+        detail: { timestamp: new Date().toISOString() }
+      }));
+    }
+  } catch (error) {
+    console.warn('⚠️ Background service initialization failed:', error);
+    // App continues to work without full services
   }
 };
 

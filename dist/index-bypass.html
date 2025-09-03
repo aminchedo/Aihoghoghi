@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ سیستم آرشیو اسناد حقوقی ایران</title>
+    
+    <!-- Meta tags for SEO and social sharing -->
+    <meta name="description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی">
+    <meta name="keywords" content="اسناد حقوقی, آرشیو, تحلیل متن, هوش مصنوعی, ایران">
+    <meta name="author" content="Iranian Legal Archive Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="سیستم آرشیو اسناد حقوقی ایران">
+    <meta property="og:description" content="سیستم پیشرفته آرشیو و تحلیل اسناد حقوقی ایران با قابلیت هوش مصنوعی">
+    
+    <!-- Disable caching for troubleshooting -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/Aihoghoghi/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- Preload critical resources with fallbacks -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Fallback font -->
+    <style>
+        @font-face {
+            font-family: 'Vazirmatn-Fallback';
+            src: local('Tahoma'), local('Arial');
+        }
+        
+        body {
+            font-family: 'Vazirmatn', 'Vazirmatn-Fallback', 'Tahoma', 'Arial', sans-serif;
+        }
+    </style>
+    
+    <!-- Service Worker Bypass Script -->
+    <script src="/Aihoghoghi/sw-bypass.js"></script>
+    
+    <!-- Tailwind CSS with fallback -->
+    <script src="https://cdn.tailwindcss.com" onerror="loadFallbackCSS()"></script>
+    <script>
+        function loadFallbackCSS() {
+            console.log('⚠️ Tailwind CDN failed, loading fallback styles');
+            const style = document.createElement('style');
+            style.textContent = `
+                .min-h-screen { min-height: 100vh; }
+                .bg-gradient-to-br { background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%); }
+                .flex { display: flex; }
+                .items-center { align-items: center; }
+                .justify-center { justify-content: center; }
+                .text-center { text-align: center; }
+                .text-2xl { font-size: 1.5rem; }
+                .font-semibold { font-weight: 600; }
+                .text-gray-800 { color: #1f2937; }
+                .text-gray-600 { color: #4b5563; }
+                .animate-spin { animation: spin 1s linear infinite; }
+                @keyframes spin { to { transform: rotate(360deg); } }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'vazir': ['Vazirmatn', 'Vazirmatn-Fallback', 'Tahoma', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Critical loading detection -->
+    <script>
+        window.loadingStartTime = Date.now();
+        
+        // Detect loading issues
+        setTimeout(() => {
+            if (!window.React) {
+                console.error('❌ React failed to load after 10 seconds');
+                document.body.innerHTML = `
+                    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f3f4f6; font-family: Tahoma, Arial; direction: rtl; text-align: center;">
+                        <div>
+                            <h1 style="color: #dc2626; margin-bottom: 1rem;">خطا در بارگذاری</h1>
+                            <p style="margin-bottom: 2rem;">لطفاً صفحه را رفرش کنید</p>
+                            <button onclick="window.location.reload()" style="padding: 1rem 2rem; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">🔄 رفرش</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }, 10000);
+    </script>
+</head>
+<body class="font-vazir bg-gray-50">
+    <div id="root">
+        <!-- Simplified loading screen -->
+        <div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+            <div class="text-center max-w-md mx-auto px-6">
+                <div class="w-16 h-16 mx-auto mb-6 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                    🏛️ آرشیو اسناد حقوقی ایران
+                </h2>
+                <p class="text-gray-600">
+                    در حال بارگذاری...
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load React app -->
+    <script type="module" src="/Aihoghoghi/src/main-lightweight.jsx"></script>
+</body>
+</html>
