@@ -1,78 +1,71 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Dashboard from './components/pages/Dashboard'
-import DocumentProcessing from './components/pages/DocumentProcessing'
-import SearchInterface from './components/pages/SearchInterface'
+import { useSystem } from './contexts/SystemContext'
+import { useWebSocket } from './contexts/WebSocketContext'
 
-// CRITICAL: GitHub Pages compatibility
-const isGitHubPages = window.location.hostname.includes('github.io')
+// Layout Components
+import Header from './components/layout/Header'
+import Sidebar from './components/layout/EnhancedSidebar'
+
+// Page Components
+import Dashboard from './components/pages/EnhancedDashboard'
+import SearchInterface from './components/pages/EnhancedSearchInterface'
+import ScrapingDashboard from './components/pages/ScrapingDashboard'
+import AIAnalysisDashboard from './components/pages/EnhancedAIAnalysisDashboard'
+import Settings from './components/pages/EnhancedSettings'
+import ProxyDashboard from './components/pages/EnhancedProxyDashboard'
+import DocumentProcessing from './components/pages/EnhancedDocumentProcessing'
+
+// UI Components
+import LoadingOverlay from './components/ui/LoadingOverlay'
+import SystemStatusIndicator from './components/ui/SystemStatusIndicator'
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [services, setServices] = useState({
-    scraping: { status: 'ready' },
-    ai: { status: 'ready' },  
-    database: { status: 'ready' }
-  })
+  const { isLoading, connectionStatus, systemHealth } = useSystem()
+  const { isConnected } = useWebSocket()
 
-  useEffect(() => {
-    // IMMEDIATE: Skip service initialization on GitHub Pages
-    if (isGitHubPages) {
-      console.log('GitHub Pages detected - using client-side mode')
-      setIsLoading(false)
-      return
-    }
-
-    // For other platforms, quick initialization
-    const initServices = async () => {
-      try {
-        // Quick health check only
-        const response = await fetch('/api/status').catch(() => null)
-        if (response?.ok) {
-          const data = await response.json()
-          setServices(data.services || services)
-        }
-      } catch (error) {
-        console.warn('Services unavailable - using fallback mode')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    // Maximum 2 second timeout
-    const timeout = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
-
-    initServices()
-
-    return () => clearTimeout(timeout)
-  }, [])
-
-  // CRITICAL: Show app immediately without waiting
-  if (isGitHubPages || !isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50" dir="rtl">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/process" element={<DocumentProcessing />} />
-          <Route path="/search" element={<SearchInterface />} />
-          <Route path="*" element={<Dashboard />} />
-        </Routes>
-      </div>
-    )
+  // Show loading overlay during initialization
+  if (isLoading) {
+    return <LoadingOverlay message="در حال راه‌اندازی سیستم آرشیو حقوقی..." />
   }
 
-  // Only show loading for non-GitHub Pages
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">در حال بارگذاری...</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900" dir="rtl">
+      {/* System Status Indicator */}
+      <SystemStatusIndicator 
+        connectionStatus={connectionStatus}
+        systemHealth={systemHealth}
+        isWebSocketConnected={isConnected}
+      />
+      
+      {/* Main Layout */}
+      <div className="flex h-screen">
+        {/* Sidebar */}
+        <Sidebar />
+        
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header */}
+          <Header />
+          
+          {/* Main Content */}
+          <main className="flex-1 overflow-y-auto p-6">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/search" element={<SearchInterface />} />
+              <Route path="/scraping" element={<ScrapingDashboard />} />
+              <Route path="/ai-analysis" element={<AIAnalysisDashboard />} />
+              <Route path="/proxy-management" element={<ProxyDashboard />} />
+              <Route path="/document-processing" element={<DocumentProcessing />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="*" element={<Dashboard />} />
+            </Routes>
+          </main>
+        </div>
       </div>
     </div>
   )
 }
 
-export default App;
+export default App
