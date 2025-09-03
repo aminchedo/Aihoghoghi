@@ -12,6 +12,7 @@ class PersianBertService {
     this.cacheDir = process.env.AI_CACHE_DIR || './ai_cache';
     this.maxSequenceLength = 512;
     this.batchSize = 8;
+    this.huggingfaceToken = process.env.HUGGINGFACE_API_KEY;
     this.modelConfig = {
       modelName: 'HooshvareLab/bert-base-parsbert-uncased',
       revision: 'main',
@@ -93,6 +94,8 @@ class PersianBertService {
         'tokenizer_config.json',
         'vocab.txt'
       ];
+
+      const huggingfaceToken = process.env.HUGGINGFACE_API_KEY;
 
       for (const file of modelFiles) {
         const url = `https://huggingface.co/${this.modelConfig.modelName}/resolve/${this.modelConfig.revision}/${file}`;

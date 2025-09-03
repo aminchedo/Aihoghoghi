@@ -297,10 +297,11 @@ chown -R $SERVICE_USER:$SERVICE_USER /opt/huggingface-cache
 log "Downloading Persian BERT model..."
 cd /opt/ai-models
 sudo -u $SERVICE_USER python3 -c "
+import os
 from transformers import AutoTokenizer, AutoModel
 model_name = 'HooshvareLab/bert-base-parsbert-uncased'
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModel.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token=os.environ.get('HUGGINGFACE_API_KEY'))
+model = AutoModel.from_pretrained(model_name, use_auth_token=os.environ.get('HUGGINGFACE_API_KEY'))
 print('Persian BERT model downloaded successfully')
 "
 
