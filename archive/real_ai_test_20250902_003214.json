@@ -1,0 +1,142 @@
+# #UNUSED - Archived Wed Sep  3 04:54:56 AM UTC 2025
+{
+  "test_timestamp": "2025-09-02T00:32:04.126261",
+  "huggingface_api_tests": {
+    "api_accessible": false,
+    "response_time": null,
+    "status_code": null,
+    "available_models": [],
+    "persian_models_found": [],
+    "error": "HTTP Error 401: Unauthorized"
+  },
+  "persian_bert_tests": {
+    "model_accessible": false,
+    "persian_text_processed": 5,
+    "successful_analyses": 0,
+    "total_tests": 5,
+    "processing_times": [],
+    "model_responses": [
+      {
+        "text_sample": "دادگاه عالی کشور در رای شماره ۱۲۳۴ مقرر داشت که مت...",
+        "processed": false,
+        "response_time": null,
+        "confidence": null,
+        "error": "HTTP 401: Unauthorized"
+      },
+      {
+        "text_sample": "وزارت دادگستری مقررات جدیدی را برای بهبود سیستم قض...",
+        "processed": false,
+        "response_time": null,
+        "confidence": null,
+        "error": "HTTP 401: Unauthorized"
+      },
+      {
+        "text_sample": "مجلس شورای اسلامی قانون جدید مالیات بر ارزش افزوده...",
+        "processed": false,
+        "response_time": null,
+        "confidence": null,
+        "error": "HTTP 401: Unauthorized"
+      },
+      {
+        "text_sample": "سازمان اداری و استخدامی کشور آیین‌نامه جدید استخدا...",
+        "processed": false,
+        "response_time": null,
+        "confidence": null,
+        "error": "HTTP 401: Unauthorized"
+      },
+      {
+        "text_sample": "بانک مرکزی جمهوری اسلامی ایران نرخ سود جدید را اعل...",
+        "processed": false,
+        "response_time": null,
+        "confidence": null,
+        "error": "HTTP 401: Unauthorized"
+      }
+    ],
+    "confidence_scores": [],
+    "error_rate": 100.0
+  },
+  "entity_extraction_tests": {
+    "entities_extracted": 4,
+    "text_samples_processed": 5,
+    "extraction_methods": [
+      "rule_based_patterns",
+      "regex_matching"
+    ],
+    "legal_entities_found": [
+      {
+        "type": "court_names",
+        "text": "دادگاه عالی کشور در رای شماره ۱۲۳۴ مقرر داشت که متهم مجرم شناخته شود",
+        "confidence": 0.85
+      },
+      {
+        "type": "case_numbers",
+        "text": "رای شماره ۱۲۳۴",
+        "confidence": 0.85
+      },
+      {
+        "type": "organizations",
+        "text": "وزارت",
+        "confidence": 0.85
+      },
+      {
+        "type": "organizations",
+        "text": "سازمان",
+        "confidence": 0.85
+      }
+    ],
+    "confidence_scores": [
+      0.85,
+      0.85,
+      0.85
+    ],
+    "average_confidence": 0.85
+  },
+  "categorization_tests": {
+    "texts_categorized": 5,
+    "categories_detected": [
+      "قضایی",
+      "اداری",
+      "قانونی",
+      "مالی",
+      "اداری"
+    ],
+    "category_distribution": {
+      "قضایی": 1,
+      "اداری": 2,
+      "قانونی": 1,
+      "مالی": 1
+    },
+    "accuracy_estimate": 100.0,
+    "categorization_method": "rule_based_keywords",
+    "unique_categories_found": [
+      "اداری",
+      "مالی",
+      "قانونی",
+      "قضایی"
+    ],
+    "category_coverage": 4
+  },
+  "confidence_score_tests": {},
+  "ai_performance_metrics": {
+    "overall_success_rate": 50.0,
+    "api_connectivity_score": 0,
+    "persian_processing_score": 0,
+    "legal_analysis_score": 100.0,
+    "total_operations": 4,
+    "successful_operations": 2,
+    "entities_per_text": 0.8,
+    "categories_coverage": 4
+  },
+  "sentence_analysis_tests": {
+    "sentences_analyzed": 5,
+    "total_sentences": 5,
+    "analysis_features": [
+      "length_analysis",
+      "word_count",
+      "legal_term_detection",
+      "sentence_classification"
+    ],
+    "processing_successful": true,
+    "analysis_coverage": 100.0
+  }
+}
