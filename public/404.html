@@ -8,30 +8,19 @@
     <!-- Persian fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- GitHub Pages HashRouter redirect -->
     <script>
-        // Redirect to HashRouter URL for GitHub Pages compatibility
+        // GitHub Pages SPA fix
         (function() {
             var l = window.location;
             var basePath = '/Aihoghoghi/';
-            
-            console.log('🔄 404.html redirect for HashRouter');
-            console.log('📍 Current path:', l.pathname);
-            
-            // Extract the route that was requested
-            var requestedRoute = l.pathname.replace(basePath, '');
-            
-            // Build HashRouter URL
-            var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + requestedRoute;
-            
-            if (l.search) {
-                redirectUrl += l.search;
+            if (l.pathname !== basePath && l.pathname !== basePath.slice(0, -1)) {
+                var route = l.pathname.replace(basePath, '');
+                var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + route;
+                if (l.search) redirectUrl += l.search;
+                l.replace(redirectUrl);
+            } else {
+                l.replace(basePath);
             }
-            
-            console.log('🎯 Redirecting to HashRouter URL:', redirectUrl);
-            
-            // Immediate redirect to HashRouter URL
-            l.replace(redirectUrl);
         })();
     </script>
     
@@ -88,20 +77,17 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="icon">⚖️</div>
-        <h1 class="title">سیستم آرشیو اسناد حقوقی ایران</h1>
-        <p class="subtitle">در حال بارگذاری اپلیکیشن...</p>
-        <div class="loading">
-            لطفاً منتظر بمانید
-            <div class="spinner"></div>
+    <div style="display: flex; align-items: center; justify-content: center; height: 100vh; font-family: Arial;">
+        <div style="text-align: center;">
+            <h1>در حال انتقال...</h1>
+            <div style="border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #3498db; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 20px auto;"></div>
         </div>
+        <style>
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+        </style>
     </div>
-    
-    <!-- Redirect to main app immediately -->
-    <script>
-        // Redirect to main app for SPA handling
-        window.location.href = '/Aihoghoghi/';
-    </script>
 </body>
 </html>

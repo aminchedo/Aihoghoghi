@@ -46,41 +46,12 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false, // Disable sourcemaps for production
-    assetsDir: 'assets',
-    // Copy 404.html for GitHub Pages SPA routing
-    copyPublicDir: true,
-    // Ensure proper asset paths
+    sourcemap: false,
     rollupOptions: {
       output: {
-        assetFileNames: 'assets/[name]-[hash][extname]',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        // Manual chunks for better loading (only if modules exist)
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor';
-            }
-            if (id.includes('react-router')) {
-              return 'router';
-            }
-            if (id.includes('@tanstack/react-query')) {
-              return 'query';
-            }
-            if (id.includes('framer-motion') || id.includes('lucide-react')) {
-              return 'ui';
-            }
-          }
-        }
-      },
-    },
-    // Optimize for GitHub Pages and Iranian networks
-    assetsInlineLimit: 2048, // Smaller inline limit for faster loading
-    cssCodeSplit: false, // Single CSS file for simpler loading
-    minify: 'esbuild',
-    target: 'es2020',
-    chunkSizeWarningLimit: 1000, // Increase chunk size limit
+        manualChunks: undefined
+      }
+    }
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', '@tanstack/react-query'],
