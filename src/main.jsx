@@ -18,9 +18,20 @@ console.log('🔧 Router basename:', basename);
 // Create root element
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// Enhanced render with error boundary
+// Enhanced render with error boundary and SPA routing support
 const renderApp = () => {
   try {
+    // Handle SPA routing from 404.html redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    const routeParam = urlParams.get('route');
+    
+    if (routeParam && window.location.hostname.includes('github.io')) {
+      console.log('🔄 SPA route detected from 404.html:', routeParam);
+      // Replace the URL to clean it up after redirect
+      const cleanUrl = window.location.origin + basename + '/' + routeParam;
+      window.history.replaceState(null, null, cleanUrl);
+    }
+    
     root.render(
       <React.StrictMode>
         <BrowserRouter basename={basename}>

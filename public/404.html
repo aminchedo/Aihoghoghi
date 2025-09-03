@@ -8,42 +8,36 @@
     <!-- Persian fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- GitHub Pages SPA routing fix -->
+    <!-- GitHub Pages SPA routing fix - Production Ready -->
     <script>
-        // Single Page App for GitHub Pages
-        // https://github.com/rafgraph/spa-github-pages
-        (function(l) {
-            if (l.search[1] === '/' ) {
-                var decoded = l.search.slice(1).split('&').map(function(s) { 
-                    return s.replace(/~and~/g, '&')
-                }).join('?');
-                window.history.replaceState(null, null,
-                    l.pathname.slice(0, -1) + decoded + l.hash
-                );
+        // Immediate redirect for GitHub Pages SPA routing
+        // This ensures all routes work correctly on GitHub Pages
+        (function() {
+            var l = window.location;
+            var basePath = '/Aihoghoghi/';
+            
+            console.log('🔄 404.html SPA routing handler activated');
+            console.log('📍 Current path:', l.pathname);
+            
+            // Extract the route that was requested
+            var requestedPath = l.pathname.replace(basePath, '') || 'dashboard';
+            
+            // Build the redirect URL with SPA routing parameter
+            var redirectUrl = l.protocol + '//' + l.hostname + basePath + '?route=' + encodeURIComponent(requestedPath);
+            
+            if (l.search) {
+                redirectUrl += '&' + l.search.slice(1);
             }
-        }(window.location))
-        
-        // Immediate redirect for SPA routes - Fixed for GitHub Pages
-        var pathSegmentsToKeep = 1; // Keep /Aihoghoghi/
-        var l = window.location;
-        
-        // Extract the route after /Aihoghoghi/
-        var pathParts = l.pathname.split('/');
-        var baseIndex = pathParts.indexOf('Aihoghoghi');
-        
-        if (baseIndex >= 0 && pathParts.length > baseIndex + 1) {
-          var routePath = pathParts.slice(baseIndex + 1).join('/');
-          var redirectUrl = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            '/Aihoghoghi/?/' + routePath.replace(/&/g, '~and~') +
-            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash;
-          
-          console.log('🔄 Redirecting SPA route:', l.pathname, '->', redirectUrl);
-          l.replace(redirectUrl);
-        } else {
-          // Fallback to main app
-          l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/Aihoghoghi/');
-        }
+            
+            if (l.hash) {
+                redirectUrl += l.hash;
+            }
+            
+            console.log('🎯 Redirecting to:', redirectUrl);
+            
+            // Immediate redirect to main app with route parameter
+            l.replace(redirectUrl);
+        })();
     </script>
     
     <style>
