@@ -8,36 +8,33 @@
     <!-- Persian fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- GitHub Pages SPA routing fix - Production Ready -->
+    <!-- GitHub Pages SPA routing fix - Standard Implementation -->
     <script>
-        // Immediate redirect for GitHub Pages SPA routing
-        // This ensures all routes work correctly on GitHub Pages
-        (function() {
-            var l = window.location;
-            var basePath = '/Aihoghoghi/';
-            
-            console.log('🔄 404.html SPA routing handler activated');
-            console.log('📍 Current path:', l.pathname);
-            
-            // Extract the route that was requested
-            var requestedPath = l.pathname.replace(basePath, '') || 'dashboard';
-            
-            // Build the redirect URL with SPA routing parameter
-            var redirectUrl = l.protocol + '//' + l.hostname + basePath + '?route=' + encodeURIComponent(requestedPath);
-            
-            if (l.search) {
-                redirectUrl += '&' + l.search.slice(1);
+        // Single Page Apps for GitHub Pages
+        // MIT License
+        // https://github.com/rafgraph/spa-github-pages
+        (function(l) {
+            if (l.search[1] === '/' ) {
+                var decoded = l.search.slice(1).split('&').map(function(s) { 
+                    return s.replace(/~and~/g, '&')
+                }).join('?');
+                window.history.replaceState(null, null,
+                    l.pathname.slice(0, -1) + decoded + l.hash
+                );
             }
-            
-            if (l.hash) {
-                redirectUrl += l.hash;
-            }
-            
-            console.log('🎯 Redirecting to:', redirectUrl);
-            
-            // Immediate redirect to main app with route parameter
-            l.replace(redirectUrl);
-        })();
+        }(window.location))
+        
+        // Store the current path for redirect
+        var pathSegmentsToKeep = 1;
+        var l = window.location;
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + 
+            '/?/' + 
+            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+        );
     </script>
     
     <style>

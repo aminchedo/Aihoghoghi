@@ -18,18 +18,17 @@ console.log('🔧 Router basename:', basename);
 // Create root element
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// Enhanced render with error boundary and SPA routing support
+// Enhanced render with error boundary and GitHub Pages SPA routing support
 const renderApp = () => {
   try {
-    // Handle SPA routing from 404.html redirect
-    const urlParams = new URLSearchParams(window.location.search);
-    const routeParam = urlParams.get('route');
-    
-    if (routeParam && window.location.hostname.includes('github.io')) {
-      console.log('🔄 SPA route detected from 404.html:', routeParam);
-      // Replace the URL to clean it up after redirect
-      const cleanUrl = window.location.origin + basename + '/' + routeParam;
-      window.history.replaceState(null, null, cleanUrl);
+    // Handle GitHub Pages SPA routing (standard spa-github-pages approach)
+    if (window.location.hostname.includes('github.io')) {
+      const search = window.location.search;
+      if (search && search[1] === '/') {
+        const decoded = search.slice(1).split('&').map(s => s.replace(/~and~/g, '&')).join('?');
+        window.history.replaceState(null, null, window.location.pathname.slice(0, -1) + decoded + window.location.hash);
+        console.log('🔄 GitHub Pages SPA routing handled successfully');
+      }
     }
     
     root.render(
