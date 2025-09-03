@@ -8,21 +8,8 @@
     <!-- Persian fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <script>
-        // GitHub Pages SPA fix
-        (function() {
-            var l = window.location;
-            var basePath = '/Aihoghoghi/';
-            if (l.pathname !== basePath && l.pathname !== basePath.slice(0, -1)) {
-                var route = l.pathname.replace(basePath, '');
-                var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + route;
-                if (l.search) redirectUrl += l.search;
-                l.replace(redirectUrl);
-            } else {
-                l.replace(basePath);
-            }
-        })();
-    </script>
+    <!-- External scripts for CSP compliance -->
+    <script src="/Aihoghoghi/404-redirect.js"></script>
     
     <style>
         body { 
@@ -51,25 +38,19 @@
             margin-bottom: 1rem;
             font-weight: 600;
         }
-        .subtitle {
+        .message {
+            font-size: 1rem;
             margin-bottom: 2rem;
             opacity: 0.9;
-            font-size: 1rem;
         }
         .loading {
-            margin-top: 1rem;
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-        .spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid rgba(255,255,255,0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
-            margin-left: 0.5rem;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -77,17 +58,11 @@
     </style>
 </head>
 <body>
-    <div style="display: flex; align-items: center; justify-content: center; height: 100vh; font-family: Arial;">
-        <div style="text-align: center;">
-            <h1>در حال انتقال...</h1>
-            <div style="border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #3498db; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 20px auto;"></div>
-        </div>
-        <style>
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-        </style>
+    <div class="container">
+        <div class="icon">🏛️</div>
+        <h1 class="title">آرشیو اسناد حقوقی ایران</h1>
+        <p class="message">در حال هدایت به صفحه اصلی...</p>
+        <div class="loading"></div>
     </div>
 </body>
 </html>
