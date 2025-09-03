@@ -1,68 +1,20 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم آرشیو اسناد حقوقی ایران</title>
-    
-    <!-- Persian fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- External scripts for CSP compliance -->
-    <script src="/Aihoghoghi/404-redirect.js"></script>
-    
-    <style>
-        body { 
-            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            direction: rtl;
-            text-align: center;
-        }
-        .container {
-            padding: 2rem;
-            max-width: 500px;
-        }
-        .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-        .title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        .message {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        .loading {
-            display: inline-block;
-            width: 2rem;
-            height: 2rem;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+        (function() {
+            var l = window.location;
+            var basePath = '/Aihoghoghi/';
+            var requestedRoute = l.pathname.replace(basePath, '');
+            var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + requestedRoute;
+            if (l.search) redirectUrl += l.search;
+            l.replace(redirectUrl);
+        })();
+    </script>
 </head>
 <body>
-    <div class="container">
-        <div class="icon">🏛️</div>
-        <h1 class="title">آرشیو اسناد حقوقی ایران</h1>
-        <p class="message">در حال هدایت به صفحه اصلی...</p>
-        <div class="loading"></div>
-    </div>
+    <p>Redirecting to Iranian Legal Archive System...</p>
 </body>
 </html>
