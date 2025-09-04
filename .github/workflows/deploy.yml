@@ -1,0 +1,77 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          
+      - name: Create .nojekyll file
+        run: touch dist/.nojekyll
+        
+      - name: Create 404.html for GitHub Pages
+        run: |
+          cat > dist/404.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="fa" dir="rtl">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>سیستم آرشیو اسناد حقوقی ایران</title>
+            <script>
+              (function() {
+                var l = window.location;
+                var basePath = '/Aihoghoghi/';
+                var requestedRoute = l.pathname.replace(basePath, '');
+                var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + requestedRoute;
+                if (l.search) redirectUrl += l.search;
+                l.replace(redirectUrl);
+              })();
+            </script>
+          </head>
+          <body>
+            <div style="text-align: center; padding: 50px; font-family: 'Vazirmatn', sans-serif;">
+              <h1>در حال انتقال...</h1>
+              <p>لطفاً صبر کنید...</p>
+            </div>
+          </body>
+          </html>
+          EOF
+          
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          cname: # Add your custom domain here if needed
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist/
+          retention-days: 30

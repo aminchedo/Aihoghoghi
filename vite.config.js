@@ -17,11 +17,14 @@ export default defineConfig({
     minify: 'esbuild',
     rollupOptions: {
       output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'router': ['react-router-dom'],
-          'ui': ['framer-motion', 'chart.js', 'react-chartjs-2'],
-          'ai': ['@huggingface/inference', '@xenova/transformers'],
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          query: ['@tanstack/react-query'],
+          ui: ['framer-motion', 'lucide-react'],
+          ai: ['@huggingface/inference', '@xenova/transformers'],
+          charts: ['chart.js', 'react-chartjs-2']
         }
       }
     }
