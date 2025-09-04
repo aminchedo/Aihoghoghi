@@ -32,7 +32,7 @@ export default defineConfig({
             './src/services/enhancedAIService.js',
             './src/services/smartScrapingService.js',
             './src/services/legalDocumentService.js',
-            './src/services/realTimeMetricsService.js'
+            './src/services/realTimeService.js'
           ]
         }
       }
