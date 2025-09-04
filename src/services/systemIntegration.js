@@ -3,7 +3,7 @@
  * Orchestrates all services and ensures seamless operation
  */
 
-import { realTimeMetricsService } from './realTimeMetricsService';
+import { realTimeMetricsService } from './realTimeService';
 import { legalDocumentService } from './legalDocumentService';
 import { smartScrapingService } from './smartScrapingService';
 import { enhancedAIService } from './enhancedAIService';

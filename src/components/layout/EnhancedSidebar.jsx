@@ -25,7 +25,7 @@ import {
   ChevronRight
 } from 'lucide-react'
 
-const Sidebar = ({ isCollapsed = false }) => {
+const EnhancedSidebar = ({ isCollapsed = false }) => {
   const location = useLocation()
   const [expandedMenus, setExpandedMenus] = useState({})
   const { metrics, systemHealth, connectionStatus } = useSystem()
@@ -383,4 +383,4 @@ const Sidebar = ({ isCollapsed = false }) => {
   )
 }
 
-export default Sidebar
+export default EnhancedSidebar

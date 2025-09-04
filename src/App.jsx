@@ -1,21 +1,41 @@
 import React from 'react'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+import { SystemProvider } from './contexts/SystemContext'
+import { WebSocketProvider } from './contexts/WebSocketContext'
+import Header from './components/layout/Header'
+import EnhancedSidebar from './components/layout/EnhancedSidebar'
+import EnhancedDashboard from './components/pages/EnhancedDashboard'
+import EnhancedSearchInterface from './components/pages/EnhancedSearchInterface'
+import EnhancedAIAnalysisDashboard from './components/pages/EnhancedAIAnalysisDashboard'
+import EnhancedProxyDashboard from './components/pages/EnhancedProxyDashboard'
+import EnhancedDocumentProcessing from './components/pages/EnhancedDocumentProcessing'
+import EnhancedSettings from './components/pages/EnhancedSettings'
+import './App.css'
 
 function App() {
   return (
-    <div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'Arial, sans-serif' }}>
-      <h1>🚀 Iranian Legal Archive System</h1>
-      <p>Frontend successfully synchronized from gh-pages branch!</p>
-      <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#f0f0f0', borderRadius: '8px' }}>
-        <h3>✅ Synchronization Status:</h3>
-        <ul style={{ textAlign: 'left', display: 'inline-block' }}>
-          <li>Enhanced Components: ✅ Loaded</li>
-          <li>AI Services: ✅ Integrated</li>
-          <li>WebSocket Services: ✅ Connected</li>
-          <li>Persian BERT: ✅ Ready</li>
-          <li>Proxy Network: ✅ Active</li>
-        </ul>
-      </div>
-    </div>
+    <SystemProvider>
+      <WebSocketProvider>
+        <Router>
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 rtl">
+            <Header />
+            <div className="flex">
+              <EnhancedSidebar />
+              <main className="flex-1 p-6">
+                <Routes>
+                  <Route path="/" element={<EnhancedDashboard />} />
+                  <Route path="/search" element={<EnhancedSearchInterface />} />
+                  <Route path="/ai-analysis" element={<EnhancedAIAnalysisDashboard />} />
+                  <Route path="/proxy" element={<EnhancedProxyDashboard />} />
+                  <Route path="/processing" element={<EnhancedDocumentProcessing />} />
+                  <Route path="/settings" element={<EnhancedSettings />} />
+                </Routes>
+              </main>
+            </div>
+          </div>
+        </Router>
+      </WebSocketProvider>
+    </SystemProvider>
   )
 }
 

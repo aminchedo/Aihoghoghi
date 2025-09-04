@@ -328,4 +328,14 @@ class RealTimeService {
 // Create singleton instance
 export const realTimeService = new RealTimeService()
 
+// Export with the expected name for compatibility
+export const realTimeMetricsService = {
+  ...realTimeService,
+  updateAIMetrics: (metrics) => {
+    // Placeholder implementation
+    console.log('AI Metrics updated:', metrics)
+    return true
+  }
+}
+
 export default realTimeService

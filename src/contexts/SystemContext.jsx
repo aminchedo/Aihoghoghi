@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
-import { systemIntegration } from '../services/systemIntegration'
+import { systemIntegrationService } from '../services/systemIntegration'
 
 const SystemContext = createContext()
 
@@ -155,7 +155,7 @@ export function SystemProvider({ children }) {
       dispatch({ type: 'SET_LOADING', payload: true })
       
       // 1. Initialize system integration service
-      await systemIntegration.initialize()
+      await systemIntegrationService.initialize()
       dispatch({ type: 'SET_SYSTEM_HEALTH', payload: { api: 'online' } })
       
       // 2. Load initial metrics
