@@ -3,7 +3,7 @@
  * Integrates with WebSocket and provides real-time data flow
  */
 
-import { API_ENDPOINTS } from '../contexts/SystemContext'
+import { API_ENDPOINTS } from '../config/apiEndpoints'
 
 class RealTimeService {
   constructor() {

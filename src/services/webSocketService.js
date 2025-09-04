@@ -3,7 +3,8 @@
  * Handles all real-time communication with backend
  */
 
-import { API_ENDPOINTS } from '../contexts/SystemContext'
+import { API_ENDPOINTS, ENVIRONMENT } from '../config/apiEndpoints'
+import { shouldDisableWebSocket, shouldUsePollingFallback } from '../utils/githubPagesConfig'
 
 class WebSocketService {
   constructor() {
@@ -14,14 +15,36 @@ class WebSocketService {
     this.listeners = new Map()
     this.isConnected = false
     this.messageQueue = []
+    this.fallbackMode = false
+    this.pollingInterval = null
+    this.healthCheckInterval = null
+    this.connectionTimeout = null
   }
 
   /**
-   * Connect to WebSocket server
+   * Connect to WebSocket server with health check and fallback
    */
-  connect(url = API_ENDPOINTS.WEB_SOCKET) {
+  async connect(url = API_ENDPOINTS.WEB_SOCKET) {
     try {
       console.log('🔌 Connecting to WebSocket:', url)
+      
+      // First check if backend is available
+      const isBackendAvailable = await this.checkBackendHealth()
+      
+      if (!isBackendAvailable) {
+        console.warn('⚠️ Backend not available, falling back to polling mode')
+        this.enableFallbackMode()
+        return
+      }
+      
+      // Set connection timeout
+      this.connectionTimeout = setTimeout(() => {
+        if (!this.isConnected) {
+          console.warn('⚠️ WebSocket connection timeout, falling back to polling')
+          this.enableFallbackMode()
+        }
+      }, 5000)
+      
       this.socket = new WebSocket(url)
       
       this.socket.onopen = this.handleOpen.bind(this)
@@ -36,12 +59,108 @@ class WebSocketService {
   }
 
   /**
+   * Check if backend is available
+   */
+  async checkBackendHealth() {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.BASE}/health`, {
+        method: 'GET',
+        timeout: 5000
+      })
+      return response.ok
+    } catch (error) {
+      console.warn('Backend health check failed:', error)
+      return false
+    }
+  }
+
+  /**
+   * Enable fallback polling mode
+   */
+  enableFallbackMode() {
+    this.fallbackMode = true
+    this.isConnected = false
+    
+    console.log('🔄 Enabling fallback polling mode')
+    
+    // Start polling for updates
+    this.startPolling()
+    
+    // Notify listeners about fallback mode
+    this.emit('fallback-mode', { 
+      status: 'polling', 
+      message: 'WebSocket unavailable, using polling fallback' 
+    })
+  }
+
+  /**
+   * Start polling for updates
+   */
+  startPolling() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval)
+    }
+    
+    this.pollingInterval = setInterval(async () => {
+      try {
+        await this.fetchUpdates()
+      } catch (error) {
+        console.warn('Polling update failed:', error)
+      }
+    }, 3000) // Poll every 3 seconds
+  }
+
+  /**
+   * Fetch updates via HTTP polling
+   */
+  async fetchUpdates() {
+    try {
+      const response = await fetch(`${API_ENDPOINTS.BASE}/updates`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      
+      if (response.ok) {
+        const updates = await response.json()
+        this.handlePollingUpdates(updates)
+      }
+    } catch (error) {
+      console.warn('Failed to fetch updates:', error)
+    }
+  }
+
+  /**
+   * Handle updates received via polling
+   */
+  handlePollingUpdates(updates) {
+    if (updates && updates.length > 0) {
+      updates.forEach(update => {
+        this.emit(update.type, update)
+        this.emit('message', update)
+      })
+    }
+  }
+
+  /**
    * Handle connection open
    */
   handleOpen() {
     console.log('✅ WebSocket connected successfully')
     this.isConnected = true
+    this.fallbackMode = false
     this.reconnectAttempts = 0
+    
+    // Clear connection timeout
+    if (this.connectionTimeout) {
+      clearTimeout(this.connectionTimeout)
+      this.connectionTimeout = null
+    }
+    
+    // Stop polling if it was running
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval)
+      this.pollingInterval = null
+    }
     
     // Send handshake
     this.send({
@@ -84,12 +203,21 @@ class WebSocketService {
     console.log('🔌 WebSocket disconnected:', event.code, event.reason)
     this.isConnected = false
     
+    // Clear connection timeout
+    if (this.connectionTimeout) {
+      clearTimeout(this.connectionTimeout)
+      this.connectionTimeout = null
+    }
+    
     // Notify listeners
     this.emit('disconnected', { code: event.code, reason: event.reason })
     
     // Attempt reconnection if not intentional
     if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
       this.scheduleReconnect()
+    } else if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      console.warn('⚠️ Max reconnection attempts reached, enabling fallback mode')
+      this.enableFallbackMode()
     }
   }
 
@@ -98,7 +226,20 @@ class WebSocketService {
    */
   handleError(error) {
     console.error('❌ WebSocket error:', error)
+    this.isConnected = false
+    
+    // Clear connection timeout
+    if (this.connectionTimeout) {
+      clearTimeout(this.connectionTimeout)
+      this.connectionTimeout = null
+    }
+    
     this.emit('error', { error })
+    
+    // Enable fallback mode on error
+    if (!this.fallbackMode) {
+      this.enableFallbackMode()
+    }
   }
 
   /**
@@ -188,7 +329,24 @@ class WebSocketService {
       this.socket.close(1000, 'Client disconnecting')
     }
     this.isConnected = false
+    this.fallbackMode = false
     this.messageQueue = []
+    
+    // Clear all intervals and timeouts
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval)
+      this.pollingInterval = null
+    }
+    
+    if (this.healthCheckInterval) {
+      clearInterval(this.healthCheckInterval)
+      this.healthCheckInterval = null
+    }
+    
+    if (this.connectionTimeout) {
+      clearTimeout(this.connectionTimeout)
+      this.connectionTimeout = null
+    }
   }
 
   /**
@@ -244,8 +402,10 @@ class WebSocketService {
   getStatus() {
     return {
       connected: this.isConnected,
+      fallbackMode: this.fallbackMode,
       readyState: this.socket?.readyState,
-      reconnectAttempts: this.reconnectAttempts
+      reconnectAttempts: this.reconnectAttempts,
+      maxReconnectAttempts: this.maxReconnectAttempts
     }
   }
 }
@@ -253,9 +413,12 @@ class WebSocketService {
 // Create singleton instance
 export const webSocketService = new WebSocketService()
 
-// Auto-connect on import (if not on GitHub Pages)
-if (!window.location.hostname.includes('github.io')) {
-  webSocketService.connect()
+// Auto-connect on import (if WebSocket is not disabled)
+if (!shouldDisableWebSocket()) {
+  // Delay connection to allow other services to initialize
+  setTimeout(() => {
+    webSocketService.connect()
+  }, 1000)
   
   // Keep connection alive
   setInterval(() => {
@@ -263,6 +426,13 @@ if (!window.location.hostname.includes('github.io')) {
       webSocketService.ping()
     }
   }, 30000)
+} else {
+  // Enable polling fallback if WebSocket is disabled
+  if (shouldUsePollingFallback()) {
+    setTimeout(() => {
+      webSocketService.enableFallbackMode()
+    }, 1000)
+  }
 }
 
 export default webSocketService

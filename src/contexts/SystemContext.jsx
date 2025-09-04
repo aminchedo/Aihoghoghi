@@ -1,40 +1,8 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import { systemIntegrationService } from '../services/systemIntegration'
+import { API_ENDPOINTS, AI_MODELS, IRANIAN_DNS_SERVERS } from '../config/apiEndpoints'
 
 const SystemContext = createContext()
-
-// API Configuration
-export const API_ENDPOINTS = {
-  BASE: 'http://127.0.0.1:7860/api',
-  PRODUCTION: 'https://your-domain.com/api',
-  MODEL_LOAD: '/api/models/load',
-  MODEL_STATUS: '/api/models/status',
-  DOCUMENT_PROCESS: '/api/documents/process',
-  SEARCH: '/api/documents/search',
-  SEMANTIC_SEARCH: '/api/documents/semantic-search',
-  NAFAQE_SEARCH: '/api/documents/nafaqe-search',
-  PROXY_STATUS: '/api/proxies/status',
-  SYSTEM_METRICS: '/api/system/metrics',
-  WEB_SOCKET: 'ws://127.0.0.1:7860/ws'
-}
-
-// Persian BERT Models Configuration
-export const AI_MODELS = {
-  classification: 'HooshvareLab/bert-fa-base-uncased',
-  sentiment: 'HooshvareLab/bert-fa-base-uncased-sentiment-digikala',
-  ner: 'HooshvareLab/bert-fa-base-uncased-ner-peyma',
-  summarization: 'csebuetnlp/mT5_multilingual_XLSum'
-}
-
-// 22 Iranian DNS Servers for Proxy System
-export const IRANIAN_DNS_SERVERS = [
-  '178.22.122.100', '185.51.200.2', '78.157.42.101', '78.157.42.100',
-  '10.202.10.202', '10.202.10.102', '172.29.0.100', '172.29.2.100',
-  '185.55.226.26', '185.55.225.25', '78.109.23.1', '94.182.190.241',
-  '37.156.28.2', '185.143.232.50', '195.191.56.49', '91.107.6.115',
-  '185.142.239.50', '78.109.23.134', '185.228.168.9', '185.228.169.9',
-  '8.8.8.8', '1.1.1.1'
-]
 
 const initialState = {
   isInitialized: false,

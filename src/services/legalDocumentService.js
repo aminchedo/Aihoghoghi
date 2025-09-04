@@ -3,7 +3,7 @@
  * Handles document processing, search, and management
  */
 
-import { API_ENDPOINTS } from '../contexts/SystemContext';
+import { API_ENDPOINTS } from '../config/apiEndpoints';
 import { realTimeMetricsService } from './realTimeService';
 
 class LegalDocumentService {

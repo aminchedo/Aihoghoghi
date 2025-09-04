@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSystem } from '../../contexts/SystemContext'
 import { useWebSocket } from '../../contexts/WebSocketContext'
-import { API_ENDPOINTS } from '../../contexts/SystemContext'
+import { API_ENDPOINTS } from '../../config/apiEndpoints'
 import { 
   Settings as SettingsIcon, 
   Zap, 

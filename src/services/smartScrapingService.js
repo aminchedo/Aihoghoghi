@@ -3,7 +3,7 @@
  * Handles intelligent web scraping with proxy management and rate limiting
  */
 
-import { API_ENDPOINTS } from '../contexts/SystemContext';
+import { API_ENDPOINTS } from '../config/apiEndpoints';
 import { realTimeMetricsService } from './realTimeService';
 
 class SmartScrapingService {

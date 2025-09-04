@@ -5,7 +5,7 @@
  */
 
 import { HfInference } from '@huggingface/inference'
-import { API_ENDPOINTS, AI_MODELS } from '../contexts/SystemContext'
+import { API_ENDPOINTS, AI_MODELS } from '../config/apiEndpoints'
 import { realTimeMetricsService } from './realTimeService';
 
 class EnhancedAIService {
