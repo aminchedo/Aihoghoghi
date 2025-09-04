@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
-import { systemIntegration } from '../services/systemIntegration'
+import systemIntegration from '../services/systemIntegration'
 
 const SystemContext = createContext()
 
