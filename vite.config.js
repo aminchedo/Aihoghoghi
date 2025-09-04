@@ -7,17 +7,7 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: true,
-    minify: 'esbuild',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ai-services': ['@huggingface/inference', '@xenova/transformers'],
-          'data-viz': ['chart.js', 'react-chartjs-2'],
-          'ui-components': ['framer-motion', 'lucide-react']
-        }
-      }
-    }
+    minify: 'esbuild'
   },
   server: {
     proxy: {
