@@ -291,21 +291,7 @@ const EnhancedAIAnalysisDashboard = () => {
     }
   }
 
-  const getModelStatus = (modelType) => {
-    const modelState = models[modelType]
-    if (!modelState) return { status: 'unloaded', color: 'gray' }
-    
-    switch (modelState.status) {
-      case 'loaded':
-        return { status: 'آماده', color: 'green' }
-      case 'loading':
-        return { status: 'در حال بارگذاری', color: 'yellow' }
-      case 'error':
-        return { status: 'خطا', color: 'red' }
-      default:
-        return { status: 'غیرفعال', color: 'gray' }
-    }
-  }
+
 
   const getColorClasses = (color) => {
     const colors = {

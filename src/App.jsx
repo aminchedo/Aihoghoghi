@@ -5,16 +5,16 @@ import { useWebSocket } from './contexts/WebSocketContext'
 
 // Layout Components
 import Header from './components/layout/Header'
-import Sidebar from './components/layout/EnhancedSidebar'
+import EnhancedSidebar from './components/layout/EnhancedSidebar'
 
 // Page Components
-import Dashboard from './components/pages/EnhancedDashboard'
-import SearchInterface from './components/pages/EnhancedSearchInterface'
+import EnhancedDashboard from './components/pages/EnhancedDashboard'
+import EnhancedSearchInterface from './components/pages/EnhancedSearchInterface'
 import ScrapingDashboard from './components/pages/ScrapingDashboard'
-import AIAnalysisDashboard from './components/pages/EnhancedAIAnalysisDashboard'
-import Settings from './components/pages/EnhancedSettings'
-import ProxyDashboard from './components/pages/EnhancedProxyDashboard'
-import DocumentProcessing from './components/pages/EnhancedDocumentProcessing'
+import EnhancedAIAnalysisDashboard from './components/pages/EnhancedAIAnalysisDashboard'
+import EnhancedSettings from './components/pages/EnhancedSettings'
+import EnhancedProxyDashboard from './components/pages/EnhancedProxyDashboard'
+import EnhancedDocumentProcessing from './components/pages/EnhancedDocumentProcessing'
 
 // UI Components
 import LoadingOverlay from './components/ui/LoadingOverlay'
@@ -41,7 +41,7 @@ function App() {
       {/* Main Layout */}
       <div className="flex h-screen">
         {/* Sidebar */}
-        <Sidebar />
+        <EnhancedSidebar />
         
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -51,15 +51,15 @@ function App() {
           {/* Main Content */}
           <main className="flex-1 overflow-y-auto p-6">
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/search" element={<SearchInterface />} />
+              <Route path="/" element={<EnhancedDashboard />} />
+              <Route path="/dashboard" element={<EnhancedDashboard />} />
+              <Route path="/search" element={<EnhancedSearchInterface />} />
               <Route path="/scraping" element={<ScrapingDashboard />} />
-              <Route path="/ai-analysis" element={<AIAnalysisDashboard />} />
-              <Route path="/proxy-management" element={<ProxyDashboard />} />
-              <Route path="/document-processing" element={<DocumentProcessing />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<Dashboard />} />
+              <Route path="/ai-analysis" element={<EnhancedAIAnalysisDashboard />} />
+              <Route path="/proxy-management" element={<EnhancedProxyDashboard />} />
+              <Route path="/document-processing" element={<EnhancedDocumentProcessing />} />
+              <Route path="/settings" element={<EnhancedSettings />} />
+              <Route path="*" element={<EnhancedDashboard />} />
             </Routes>
           </main>
         </div>

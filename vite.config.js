@@ -1,8 +1,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig({
   base: '/Aihoghoghi/',
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -11,26 +18,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ai-services': ['@huggingface/inference', '@xenova/transformers'],
-          'data-viz': ['chart.js', 'react-chartjs-2'],
-          'ui-components': ['framer-motion', 'lucide-react']
+          'react-vendor': ['react', 'react-dom'],
+          'router': ['react-router-dom'],
+          'ui': ['framer-motion', 'chart.js'],
         }
       }
     }
   },
   server: {
-    proxy: {
-      '/api': {
-        target: 'https://api.iranian-legal-archive.com',
-        changeOrigin: true,
-        secure: true
-      }
-    }
-  },
-  plugins: [react()],
-  define: {
-    __DEV__: false,
-    __PROD__: true
+    port: 3000,
+    host: true
   }
 });
