@@ -1,0 +1,115 @@
+{
+  "name": "iranian-legal-archive-ui",
+  "version": "2.0.0",
+  "description": "Modern React-based UI for Iranian Legal Document Archive & Analyzer",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint src --ext js,jsx --fix",
+    "format": "prettier --write src/**/*.{js,jsx,css,md}",
+    "type-check": "tsc --noEmit",
+    "deploy:github": "node deploy-github.js",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir=dist",
+    "deploy:railway": "railway deploy",
+    "build:github": "cross-env NODE_ENV=production VITE_API_URL=https://iranian-legal-archive-backend.railway.app/api VITE_WS_URL=wss://iranian-legal-archive-backend.railway.app/ws vite build",
+    "build:vercel": "cross-env NODE_ENV=production vite build",
+    "build:netlify": "cross-env NODE_ENV=production vite build",
+    "start": "npm run preview",
+    "serve": "npm run preview"
+  },
+  "dependencies": {
+    "@huggingface/inference": "^4.7.1",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tanstack/react-query": "^4.24.6",
+    "@tanstack/react-query-devtools": "^4.24.6",
+    "@xenova/transformers": "^2.17.2",
+    "axios": "^1.6.0",
+    "chart.js": "^4.2.1",
+    "clsx": "^1.2.1",
+    "date-fns": "^2.29.3",
+    "date-fns-jalali": "^2.29.3-0",
+    "framer-motion": "^10.16.0",
+    "lucide-react": "^0.290.0",
+    "mongodb": "^6.3.0",
+    "node-fetch": "^3.3.2",
+    "playwright": "^1.40.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.0",
+    "react-router-dom": "^6.8.1",
+    "react-virtualized-auto-sizer": "^1.0.20",
+    "react-window": "^1.8.8",
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@types/react-window": "^1.8.5",
+    "@vitejs/plugin-react": "^3.1.0",
+    "@vitest/coverage-c8": "^0.28.5",
+    "@vitest/ui": "^0.28.5",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.34.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "jsdom": "^21.1.0",
+    "postcss": "^8.4.21",
+    "prettier": "^2.8.4",
+    "prettier-plugin-tailwindcss": "^0.2.2",
+    "tailwindcss": "^3.2.6",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.0",
+    "vitest": "^0.28.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "react",
+    "legal-documents",
+    "archive",
+    "persian",
+    "rtl",
+    "document-processing",
+    "legal-analysis"
+  ],
+  "author": "Iranian Legal Archive Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iranian-legal-archive/ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iranian-legal-archive/ui/issues"
+  },
+  "homepage": "https://aminchedo.github.io/Aihoghoghi/"
+}
