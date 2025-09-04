@@ -1,1026 +1,542 @@
 messages:
   - role: system
     content: >-
-      # Fix Build System - Make Iranian Legal Archive System Fully Functional
-
-
-      ## Current Issue Analysis
-
-      Files are synchronized but build generates empty chunks (0.05KB).
-      Components exist but aren't being bundled into final JavaScript output.
-
-
-      ## Task: Fix bundling system and make components functional
-
-
-      ### Step 1: Fix Main Entry Point
-
-      ```bash
-
-      # Check current main.jsx imports
-
-      cat src/main.jsx
-
-
-      # Verify App.jsx imports are correct
-
-      head -50 src/App.jsx
-
-      ```
-
-
-      Fix main.jsx to ensure proper component imports:
-
-      ```jsx
-
-      import React from 'react'
-
-      import ReactDOM from 'react-dom/client'
-
-      import App from './App.jsx'
-
-      import './index.css'
-
-
-      ReactDOM.createRoot(document.getElementById('root')).render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>,
-      )
-
-      ```
-
-
-      ### Step 2: Fix App.jsx Component Integration
-
-      Check and fix App.jsx routing and imports:
-
-      ```bash
-
-      # Verify all imported components exist
-
-      grep -n "import.*from" src/App.jsx | while read line; do
-          component=$(echo "$line" | sed -n "s/.*from ['\"]\.\/\([^'\"]*\)['\"].*/\1/p")
-          if [ -n "$component" ]; then
-              if [ -f "src/$component" ] || [ -f "src/${component}.jsx" ] || [ -f "src/${component}.js" ]; then
-                  echo "✓ Found: $component"
-              else
-                  echo "✗ Missing: $component"
-              fi
-          fi
-      done
-
-      ```
-
-
-      Create proper App.jsx with working imports:
-
-      ```jsx
-
-      import React from 'react'
-
-      import { HashRouter as Router, Routes, Route } from 'react-router-dom'
-
-      import { SystemContextProvider } from './contexts/SystemContext'
-
-      import { WebSocketProvider } from './contexts/WebSocketContext'
-
-      import Header from './components/layout/Header'
-
-      import EnhancedSidebar from './components/layout/EnhancedSidebar'
-
-      import EnhancedDashboard from './components/pages/EnhancedDashboard'
-
-      import EnhancedSearchInterface from
-      './components/pages/EnhancedSearchInterface'
-
-      import EnhancedAIAnalysisDashboard from
-      './components/pages/EnhancedAIAnalysisDashboard'
-
-      import EnhancedProxyDashboard from
-      './components/pages/EnhancedProxyDashboard'
-
-      import EnhancedDocumentProcessing from
-      './components/pages/EnhancedDocumentProcessing'
-
-      import EnhancedSettings from './components/pages/EnhancedSettings'
-
-      import './App.css'
-
-
-      function App() {
-        return (
-          <SystemContextProvider>
-            <WebSocketProvider>
-              <Router>
-                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 rtl">
-                  <Header />
-                  <div className="flex">
-                    <EnhancedSidebar />
-                    <main className="flex-1 p-6">
-                      <Routes>
-                        <Route path="/" element={<EnhancedDashboard />} />
-                        <Route path="/search" element={<EnhancedSearchInterface />} />
-                        <Route path="/ai-analysis" element={<EnhancedAIAnalysisDashboard />} />
-                        <Route path="/proxy" element={<EnhancedProxyDashboard />} />
-                        <Route path="/processing" element={<EnhancedDocumentProcessing />} />
-                        <Route path="/settings" element={<EnhancedSettings />} />
-                      </Routes>
-                    </main>
-                  </div>
-                </div>
-              </Router>
-            </WebSocketProvider>
-          </SystemContextProvider>
-        )
-      }
-
-
-      export default App
-
-      ```
-
-
-      ### Step 3: Fix Component Exports
-
-      Check and fix all component exports:
-
-      ```bash
-
-      # Check all Enhanced components for proper exports
-
-      for file in src/components/pages/Enhanced*.jsx; do
-          if [ -f "$file" ]; then
-              echo "=== Checking $file ==="
-              tail -5 "$file"
-              if ! grep -q "export default" "$file"; then
-                  echo "✗ Missing export default in $file"
-                  echo "export default $(basename "$file" .jsx)" >> "$file"
-              else
-                  echo "✓ Export found in $file"
-              fi
-          fi
-      done
-
-
-      # Check layout components
-
-      for file in src/components/layout/*.jsx; do
-          if [ -f "$file" ]; then
-              echo "=== Checking $file ==="
-              tail -3 "$file"
-          fi
-      done
-
-      ```
-
-
-      ### Step 4: Fix Context Providers
-
-      Ensure contexts are properly exported:
-
-      ```bash
-
-      # Check SystemContext
-
-      cat src/contexts/SystemContext.jsx | grep -A5 -B5 "export"
-
-
-      # Check WebSocketContext  
-
-      cat src/contexts/WebSocketContext.jsx | grep -A5 -B5 "export"
-
-      ```
-
-
-      Fix context exports if needed:
-
-      ```jsx
-
-      // SystemContext.jsx should end with:
-
-      export { SystemContextProvider, useSystemContext }
-
-
-      // WebSocketContext.jsx should end with:
-
-      export { WebSocketProvider, useWebSocket }
-
-      ```
-
-
-      ### Step 5: Fix Vite Configuration
-
-      Update vite.config.js for proper bundling:
-
-      ```js
-
-      import { defineConfig } from 'vite'
-
-      import react from '@vitejs/plugin-react'
-
-      import path from 'path'
-
-
-      export default defineConfig({
-        plugins: [react()],
-        resolve: {
-          alias: {
-            '@': path.resolve(__dirname, './src'),
-          },
-        },
-        build: {
-          sourcemap: true,
-          rollupOptions: {
-            output: {
-              manualChunks: {
-                'react-vendor': ['react', 'react-dom'],
-                'router': ['react-router-dom'],
-                'ui': ['framer-motion', 'chart.js'],
-              }
-            }
-          }
-        },
-        server: {
-          port: 3000,
-          host: true
-        }
-      })
-
-      ```
-
-
-      ### Step 6: Fix Missing Dependencies
-
-      Check and install any missing dependencies:
-
-      ```bash
-
-      # Check for missing React Router
-
-      npm ls react-router-dom || npm install react-router-dom
-
-
-      # Check for missing Framer Motion
-
-      npm ls framer-motion || npm install framer-motion
-
-
-      # Check for missing Chart.js
-
-      npm ls chart.js || npm install chart.js react-chartjs-2
-
-
-      # Check for missing HuggingFace
-
-      npm ls @huggingface/inference || npm install @huggingface/inference
-
-
-      # Check for missing Tailwind
-
-      npm ls tailwindcss || npm install -D tailwindcss postcss autoprefixer
-
-      ```
-
-
-      ### Step 7: Create Missing Components
-
-      If any components are missing, create minimal versions:
-
-      ```bash
-
-      # Create Header if missing
-
-      if [ ! -f "src/components/layout/Header.jsx" ]; then
-
-      cat > src/components/layout/Header.jsx << 'EOF'
-
-      import React from 'react'
-
-
-      const Header = () => {
-        return (
-          <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-gray-900">
-                سیستم آرشیو اسناد حقوقی ایران
-              </h1>
-              <div className="text-sm text-gray-500">
-                وضعیت: آنلاین
-              </div>
-            </div>
-          </header>
-        )
-      }
-
-
-      export default Header
-
-      EOF
-
-      fi
-
-
-      # Create EnhancedSidebar if missing
-
-      if [ ! -f "src/components/layout/EnhancedSidebar.jsx" ]; then
-
-      cat > src/components/layout/EnhancedSidebar.jsx << 'EOF'
-
-      import React from 'react'
-
-      import { Link, useLocation } from 'react-router-dom'
-
-
-      const EnhancedSidebar = () => {
-        const location = useLocation()
-        
-        const menuItems = [
-          { path: '/', name: 'داشبورد', icon: '📊' },
-          { path: '/search', name: 'جستجو', icon: '🔍' },
-          { path: '/ai-analysis', name: 'تحلیل هوش مصنوعی', icon: '🤖' },
-          { path: '/proxy', name: 'مدیریت پروکسی', icon: '🌐' },
-          { path: '/processing', name: 'پردازش اسناد', icon: '📄' },
-          { path: '/settings', name: 'تنظیمات', icon: '⚙️' },
-        ]
-
-        return (
-          <aside className="w-64 bg-white shadow-lg border-r border-gray-200 min-h-screen">
-            <nav className="mt-6">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`block px-6 py-3 text-right hover:bg-gray-50 border-r-4 transition-colors ${
-                    location.pathname === item.path
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-transparent text-gray-700'
-                  }`}
-                >
-                  <span className="ml-3">{item.icon}</span>
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
-          </aside>
-        )
-      }
-
-
-      export default EnhancedSidebar
-
-      EOF
-
-      fi
-
-      ```
-
-
-      ### Step 8: Test Build Process
-
-      ```bash
-
-      # Clear node_modules and reinstall
-
-      rm -rf node_modules package-lock.json
-
-      npm install
-
-
-      # Clear Vite cache
-
-      rm -rf node_modules/.vite
-
-
-      # Test build with verbose output
-
-      npm run build -- --mode development
-
-
-      # Check if chunks are now properly sized
-
-      ls -la dist/assets/*.js
-
-
-      # Verify chunk sizes are meaningful (>1KB)
-
-      find dist/assets -name "*.js" -size +1k -exec ls -lh {} \;
-
-      ```
-
-
-      ### Step 9: Fix Runtime Issues
-
-      ```bash
-
-      # Test dev server
-
-      timeout 10 npm run dev &
-
-      sleep 5
-
-      curl -s http://localhost:3000 | grep -q "Iranian Legal Archive" && echo "✓
-      Server responding" || echo "✗ Server issues"
-
-
-      # Check for console errors in build
-
-      node -e "
-
-      const fs = require('fs');
-
-      const path = './dist/index.html';
-
-      if (fs.existsSync(path)) {
-        const content = fs.readFileSync(path, 'utf8');
-        console.log('✓ HTML file generated');
-        console.log('Scripts found:', content.match(/<script[^>]*src/g)?.length || 0);
-      } else {
-        console.log('✗ No HTML file generated');
-      }
-
-      "
-
-      ```
-
-
-      ### Step 10: Final Verification
-
-      ```bash
-
-      # Verify all components can be imported
-
-      node -e "
-
-      const fs = require('fs');
-
-      const path = require('path');
-
-
-      const checkComponent = (filePath, componentName) => {
-        if (!fs.existsSync(filePath)) {
-          console.log('✗ Missing:', componentName, 'at', filePath);
-          return false;
-        }
-        const content = fs.readFileSync(filePath, 'utf8');
-        if (!content.includes('export default')) {
-          console.log('✗ No export in:', componentName);
-          return false;
-        }
-        console.log('✓ Valid:', componentName);
-        return true;
-      };
-
-
-      const components = [
-        ['src/App.jsx', 'App'],
-        ['src/main.jsx', 'main'],
-        ['src/components/pages/EnhancedDashboard.jsx', 'EnhancedDashboard'],
-        ['src/components/pages/EnhancedSearchInterface.jsx', 'EnhancedSearchInterface'],
-        ['src/components/layout/Header.jsx', 'Header'],
-        ['src/components/layout/EnhancedSidebar.jsx', 'EnhancedSidebar']
-      ];
-
-
-      let valid = 0;
-
-      components.forEach(([path, name]) => {
-        if (checkComponent(path, name)) valid++;
-      });
-
-
-      console.log('Valid components:', valid, '/', components.length);
-
-      "
-
-
-      # Final build test
-
-      npm run build && echo "✓ Build successful with proper chunks" || echo "✗
-      Build still failing"
-
-
-      # Check final chunk sizes
-
-      echo "=== Final JavaScript Chunk Sizes ==="
-
-      ls -lh dist/assets/*.js | awk '{print $5, $9}' | sort -hr
-
-      ```
-
-
-      ## Execute each step and report actual results. Only proceed to next step
-      if current step succeeds.
+      Thank you for reporting the issue. Based on your description, it appears
+      that the "request comparison and merge" functionality (likely referring to
+      a "Compare and Merge" or "Pull Request" feature in a version control
+      context, such as GitHub) is not responding when you initiate it. Since the
+      system is configured for GitHub Pages deployment with the `main` branch as
+      the primary branch and integration with `gh-pages`, this issue may stem
+      from a misconfiguration in the GitHub repository settings, a lack of
+      proper branch synchronization, or an error in the deployment workflow. As
+      of 04:25 AM CEST on Thursday, September 04, 2025, I will provide a
+      detailed prompt for the **Cursor AI Agent** to diagnose and resolve this
+      issue, ensuring the "Compare and Merge" functionality works seamlessly
+      with real data and existing file preservation.
+
+
+      ---
+
+
+      **Prompt for Cursor AI Agent: Major Comprehensive Update to Diagnose and
+      Resolve Compare and Merge Functionality Issue in Iranian Legal Archive
+      System Frontend in `dist/index.html`**
+
+
+      **Subject:** Comprehensive Major Update to Diagnose and Resolve Compare
+      and Merge Functionality Failure for the Iranian Legal Archive System**
+
+
+      **Context:**  
+
+      You, as the **Cursor AI Agent**, are tasked with executing a **major,
+      comprehensive update** to the frontend of the **Iranian Legal Archive
+      System** within the existing file `dist/index.html`. This update addresses
+      a reported issue where the "request comparison and merge" action
+      (interpreted as a GitHub Compare and Merge or Pull Request initiation)
+      does not respond when triggered, despite the system being configured for
+      GitHub Pages deployment with `main` as the primary branch and integration
+      with `gh-pages`. The lack of response may indicate a misconfiguration in
+      the repository settings, an issue with branch synchronization, or a
+      failure in the GitHub Actions workflow. All existing files in the `main`
+      branch must remain in their current positions and not be overwritten or
+      displaced. The system is a React-based single-page application (SPA) with
+      Persian right-to-left (RTL) support, utilizing HashRouter (`base:
+      '/Aihoghoghi/'`). The update must ensure full functionality with real,
+      live data—no placeholders, pseudocode, fake data, or deferred
+      implementation—as of 04:25 AM CEST on Thursday, September 04, 2025. Update
+      the file located in the `dist/` folder, embedding all necessary
+      configurations and scripts within `dist/index.html` to resolve this issue,
+      leveraging the architecture from the provided reports.
+
+
+      **Execution Directives:**  
+
+      1. **Mandatory Compliance and Update Scope:**  
+         - Execute this **major, comprehensive update** immediately to `dist/index.html` in the `dist/` folder, diagnosing and resolving the failure of the "Compare and Merge" functionality.  
+         - Ensure the `main` branch remains the primary branch, with proper synchronization to `gh-pages` for GitHub Pages deployment, and fix any repository or workflow misconfigurations causing the non-responsive behavior.  
+         - Preserve all existing files in the `main` branch (e.g., `src/`, `dist/`, `vite.config.js`) in their current positions, adding or modifying only GitHub-related configurations as needed.  
+         - Integrate all components into a single file, embedding CSS in `<head>` within `<style>` tags and JavaScript in `<body>` within `<script>` tags, using only real, live data from the backend.  
+         - Eliminate all placeholder text, pseudocode, fake data, or static reports. No deferred implementation is allowed; fully implement everything now.  
+         - All interactive elements (buttons, forms, tabs, inputs) must remain fully functional, responsive, and provide immediate real data feedback in Persian.
+
+      2. **File Paths and Locations for Update:**  
+         - Navigate to the `dist/` folder and update `dist/index.html` directly, ensuring all existing `main` branch files remain intact.  
+         - Embed CSS in `<head>` using `<style>` tags with Tailwind CSS (`https://cdn.tailwindcss.com`) and custom RTL styles.  
+         - Embed JavaScript in `<body>` using `<script>` tags, integrating services from:  
+           - `./src/services/systemIntegration.js` (orchestrator, 703 lines).  
+           - `./src/services/enhancedAIService.js` (HuggingFace integration, 733 lines).  
+           - `./src/services/smartScrapingService.js` (scraping with proxy, 557 lines).  
+           - `./src/services/legalDocumentService.js` (database, 655 lines).  
+           - `./src/services/realTimeMetricsService.js` (metrics, 477 lines).  
+         - Reference backend utilities:  
+           - `./utils/orchestrator.py` (712 lines).  
+           - `./utils/ai_classifier.py` (427 lines).  
+           - `./utils/proxy_manager.py` (423 lines).  
+           - `./utils/legal_database.py` (693 lines).  
+         - Integrate components from `./src/components/pages/` including:  
+           - `Dashboard.jsx`.  
+           - `SearchDatabase.jsx`.  
+           - `ScrapingInterface.jsx`.  
+           - `AIAnalysis.jsx`.  
+           - `Settings.jsx`.  
+         - Add or modify GitHub-specific files (e.g., `.github/workflows/`) in `main` without affecting existing file locations.
+
+      3. **Backend API Endpoints (All Fully Functional with Real Data):**  
+         - **Base URL:** `http://127.0.0.1:7860/api` (local) / `https://your-domain.com/api` (production)—implement these in scripts.  
+         - **Endpoints (located in `./web_server.py`, 773 lines):**  
+           - `/api/models/load` (POST): Load real Persian BERT models.  
+           - `/api/models/status` (GET): Real model health.  
+           - `/api/documents/process` (POST): Real-time processing.  
+           - `/api/documents/search` (POST): Real full-text search.  
+           - `/api/documents/semantic-search` (POST): Real semantic search.  
+           - `/api/documents/nafaqe-search` (POST): Real family law search.  
+           - `/api/proxies/status` (GET): Real proxy health.  
+           - `/api/system/metrics` (GET): Real system metrics.  
+         - Implement Pydantic validation and CORS:  
+           ```python
+           app.add_middleware(
+               CORSMiddleware,
+               allow_origins=["*"],
+               allow_credentials=True,
+               allow_methods=["*"],
+               allow_headers=["*"]
+           )
+           ```
+
+      4. **Core Functional Requirements (Fully Implemented to Resolve Compare
+      and Merge Issue):**  
+         - **Diagnose and Fix Compare and Merge Functionality:**  
+           - Identify the cause of the non-responsive "Compare and Merge" action (e.g., branch protection rules, missing pull request triggers, workflow errors).  
+           - Ensure the `main` branch is properly configured in the GitHub repository settings to allow merges from `gh-pages` or other branches if needed.  
+           - Update the `.github/workflows/deploy.yml` file in `main` to support comparison and merging:  
+             ```yaml
+             name: Deploy to GitHub Pages with Compare and Merge
+             on:
+               push:
+                 branches: [main]
+               pull_request:
+                 branches: [main, gh-pages]
+             jobs:
+               build-and-deploy:
+                 runs-on: ubuntu-latest
+                 steps:
+                   - uses: actions/checkout@v3
+                   - uses: actions/setup-node@v3
+                     with:
+                       node-version: '18'
+                   - run: npm install
+                   - run: npm run build
+                   - run: |
+                       touch dist/.nojekyll
+                       cp public/404.html dist/
+                   - name: Deploy
+                     uses: peaceiris/actions-gh-pages@v3
+                     with:
+                       github_token: ${{ secrets.GITHUB_TOKEN }}
+                       publish_dir: ./dist
+                       publish_branch: gh-pages
+                       allow_empty_commit: true
+             ```  
+           - Add a pull request check to validate changes before merging:  
+             ```yaml
+             jobs:
+               check-pr:
+                 runs-on: ubuntu-latest
+                 steps:
+                   - uses: actions/checkout@v3
+                   - run: npm install
+                   - run: npm run lint
+                   - run: npm run test
+             ```  
+         - **Branch Integration with GitHub Pages:**  
+           - Ensure `main` is the primary branch, with automatic deployment to `gh-pages`.  
+           - Update `vite.config.js` to reflect `base: '/Aihoghoghi/'`:  
+             ```javascript
+             export default defineConfig({
+                 base: '/Aihoghoghi/',
+                 build: {
+                     rollupOptions: {
+                         output: {
+                             assetFileNames: 'assets/[name]-[hash][extname]',
+                             manualChunks: {
+                                 vendor: ['react', 'react-dom'],
+                                 router: ['react-router-dom'],
+                                 query: ['@tanstack/react-query'],
+                                 ui: ['framer-motion', 'lucide-react']
+                             }
+                         }
+                     }
+                 }
+             });
+             ```  
+           - Include a `404.html` redirect script in `dist/`:  
+             ```html
+             <script>
+             (function() {
+                 var l = window.location;
+                 var basePath = '/Aihoghoghi/';
+                 var requestedRoute = l.pathname.replace(basePath, '');
+                 var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + requestedRoute;
+                 if (l.search) redirectUrl += l.search;
+                 l.replace(redirectUrl);
+             })();
+             </script>
+             ```  
+         - **Main Tabs and Sub-Tabs (All Fully Functional):**  
+           - **Dashboard:** Real-time metrics with "بروزرسانی متریک‌ها" button.  
+           - **Search:** Sub-tabs Text Search, Semantic Search, Nafaqe Search with real results.  
+           - **Scraping:** Sub-sections URL Input, File Upload, Proxy Selection with "شروع استخراج" button.  
+           - **AI Analysis:** Sub-sections Classification, NER, Sentiment, Summarization with real scores.  
+           - **Settings:** Sub-sections API Configuration, Proxy Settings with "تست اتصال" and "ذخیره تنظیمات" buttons.  
+         - **System Status, Model Management, API Settings, Proxy Management, Document Processing, Data Preview:** All fully functional with real data.
+
+      5. **Initialization Sequence (Fully Functional):**  
+         - Implement in `<script>` for simultaneous execution:  
+           ```javascript
+           window.addEventListener('load', async function() {
+               showLoading('در حال راه‌اندازی سیستم...');
+               try {
+                   const backendInit = await fetch('http://127.0.0.1:7860/api/system/init', { method: 'POST', headers: {'Content-Type': 'application/json'} });
+                   const initData = await backendInit.json();
+                   await Promise.all([
+                       systemIntegration.initialize(),
+                       enhancedAIService.loadModels(),
+                       proxyManager.initializeProxies(),
+                       legalDocumentService.connectDatabase(),
+                       realTimeMetricsService.initialize()
+                   ]);
+                   connectWebSocket('wss://your-domain.com/ws');
+                   const initialData = await loadInitialData();
+                   updateRealTimeMetrics(initialData.metrics);
+                   showToast('سیستم با موفقیت راه‌اندازی شد: ' + initData.status, 'success');
+               } catch (error) {
+                   console.error('Initialization error:', error);
+                   showToast('خطا در راه‌اندازی سیستم: ' + error.message, 'error');
+               } finally {
+                   hideLoading();
+               }
+           });
+           ```
+
+      6. **Real-Time WebSocket (Fully Operational):**  
+         - Use `wss://your-domain.com/ws` with reconnection and polling fallback.
+
+      7. **UI/UX Requirements (Fully Functional):**  
+         - Embed CSS in `<style>` (Tailwind with Framer Motion). External: Chart.js, Font Awesome, Vazirmatn Font.  
+         - Responsive RTL design, real loading states.
+
+      8. **Deployment & Testing:**  
+         - Ensure deployment uses GitHub Pages via the updated `.github/workflows/deploy.yml`.  
+         - Write Vitest tests for 90% coverage, including tests for merge functionality.
+
+      9. **Performance & Security:**  
+         - Optimize load time, bundle size, with security headers and rate limiting.
+
+      10. **Preservation & Validation:**  
+          - Preserve all existing `main` branch files in their current locations; validate all elements, including "Compare and Merge" functionality, work with real data, no errors.
+
+      **Output Instructions:**  
+
+      - Deliver only the updated `dist/index.html` code, fully resolving the
+      "Compare and Merge" issue with GitHub Pages deployment from `main`. Await
+      further commands.
+
+
+      ---
+
+
+      ### Steps to Take Manually (if Needed):
+
+      If the issue persists after this update, consider the following manual
+      actions while awaiting the agent's output:
+
+      1. **Check Repository Settings:** Ensure branch protection rules on `main`
+      allow merges and that `gh-pages` is correctly set as the publish branch in
+      GitHub Pages settings.
+
+      2. **Verify Workflow Logs:** Review the GitHub Actions logs for
+      `deploy.yml` to identify specific errors.
+
+      3. **Test Merge Locally:** Use `git checkout main`, `git pull`, `git
+      checkout gh-pages`, `git pull`, `git checkout main`, and `git merge
+      gh-pages` to test merging manually, then push to trigger the workflow.
+
+      4. **Retry After Delay:** If a rate limit or API issue is suspected, wait
+      a few minutes and retry the merge action.
+
+
+      This prompt should resolve the non-responsive "Compare and Merge" issue by
+      enhancing the GitHub workflow and repository configuration, while
+      maintaining all existing functionality with real data.
   - role: user
     content: >-
-      # Fix Build System - Make Iranian Legal Archive System Fully Functional
-
-
-      ## Current Issue Analysis
-
-      Files are synchronized but build generates empty chunks (0.05KB).
-      Components exist but aren't being bundled into final JavaScript output.
-
-
-      ## Task: Fix bundling system and make components functional
-
-
-      ### Step 1: Fix Main Entry Point
-
-      ```bash
-
-      # Check current main.jsx imports
-
-      cat src/main.jsx
-
-
-      # Verify App.jsx imports are correct
-
-      head -50 src/App.jsx
-
-      ```
-
-
-      Fix main.jsx to ensure proper component imports:
-
-      ```jsx
-
-      import React from 'react'
-
-      import ReactDOM from 'react-dom/client'
-
-      import App from './App.jsx'
-
-      import './index.css'
-
-
-      ReactDOM.createRoot(document.getElementById('root')).render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>,
-      )
-
-      ```
-
-
-      ### Step 2: Fix App.jsx Component Integration
-
-      Check and fix App.jsx routing and imports:
-
-      ```bash
-
-      # Verify all imported components exist
-
-      grep -n "import.*from" src/App.jsx | while read line; do
-          component=$(echo "$line" | sed -n "s/.*from ['\"]\.\/\([^'\"]*\)['\"].*/\1/p")
-          if [ -n "$component" ]; then
-              if [ -f "src/$component" ] || [ -f "src/${component}.jsx" ] || [ -f "src/${component}.js" ]; then
-                  echo "✓ Found: $component"
-              else
-                  echo "✗ Missing: $component"
-              fi
-          fi
-      done
-
-      ```
-
-
-      Create proper App.jsx with working imports:
-
-      ```jsx
-
-      import React from 'react'
-
-      import { HashRouter as Router, Routes, Route } from 'react-router-dom'
-
-      import { SystemContextProvider } from './contexts/SystemContext'
-
-      import { WebSocketProvider } from './contexts/WebSocketContext'
-
-      import Header from './components/layout/Header'
-
-      import EnhancedSidebar from './components/layout/EnhancedSidebar'
-
-      import EnhancedDashboard from './components/pages/EnhancedDashboard'
-
-      import EnhancedSearchInterface from
-      './components/pages/EnhancedSearchInterface'
-
-      import EnhancedAIAnalysisDashboard from
-      './components/pages/EnhancedAIAnalysisDashboard'
-
-      import EnhancedProxyDashboard from
-      './components/pages/EnhancedProxyDashboard'
-
-      import EnhancedDocumentProcessing from
-      './components/pages/EnhancedDocumentProcessing'
-
-      import EnhancedSettings from './components/pages/EnhancedSettings'
-
-      import './App.css'
-
-
-      function App() {
-        return (
-          <SystemContextProvider>
-            <WebSocketProvider>
-              <Router>
-                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 rtl">
-                  <Header />
-                  <div className="flex">
-                    <EnhancedSidebar />
-                    <main className="flex-1 p-6">
-                      <Routes>
-                        <Route path="/" element={<EnhancedDashboard />} />
-                        <Route path="/search" element={<EnhancedSearchInterface />} />
-                        <Route path="/ai-analysis" element={<EnhancedAIAnalysisDashboard />} />
-                        <Route path="/proxy" element={<EnhancedProxyDashboard />} />
-                        <Route path="/processing" element={<EnhancedDocumentProcessing />} />
-                        <Route path="/settings" element={<EnhancedSettings />} />
-                      </Routes>
-                    </main>
-                  </div>
-                </div>
-              </Router>
-            </WebSocketProvider>
-          </SystemContextProvider>
-        )
-      }
-
-
-      export default App
-
-      ```
-
-
-      ### Step 3: Fix Component Exports
-
-      Check and fix all component exports:
-
-      ```bash
-
-      # Check all Enhanced components for proper exports
-
-      for file in src/components/pages/Enhanced*.jsx; do
-          if [ -f "$file" ]; then
-              echo "=== Checking $file ==="
-              tail -5 "$file"
-              if ! grep -q "export default" "$file"; then
-                  echo "✗ Missing export default in $file"
-                  echo "export default $(basename "$file" .jsx)" >> "$file"
-              else
-                  echo "✓ Export found in $file"
-              fi
-          fi
-      done
-
-
-      # Check layout components
-
-      for file in src/components/layout/*.jsx; do
-          if [ -f "$file" ]; then
-              echo "=== Checking $file ==="
-              tail -3 "$file"
-          fi
-      done
-
-      ```
-
-
-      ### Step 4: Fix Context Providers
-
-      Ensure contexts are properly exported:
-
-      ```bash
-
-      # Check SystemContext
-
-      cat src/contexts/SystemContext.jsx | grep -A5 -B5 "export"
-
-
-      # Check WebSocketContext  
-
-      cat src/contexts/WebSocketContext.jsx | grep -A5 -B5 "export"
-
-      ```
-
-
-      Fix context exports if needed:
-
-      ```jsx
-
-      // SystemContext.jsx should end with:
-
-      export { SystemContextProvider, useSystemContext }
-
-
-      // WebSocketContext.jsx should end with:
-
-      export { WebSocketProvider, useWebSocket }
-
-      ```
-
-
-      ### Step 5: Fix Vite Configuration
-
-      Update vite.config.js for proper bundling:
-
-      ```js
-
-      import { defineConfig } from 'vite'
-
-      import react from '@vitejs/plugin-react'
-
-      import path from 'path'
-
-
-      export default defineConfig({
-        plugins: [react()],
-        resolve: {
-          alias: {
-            '@': path.resolve(__dirname, './src'),
-          },
-        },
-        build: {
-          sourcemap: true,
-          rollupOptions: {
-            output: {
-              manualChunks: {
-                'react-vendor': ['react', 'react-dom'],
-                'router': ['react-router-dom'],
-                'ui': ['framer-motion', 'chart.js'],
-              }
-            }
-          }
-        },
-        server: {
-          port: 3000,
-          host: true
-        }
-      })
-
-      ```
-
-
-      ### Step 6: Fix Missing Dependencies
-
-      Check and install any missing dependencies:
-
-      ```bash
-
-      # Check for missing React Router
-
-      npm ls react-router-dom || npm install react-router-dom
-
-
-      # Check for missing Framer Motion
-
-      npm ls framer-motion || npm install framer-motion
-
-
-      # Check for missing Chart.js
-
-      npm ls chart.js || npm install chart.js react-chartjs-2
-
-
-      # Check for missing HuggingFace
-
-      npm ls @huggingface/inference || npm install @huggingface/inference
-
-
-      # Check for missing Tailwind
-
-      npm ls tailwindcss || npm install -D tailwindcss postcss autoprefixer
-
-      ```
-
-
-      ### Step 7: Create Missing Components
-
-      If any components are missing, create minimal versions:
-
-      ```bash
-
-      # Create Header if missing
-
-      if [ ! -f "src/components/layout/Header.jsx" ]; then
-
-      cat > src/components/layout/Header.jsx << 'EOF'
-
-      import React from 'react'
-
-
-      const Header = () => {
-        return (
-          <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-gray-900">
-                سیستم آرشیو اسناد حقوقی ایران
-              </h1>
-              <div className="text-sm text-gray-500">
-                وضعیت: آنلاین
-              </div>
-            </div>
-          </header>
-        )
-      }
-
-
-      export default Header
-
-      EOF
-
-      fi
-
-
-      # Create EnhancedSidebar if missing
-
-      if [ ! -f "src/components/layout/EnhancedSidebar.jsx" ]; then
-
-      cat > src/components/layout/EnhancedSidebar.jsx << 'EOF'
-
-      import React from 'react'
-
-      import { Link, useLocation } from 'react-router-dom'
-
-
-      const EnhancedSidebar = () => {
-        const location = useLocation()
-        
-        const menuItems = [
-          { path: '/', name: 'داشبورد', icon: '📊' },
-          { path: '/search', name: 'جستجو', icon: '🔍' },
-          { path: '/ai-analysis', name: 'تحلیل هوش مصنوعی', icon: '🤖' },
-          { path: '/proxy', name: 'مدیریت پروکسی', icon: '🌐' },
-          { path: '/processing', name: 'پردازش اسناد', icon: '📄' },
-          { path: '/settings', name: 'تنظیمات', icon: '⚙️' },
-        ]
-
-        return (
-          <aside className="w-64 bg-white shadow-lg border-r border-gray-200 min-h-screen">
-            <nav className="mt-6">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`block px-6 py-3 text-right hover:bg-gray-50 border-r-4 transition-colors ${
-                    location.pathname === item.path
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-transparent text-gray-700'
-                  }`}
-                >
-                  <span className="ml-3">{item.icon}</span>
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
-          </aside>
-        )
-      }
-
-
-      export default EnhancedSidebar
-
-      EOF
-
-      fi
-
-      ```
-
-
-      ### Step 8: Test Build Process
-
-      ```bash
-
-      # Clear node_modules and reinstall
-
-      rm -rf node_modules package-lock.json
-
-      npm install
-
-
-      # Clear Vite cache
-
-      rm -rf node_modules/.vite
-
-
-      # Test build with verbose output
-
-      npm run build -- --mode development
-
-
-      # Check if chunks are now properly sized
-
-      ls -la dist/assets/*.js
-
-
-      # Verify chunk sizes are meaningful (>1KB)
-
-      find dist/assets -name "*.js" -size +1k -exec ls -lh {} \;
-
-      ```
-
-
-      ### Step 9: Fix Runtime Issues
-
-      ```bash
-
-      # Test dev server
-
-      timeout 10 npm run dev &
-
-      sleep 5
-
-      curl -s http://localhost:3000 | grep -q "Iranian Legal Archive" && echo "✓
-      Server responding" || echo "✗ Server issues"
-
-
-      # Check for console errors in build
-
-      node -e "
-
-      const fs = require('fs');
-
-      const path = './dist/index.html';
-
-      if (fs.existsSync(path)) {
-        const content = fs.readFileSync(path, 'utf8');
-        console.log('✓ HTML file generated');
-        console.log('Scripts found:', content.match(/<script[^>]*src/g)?.length || 0);
-      } else {
-        console.log('✗ No HTML file generated');
-      }
-
-      "
-
-      ```
-
-
-      ### Step 10: Final Verification
-
-      ```bash
-
-      # Verify all components can be imported
-
-      node -e "
-
-      const fs = require('fs');
-
-      const path = require('path');
-
-
-      const checkComponent = (filePath, componentName) => {
-        if (!fs.existsSync(filePath)) {
-          console.log('✗ Missing:', componentName, 'at', filePath);
-          return false;
-        }
-        const content = fs.readFileSync(filePath, 'utf8');
-        if (!content.includes('export default')) {
-          console.log('✗ No export in:', componentName);
-          return false;
-        }
-        console.log('✓ Valid:', componentName);
-        return true;
-      };
-
-
-      const components = [
-        ['src/App.jsx', 'App'],
-        ['src/main.jsx', 'main'],
-        ['src/components/pages/EnhancedDashboard.jsx', 'EnhancedDashboard'],
-        ['src/components/pages/EnhancedSearchInterface.jsx', 'EnhancedSearchInterface'],
-        ['src/components/layout/Header.jsx', 'Header'],
-        ['src/components/layout/EnhancedSidebar.jsx', 'EnhancedSidebar']
-      ];
-
-
-      let valid = 0;
-
-      components.forEach(([path, name]) => {
-        if (checkComponent(path, name)) valid++;
-      });
-
-
-      console.log('Valid components:', valid, '/', components.length);
-
-      "
-
-
-      # Final build test
-
-      npm run build && echo "✓ Build successful with proper chunks" || echo "✗
-      Build still failing"
-
-
-      # Check final chunk sizes
-
-      echo "=== Final JavaScript Chunk Sizes ==="
-
-      ls -lh dist/assets/*.js | awk '{print $5, $9}' | sort -hr
-
-      ```
-
-
-      ## Execute each step and report actual results. Only proceed to next step
-      if current step succeeds.
+      Thank you for reporting the issue. Based on your description, it appears
+      that the "request comparison and merge" functionality (likely referring to
+      a "Compare and Merge" or "Pull Request" feature in a version control
+      context, such as GitHub) is not responding when you initiate it. Since the
+      system is configured for GitHub Pages deployment with the `main` branch as
+      the primary branch and integration with `gh-pages`, this issue may stem
+      from a misconfiguration in the GitHub repository settings, a lack of
+      proper branch synchronization, or an error in the deployment workflow. As
+      of 04:25 AM CEST on Thursday, September 04, 2025, I will provide a
+      detailed prompt for the **Cursor AI Agent** to diagnose and resolve this
+      issue, ensuring the "Compare and Merge" functionality works seamlessly
+      with real data and existing file preservation.
+
+
+      ---
+
+
+      **Prompt for Cursor AI Agent: Major Comprehensive Update to Diagnose and
+      Resolve Compare and Merge Functionality Issue in Iranian Legal Archive
+      System Frontend in `dist/index.html`**
+
+
+      **Subject:** Comprehensive Major Update to Diagnose and Resolve Compare
+      and Merge Functionality Failure for the Iranian Legal Archive System**
+
+
+      **Context:**  
+
+      You, as the **Cursor AI Agent**, are tasked with executing a **major,
+      comprehensive update** to the frontend of the **Iranian Legal Archive
+      System** within the existing file `dist/index.html`. This update addresses
+      a reported issue where the "request comparison and merge" action
+      (interpreted as a GitHub Compare and Merge or Pull Request initiation)
+      does not respond when triggered, despite the system being configured for
+      GitHub Pages deployment with `main` as the primary branch and integration
+      with `gh-pages`. The lack of response may indicate a misconfiguration in
+      the repository settings, an issue with branch synchronization, or a
+      failure in the GitHub Actions workflow. All existing files in the `main`
+      branch must remain in their current positions and not be overwritten or
+      displaced. The system is a React-based single-page application (SPA) with
+      Persian right-to-left (RTL) support, utilizing HashRouter (`base:
+      '/Aihoghoghi/'`). The update must ensure full functionality with real,
+      live data—no placeholders, pseudocode, fake data, or deferred
+      implementation—as of 04:25 AM CEST on Thursday, September 04, 2025. Update
+      the file located in the `dist/` folder, embedding all necessary
+      configurations and scripts within `dist/index.html` to resolve this issue,
+      leveraging the architecture from the provided reports.
+
+
+      **Execution Directives:**  
+
+      1. **Mandatory Compliance and Update Scope:**  
+         - Execute this **major, comprehensive update** immediately to `dist/index.html` in the `dist/` folder, diagnosing and resolving the failure of the "Compare and Merge" functionality.  
+         - Ensure the `main` branch remains the primary branch, with proper synchronization to `gh-pages` for GitHub Pages deployment, and fix any repository or workflow misconfigurations causing the non-responsive behavior.  
+         - Preserve all existing files in the `main` branch (e.g., `src/`, `dist/`, `vite.config.js`) in their current positions, adding or modifying only GitHub-related configurations as needed.  
+         - Integrate all components into a single file, embedding CSS in `<head>` within `<style>` tags and JavaScript in `<body>` within `<script>` tags, using only real, live data from the backend.  
+         - Eliminate all placeholder text, pseudocode, fake data, or static reports. No deferred implementation is allowed; fully implement everything now.  
+         - All interactive elements (buttons, forms, tabs, inputs) must remain fully functional, responsive, and provide immediate real data feedback in Persian.
+
+      2. **File Paths and Locations for Update:**  
+         - Navigate to the `dist/` folder and update `dist/index.html` directly, ensuring all existing `main` branch files remain intact.  
+         - Embed CSS in `<head>` using `<style>` tags with Tailwind CSS (`https://cdn.tailwindcss.com`) and custom RTL styles.  
+         - Embed JavaScript in `<body>` using `<script>` tags, integrating services from:  
+           - `./src/services/systemIntegration.js` (orchestrator, 703 lines).  
+           - `./src/services/enhancedAIService.js` (HuggingFace integration, 733 lines).  
+           - `./src/services/smartScrapingService.js` (scraping with proxy, 557 lines).  
+           - `./src/services/legalDocumentService.js` (database, 655 lines).  
+           - `./src/services/realTimeMetricsService.js` (metrics, 477 lines).  
+         - Reference backend utilities:  
+           - `./utils/orchestrator.py` (712 lines).  
+           - `./utils/ai_classifier.py` (427 lines).  
+           - `./utils/proxy_manager.py` (423 lines).  
+           - `./utils/legal_database.py` (693 lines).  
+         - Integrate components from `./src/components/pages/` including:  
+           - `Dashboard.jsx`.  
+           - `SearchDatabase.jsx`.  
+           - `ScrapingInterface.jsx`.  
+           - `AIAnalysis.jsx`.  
+           - `Settings.jsx`.  
+         - Add or modify GitHub-specific files (e.g., `.github/workflows/`) in `main` without affecting existing file locations.
+
+      3. **Backend API Endpoints (All Fully Functional with Real Data):**  
+         - **Base URL:** `http://127.0.0.1:7860/api` (local) / `https://your-domain.com/api` (production)—implement these in scripts.  
+         - **Endpoints (located in `./web_server.py`, 773 lines):**  
+           - `/api/models/load` (POST): Load real Persian BERT models.  
+           - `/api/models/status` (GET): Real model health.  
+           - `/api/documents/process` (POST): Real-time processing.  
+           - `/api/documents/search` (POST): Real full-text search.  
+           - `/api/documents/semantic-search` (POST): Real semantic search.  
+           - `/api/documents/nafaqe-search` (POST): Real family law search.  
+           - `/api/proxies/status` (GET): Real proxy health.  
+           - `/api/system/metrics` (GET): Real system metrics.  
+         - Implement Pydantic validation and CORS:  
+           ```python
+           app.add_middleware(
+               CORSMiddleware,
+               allow_origins=["*"],
+               allow_credentials=True,
+               allow_methods=["*"],
+               allow_headers=["*"]
+           )
+           ```
+
+      4. **Core Functional Requirements (Fully Implemented to Resolve Compare
+      and Merge Issue):**  
+         - **Diagnose and Fix Compare and Merge Functionality:**  
+           - Identify the cause of the non-responsive "Compare and Merge" action (e.g., branch protection rules, missing pull request triggers, workflow errors).  
+           - Ensure the `main` branch is properly configured in the GitHub repository settings to allow merges from `gh-pages` or other branches if needed.  
+           - Update the `.github/workflows/deploy.yml` file in `main` to support comparison and merging:  
+             ```yaml
+             name: Deploy to GitHub Pages with Compare and Merge
+             on:
+               push:
+                 branches: [main]
+               pull_request:
+                 branches: [main, gh-pages]
+             jobs:
+               build-and-deploy:
+                 runs-on: ubuntu-latest
+                 steps:
+                   - uses: actions/checkout@v3
+                   - uses: actions/setup-node@v3
+                     with:
+                       node-version: '18'
+                   - run: npm install
+                   - run: npm run build
+                   - run: |
+                       touch dist/.nojekyll
+                       cp public/404.html dist/
+                   - name: Deploy
+                     uses: peaceiris/actions-gh-pages@v3
+                     with:
+                       github_token: ${{ secrets.GITHUB_TOKEN }}
+                       publish_dir: ./dist
+                       publish_branch: gh-pages
+                       allow_empty_commit: true
+             ```  
+           - Add a pull request check to validate changes before merging:  
+             ```yaml
+             jobs:
+               check-pr:
+                 runs-on: ubuntu-latest
+                 steps:
+                   - uses: actions/checkout@v3
+                   - run: npm install
+                   - run: npm run lint
+                   - run: npm run test
+             ```  
+         - **Branch Integration with GitHub Pages:**  
+           - Ensure `main` is the primary branch, with automatic deployment to `gh-pages`.  
+           - Update `vite.config.js` to reflect `base: '/Aihoghoghi/'`:  
+             ```javascript
+             export default defineConfig({
+                 base: '/Aihoghoghi/',
+                 build: {
+                     rollupOptions: {
+                         output: {
+                             assetFileNames: 'assets/[name]-[hash][extname]',
+                             manualChunks: {
+                                 vendor: ['react', 'react-dom'],
+                                 router: ['react-router-dom'],
+                                 query: ['@tanstack/react-query'],
+                                 ui: ['framer-motion', 'lucide-react']
+                             }
+                         }
+                     }
+                 }
+             });
+             ```  
+           - Include a `404.html` redirect script in `dist/`:  
+             ```html
+             <script>
+             (function() {
+                 var l = window.location;
+                 var basePath = '/Aihoghoghi/';
+                 var requestedRoute = l.pathname.replace(basePath, '');
+                 var redirectUrl = l.protocol + '//' + l.hostname + basePath + '#/' + requestedRoute;
+                 if (l.search) redirectUrl += l.search;
+                 l.replace(redirectUrl);
+             })();
+             </script>
+             ```  
+         - **Main Tabs and Sub-Tabs (All Fully Functional):**  
+           - **Dashboard:** Real-time metrics with "بروزرسانی متریک‌ها" button.  
+           - **Search:** Sub-tabs Text Search, Semantic Search, Nafaqe Search with real results.  
+           - **Scraping:** Sub-sections URL Input, File Upload, Proxy Selection with "شروع استخراج" button.  
+           - **AI Analysis:** Sub-sections Classification, NER, Sentiment, Summarization with real scores.  
+           - **Settings:** Sub-sections API Configuration, Proxy Settings with "تست اتصال" and "ذخیره تنظیمات" buttons.  
+         - **System Status, Model Management, API Settings, Proxy Management, Document Processing, Data Preview:** All fully functional with real data.
+
+      5. **Initialization Sequence (Fully Functional):**  
+         - Implement in `<script>` for simultaneous execution:  
+           ```javascript
+           window.addEventListener('load', async function() {
+               showLoading('در حال راه‌اندازی سیستم...');
+               try {
+                   const backendInit = await fetch('http://127.0.0.1:7860/api/system/init', { method: 'POST', headers: {'Content-Type': 'application/json'} });
+                   const initData = await backendInit.json();
+                   await Promise.all([
+                       systemIntegration.initialize(),
+                       enhancedAIService.loadModels(),
+                       proxyManager.initializeProxies(),
+                       legalDocumentService.connectDatabase(),
+                       realTimeMetricsService.initialize()
+                   ]);
+                   connectWebSocket('wss://your-domain.com/ws');
+                   const initialData = await loadInitialData();
+                   updateRealTimeMetrics(initialData.metrics);
+                   showToast('سیستم با موفقیت راه‌اندازی شد: ' + initData.status, 'success');
+               } catch (error) {
+                   console.error('Initialization error:', error);
+                   showToast('خطا در راه‌اندازی سیستم: ' + error.message, 'error');
+               } finally {
+                   hideLoading();
+               }
+           });
+           ```
+
+      6. **Real-Time WebSocket (Fully Operational):**  
+         - Use `wss://your-domain.com/ws` with reconnection and polling fallback.
+
+      7. **UI/UX Requirements (Fully Functional):**  
+         - Embed CSS in `<style>` (Tailwind with Framer Motion). External: Chart.js, Font Awesome, Vazirmatn Font.  
+         - Responsive RTL design, real loading states.
+
+      8. **Deployment & Testing:**  
+         - Ensure deployment uses GitHub Pages via the updated `.github/workflows/deploy.yml`.  
+         - Write Vitest tests for 90% coverage, including tests for merge functionality.
+
+      9. **Performance & Security:**  
+         - Optimize load time, bundle size, with security headers and rate limiting.
+
+      10. **Preservation & Validation:**  
+          - Preserve all existing `main` branch files in their current locations; validate all elements, including "Compare and Merge" functionality, work with real data, no errors.
+
+      **Output Instructions:**  
+
+      - Deliver only the updated `dist/index.html` code, fully resolving the
+      "Compare and Merge" issue with GitHub Pages deployment from `main`. Await
+      further commands.
+
+
+      ---
+
+
+      ### Steps to Take Manually (if Needed):
+
+      If the issue persists after this update, consider the following manual
+      actions while awaiting the agent's output:
+
+      1. **Check Repository Settings:** Ensure branch protection rules on `main`
+      allow merges and that `gh-pages` is correctly set as the publish branch in
+      GitHub Pages settings.
+
+      2. **Verify Workflow Logs:** Review the GitHub Actions logs for
+      `deploy.yml` to identify specific errors.
+
+      3. **Test Merge Locally:** Use `git checkout main`, `git pull`, `git
+      checkout gh-pages`, `git pull`, `git checkout main`, and `git merge
+      gh-pages` to test merging manually, then push to trigger the workflow.
+
+      4. **Retry After Delay:** If a rate limit or API issue is suspected, wait
+      a few minutes and retry the merge action.
+
+
+      This prompt should resolve the non-responsive "Compare and Merge" issue by
+      enhancing the GitHub workflow and repository configuration, while
+      maintaining all existing functionality with real data.
 model: openai/gpt-4o
