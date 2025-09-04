@@ -1,0 +1,1026 @@
+messages:
+  - role: system
+    content: >-
+      # Fix Build System - Make Iranian Legal Archive System Fully Functional
+
+
+      ## Current Issue Analysis
+
+      Files are synchronized but build generates empty chunks (0.05KB).
+      Components exist but aren't being bundled into final JavaScript output.
+
+
+      ## Task: Fix bundling system and make components functional
+
+
+      ### Step 1: Fix Main Entry Point
+
+      ```bash
+
+      # Check current main.jsx imports
+
+      cat src/main.jsx
+
+
+      # Verify App.jsx imports are correct
+
+      head -50 src/App.jsx
+
+      ```
+
+
+      Fix main.jsx to ensure proper component imports:
+
+      ```jsx
+
+      import React from 'react'
+
+      import ReactDOM from 'react-dom/client'
+
+      import App from './App.jsx'
+
+      import './index.css'
+
+
+      ReactDOM.createRoot(document.getElementById('root')).render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>,
+      )
+
+      ```
+
+
+      ### Step 2: Fix App.jsx Component Integration
+
+      Check and fix App.jsx routing and imports:
+
+      ```bash
+
+      # Verify all imported components exist
+
+      grep -n "import.*from" src/App.jsx | while read line; do
+          component=$(echo "$line" | sed -n "s/.*from ['\"]\.\/\([^'\"]*\)['\"].*/\1/p")
+          if [ -n "$component" ]; then
+              if [ -f "src/$component" ] || [ -f "src/${component}.jsx" ] || [ -f "src/${component}.js" ]; then
+                  echo "✓ Found: $component"
+              else
+                  echo "✗ Missing: $component"
+              fi
+          fi
+      done
+
+      ```
+
+
+      Create proper App.jsx with working imports:
+
+      ```jsx
+
+      import React from 'react'
+
+      import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+
+      import { SystemContextProvider } from './contexts/SystemContext'
+
+      import { WebSocketProvider } from './contexts/WebSocketContext'
+
+      import Header from './components/layout/Header'
+
+      import EnhancedSidebar from './components/layout/EnhancedSidebar'
+
+      import EnhancedDashboard from './components/pages/EnhancedDashboard'
+
+      import EnhancedSearchInterface from
+      './components/pages/EnhancedSearchInterface'
+
+      import EnhancedAIAnalysisDashboard from
+      './components/pages/EnhancedAIAnalysisDashboard'
+
+      import EnhancedProxyDashboard from
+      './components/pages/EnhancedProxyDashboard'
+
+      import EnhancedDocumentProcessing from
+      './components/pages/EnhancedDocumentProcessing'
+
+      import EnhancedSettings from './components/pages/EnhancedSettings'
+
+      import './App.css'
+
+
+      function App() {
+        return (
+          <SystemContextProvider>
+            <WebSocketProvider>
+              <Router>
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 rtl">
+                  <Header />
+                  <div className="flex">
+                    <EnhancedSidebar />
+                    <main className="flex-1 p-6">
+                      <Routes>
+                        <Route path="/" element={<EnhancedDashboard />} />
+                        <Route path="/search" element={<EnhancedSearchInterface />} />
+                        <Route path="/ai-analysis" element={<EnhancedAIAnalysisDashboard />} />
+                        <Route path="/proxy" element={<EnhancedProxyDashboard />} />
+                        <Route path="/processing" element={<EnhancedDocumentProcessing />} />
+                        <Route path="/settings" element={<EnhancedSettings />} />
+                      </Routes>
+                    </main>
+                  </div>
+                </div>
+              </Router>
+            </WebSocketProvider>
+          </SystemContextProvider>
+        )
+      }
+
+
+      export default App
+
+      ```
+
+
+      ### Step 3: Fix Component Exports
+
+      Check and fix all component exports:
+
+      ```bash
+
+      # Check all Enhanced components for proper exports
+
+      for file in src/components/pages/Enhanced*.jsx; do
+          if [ -f "$file" ]; then
+              echo "=== Checking $file ==="
+              tail -5 "$file"
+              if ! grep -q "export default" "$file"; then
+                  echo "✗ Missing export default in $file"
+                  echo "export default $(basename "$file" .jsx)" >> "$file"
+              else
+                  echo "✓ Export found in $file"
+              fi
+          fi
+      done
+
+
+      # Check layout components
+
+      for file in src/components/layout/*.jsx; do
+          if [ -f "$file" ]; then
+              echo "=== Checking $file ==="
+              tail -3 "$file"
+          fi
+      done
+
+      ```
+
+
+      ### Step 4: Fix Context Providers
+
+      Ensure contexts are properly exported:
+
+      ```bash
+
+      # Check SystemContext
+
+      cat src/contexts/SystemContext.jsx | grep -A5 -B5 "export"
+
+
+      # Check WebSocketContext  
+
+      cat src/contexts/WebSocketContext.jsx | grep -A5 -B5 "export"
+
+      ```
+
+
+      Fix context exports if needed:
+
+      ```jsx
+
+      // SystemContext.jsx should end with:
+
+      export { SystemContextProvider, useSystemContext }
+
+
+      // WebSocketContext.jsx should end with:
+
+      export { WebSocketProvider, useWebSocket }
+
+      ```
+
+
+      ### Step 5: Fix Vite Configuration
+
+      Update vite.config.js for proper bundling:
+
+      ```js
+
+      import { defineConfig } from 'vite'
+
+      import react from '@vitejs/plugin-react'
+
+      import path from 'path'
+
+
+      export default defineConfig({
+        plugins: [react()],
+        resolve: {
+          alias: {
+            '@': path.resolve(__dirname, './src'),
+          },
+        },
+        build: {
+          sourcemap: true,
+          rollupOptions: {
+            output: {
+              manualChunks: {
+                'react-vendor': ['react', 'react-dom'],
+                'router': ['react-router-dom'],
+                'ui': ['framer-motion', 'chart.js'],
+              }
+            }
+          }
+        },
+        server: {
+          port: 3000,
+          host: true
+        }
+      })
+
+      ```
+
+
+      ### Step 6: Fix Missing Dependencies
+
+      Check and install any missing dependencies:
+
+      ```bash
+
+      # Check for missing React Router
+
+      npm ls react-router-dom || npm install react-router-dom
+
+
+      # Check for missing Framer Motion
+
+      npm ls framer-motion || npm install framer-motion
+
+
+      # Check for missing Chart.js
+
+      npm ls chart.js || npm install chart.js react-chartjs-2
+
+
+      # Check for missing HuggingFace
+
+      npm ls @huggingface/inference || npm install @huggingface/inference
+
+
+      # Check for missing Tailwind
+
+      npm ls tailwindcss || npm install -D tailwindcss postcss autoprefixer
+
+      ```
+
+
+      ### Step 7: Create Missing Components
+
+      If any components are missing, create minimal versions:
+
+      ```bash
+
+      # Create Header if missing
+
+      if [ ! -f "src/components/layout/Header.jsx" ]; then
+
+      cat > src/components/layout/Header.jsx << 'EOF'
+
+      import React from 'react'
+
+
+      const Header = () => {
+        return (
+          <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold text-gray-900">
+                سیستم آرشیو اسناد حقوقی ایران
+              </h1>
+              <div className="text-sm text-gray-500">
+                وضعیت: آنلاین
+              </div>
+            </div>
+          </header>
+        )
+      }
+
+
+      export default Header
+
+      EOF
+
+      fi
+
+
+      # Create EnhancedSidebar if missing
+
+      if [ ! -f "src/components/layout/EnhancedSidebar.jsx" ]; then
+
+      cat > src/components/layout/EnhancedSidebar.jsx << 'EOF'
+
+      import React from 'react'
+
+      import { Link, useLocation } from 'react-router-dom'
+
+
+      const EnhancedSidebar = () => {
+        const location = useLocation()
+        
+        const menuItems = [
+          { path: '/', name: 'داشبورد', icon: '📊' },
+          { path: '/search', name: 'جستجو', icon: '🔍' },
+          { path: '/ai-analysis', name: 'تحلیل هوش مصنوعی', icon: '🤖' },
+          { path: '/proxy', name: 'مدیریت پروکسی', icon: '🌐' },
+          { path: '/processing', name: 'پردازش اسناد', icon: '📄' },
+          { path: '/settings', name: 'تنظیمات', icon: '⚙️' },
+        ]
+
+        return (
+          <aside className="w-64 bg-white shadow-lg border-r border-gray-200 min-h-screen">
+            <nav className="mt-6">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`block px-6 py-3 text-right hover:bg-gray-50 border-r-4 transition-colors ${
+                    location.pathname === item.path
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-transparent text-gray-700'
+                  }`}
+                >
+                  <span className="ml-3">{item.icon}</span>
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+          </aside>
+        )
+      }
+
+
+      export default EnhancedSidebar
+
+      EOF
+
+      fi
+
+      ```
+
+
+      ### Step 8: Test Build Process
+
+      ```bash
+
+      # Clear node_modules and reinstall
+
+      rm -rf node_modules package-lock.json
+
+      npm install
+
+
+      # Clear Vite cache
+
+      rm -rf node_modules/.vite
+
+
+      # Test build with verbose output
+
+      npm run build -- --mode development
+
+
+      # Check if chunks are now properly sized
+
+      ls -la dist/assets/*.js
+
+
+      # Verify chunk sizes are meaningful (>1KB)
+
+      find dist/assets -name "*.js" -size +1k -exec ls -lh {} \;
+
+      ```
+
+
+      ### Step 9: Fix Runtime Issues
+
+      ```bash
+
+      # Test dev server
+
+      timeout 10 npm run dev &
+
+      sleep 5
+
+      curl -s http://localhost:3000 | grep -q "Iranian Legal Archive" && echo "✓
+      Server responding" || echo "✗ Server issues"
+
+
+      # Check for console errors in build
+
+      node -e "
+
+      const fs = require('fs');
+
+      const path = './dist/index.html';
+
+      if (fs.existsSync(path)) {
+        const content = fs.readFileSync(path, 'utf8');
+        console.log('✓ HTML file generated');
+        console.log('Scripts found:', content.match(/<script[^>]*src/g)?.length || 0);
+      } else {
+        console.log('✗ No HTML file generated');
+      }
+
+      "
+
+      ```
+
+
+      ### Step 10: Final Verification
+
+      ```bash
+
+      # Verify all components can be imported
+
+      node -e "
+
+      const fs = require('fs');
+
+      const path = require('path');
+
+
+      const checkComponent = (filePath, componentName) => {
+        if (!fs.existsSync(filePath)) {
+          console.log('✗ Missing:', componentName, 'at', filePath);
+          return false;
+        }
+        const content = fs.readFileSync(filePath, 'utf8');
+        if (!content.includes('export default')) {
+          console.log('✗ No export in:', componentName);
+          return false;
+        }
+        console.log('✓ Valid:', componentName);
+        return true;
+      };
+
+
+      const components = [
+        ['src/App.jsx', 'App'],
+        ['src/main.jsx', 'main'],
+        ['src/components/pages/EnhancedDashboard.jsx', 'EnhancedDashboard'],
+        ['src/components/pages/EnhancedSearchInterface.jsx', 'EnhancedSearchInterface'],
+        ['src/components/layout/Header.jsx', 'Header'],
+        ['src/components/layout/EnhancedSidebar.jsx', 'EnhancedSidebar']
+      ];
+
+
+      let valid = 0;
+
+      components.forEach(([path, name]) => {
+        if (checkComponent(path, name)) valid++;
+      });
+
+
+      console.log('Valid components:', valid, '/', components.length);
+
+      "
+
+
+      # Final build test
+
+      npm run build && echo "✓ Build successful with proper chunks" || echo "✗
+      Build still failing"
+
+
+      # Check final chunk sizes
+
+      echo "=== Final JavaScript Chunk Sizes ==="
+
+      ls -lh dist/assets/*.js | awk '{print $5, $9}' | sort -hr
+
+      ```
+
+
+      ## Execute each step and report actual results. Only proceed to next step
+      if current step succeeds.
+  - role: user
+    content: >-
+      # Fix Build System - Make Iranian Legal Archive System Fully Functional
+
+
+      ## Current Issue Analysis
+
+      Files are synchronized but build generates empty chunks (0.05KB).
+      Components exist but aren't being bundled into final JavaScript output.
+
+
+      ## Task: Fix bundling system and make components functional
+
+
+      ### Step 1: Fix Main Entry Point
+
+      ```bash
+
+      # Check current main.jsx imports
+
+      cat src/main.jsx
+
+
+      # Verify App.jsx imports are correct
+
+      head -50 src/App.jsx
+
+      ```
+
+
+      Fix main.jsx to ensure proper component imports:
+
+      ```jsx
+
+      import React from 'react'
+
+      import ReactDOM from 'react-dom/client'
+
+      import App from './App.jsx'
+
+      import './index.css'
+
+
+      ReactDOM.createRoot(document.getElementById('root')).render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>,
+      )
+
+      ```
+
+
+      ### Step 2: Fix App.jsx Component Integration
+
+      Check and fix App.jsx routing and imports:
+
+      ```bash
+
+      # Verify all imported components exist
+
+      grep -n "import.*from" src/App.jsx | while read line; do
+          component=$(echo "$line" | sed -n "s/.*from ['\"]\.\/\([^'\"]*\)['\"].*/\1/p")
+          if [ -n "$component" ]; then
+              if [ -f "src/$component" ] || [ -f "src/${component}.jsx" ] || [ -f "src/${component}.js" ]; then
+                  echo "✓ Found: $component"
+              else
+                  echo "✗ Missing: $component"
+              fi
+          fi
+      done
+
+      ```
+
+
+      Create proper App.jsx with working imports:
+
+      ```jsx
+
+      import React from 'react'
+
+      import { HashRouter as Router, Routes, Route } from 'react-router-dom'
+
+      import { SystemContextProvider } from './contexts/SystemContext'
+
+      import { WebSocketProvider } from './contexts/WebSocketContext'
+
+      import Header from './components/layout/Header'
+
+      import EnhancedSidebar from './components/layout/EnhancedSidebar'
+
+      import EnhancedDashboard from './components/pages/EnhancedDashboard'
+
+      import EnhancedSearchInterface from
+      './components/pages/EnhancedSearchInterface'
+
+      import EnhancedAIAnalysisDashboard from
+      './components/pages/EnhancedAIAnalysisDashboard'
+
+      import EnhancedProxyDashboard from
+      './components/pages/EnhancedProxyDashboard'
+
+      import EnhancedDocumentProcessing from
+      './components/pages/EnhancedDocumentProcessing'
+
+      import EnhancedSettings from './components/pages/EnhancedSettings'
+
+      import './App.css'
+
+
+      function App() {
+        return (
+          <SystemContextProvider>
+            <WebSocketProvider>
+              <Router>
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 rtl">
+                  <Header />
+                  <div className="flex">
+                    <EnhancedSidebar />
+                    <main className="flex-1 p-6">
+                      <Routes>
+                        <Route path="/" element={<EnhancedDashboard />} />
+                        <Route path="/search" element={<EnhancedSearchInterface />} />
+                        <Route path="/ai-analysis" element={<EnhancedAIAnalysisDashboard />} />
+                        <Route path="/proxy" element={<EnhancedProxyDashboard />} />
+                        <Route path="/processing" element={<EnhancedDocumentProcessing />} />
+                        <Route path="/settings" element={<EnhancedSettings />} />
+                      </Routes>
+                    </main>
+                  </div>
+                </div>
+              </Router>
+            </WebSocketProvider>
+          </SystemContextProvider>
+        )
+      }
+
+
+      export default App
+
+      ```
+
+
+      ### Step 3: Fix Component Exports
+
+      Check and fix all component exports:
+
+      ```bash
+
+      # Check all Enhanced components for proper exports
+
+      for file in src/components/pages/Enhanced*.jsx; do
+          if [ -f "$file" ]; then
+              echo "=== Checking $file ==="
+              tail -5 "$file"
+              if ! grep -q "export default" "$file"; then
+                  echo "✗ Missing export default in $file"
+                  echo "export default $(basename "$file" .jsx)" >> "$file"
+              else
+                  echo "✓ Export found in $file"
+              fi
+          fi
+      done
+
+
+      # Check layout components
+
+      for file in src/components/layout/*.jsx; do
+          if [ -f "$file" ]; then
+              echo "=== Checking $file ==="
+              tail -3 "$file"
+          fi
+      done
+
+      ```
+
+
+      ### Step 4: Fix Context Providers
+
+      Ensure contexts are properly exported:
+
+      ```bash
+
+      # Check SystemContext
+
+      cat src/contexts/SystemContext.jsx | grep -A5 -B5 "export"
+
+
+      # Check WebSocketContext  
+
+      cat src/contexts/WebSocketContext.jsx | grep -A5 -B5 "export"
+
+      ```
+
+
+      Fix context exports if needed:
+
+      ```jsx
+
+      // SystemContext.jsx should end with:
+
+      export { SystemContextProvider, useSystemContext }
+
+
+      // WebSocketContext.jsx should end with:
+
+      export { WebSocketProvider, useWebSocket }
+
+      ```
+
+
+      ### Step 5: Fix Vite Configuration
+
+      Update vite.config.js for proper bundling:
+
+      ```js
+
+      import { defineConfig } from 'vite'
+
+      import react from '@vitejs/plugin-react'
+
+      import path from 'path'
+
+
+      export default defineConfig({
+        plugins: [react()],
+        resolve: {
+          alias: {
+            '@': path.resolve(__dirname, './src'),
+          },
+        },
+        build: {
+          sourcemap: true,
+          rollupOptions: {
+            output: {
+              manualChunks: {
+                'react-vendor': ['react', 'react-dom'],
+                'router': ['react-router-dom'],
+                'ui': ['framer-motion', 'chart.js'],
+              }
+            }
+          }
+        },
+        server: {
+          port: 3000,
+          host: true
+        }
+      })
+
+      ```
+
+
+      ### Step 6: Fix Missing Dependencies
+
+      Check and install any missing dependencies:
+
+      ```bash
+
+      # Check for missing React Router
+
+      npm ls react-router-dom || npm install react-router-dom
+
+
+      # Check for missing Framer Motion
+
+      npm ls framer-motion || npm install framer-motion
+
+
+      # Check for missing Chart.js
+
+      npm ls chart.js || npm install chart.js react-chartjs-2
+
+
+      # Check for missing HuggingFace
+
+      npm ls @huggingface/inference || npm install @huggingface/inference
+
+
+      # Check for missing Tailwind
+
+      npm ls tailwindcss || npm install -D tailwindcss postcss autoprefixer
+
+      ```
+
+
+      ### Step 7: Create Missing Components
+
+      If any components are missing, create minimal versions:
+
+      ```bash
+
+      # Create Header if missing
+
+      if [ ! -f "src/components/layout/Header.jsx" ]; then
+
+      cat > src/components/layout/Header.jsx << 'EOF'
+
+      import React from 'react'
+
+
+      const Header = () => {
+        return (
+          <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-2xl font-bold text-gray-900">
+                سیستم آرشیو اسناد حقوقی ایران
+              </h1>
+              <div className="text-sm text-gray-500">
+                وضعیت: آنلاین
+              </div>
+            </div>
+          </header>
+        )
+      }
+
+
+      export default Header
+
+      EOF
+
+      fi
+
+
+      # Create EnhancedSidebar if missing
+
+      if [ ! -f "src/components/layout/EnhancedSidebar.jsx" ]; then
+
+      cat > src/components/layout/EnhancedSidebar.jsx << 'EOF'
+
+      import React from 'react'
+
+      import { Link, useLocation } from 'react-router-dom'
+
+
+      const EnhancedSidebar = () => {
+        const location = useLocation()
+        
+        const menuItems = [
+          { path: '/', name: 'داشبورد', icon: '📊' },
+          { path: '/search', name: 'جستجو', icon: '🔍' },
+          { path: '/ai-analysis', name: 'تحلیل هوش مصنوعی', icon: '🤖' },
+          { path: '/proxy', name: 'مدیریت پروکسی', icon: '🌐' },
+          { path: '/processing', name: 'پردازش اسناد', icon: '📄' },
+          { path: '/settings', name: 'تنظیمات', icon: '⚙️' },
+        ]
+
+        return (
+          <aside className="w-64 bg-white shadow-lg border-r border-gray-200 min-h-screen">
+            <nav className="mt-6">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`block px-6 py-3 text-right hover:bg-gray-50 border-r-4 transition-colors ${
+                    location.pathname === item.path
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-transparent text-gray-700'
+                  }`}
+                >
+                  <span className="ml-3">{item.icon}</span>
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+          </aside>
+        )
+      }
+
+
+      export default EnhancedSidebar
+
+      EOF
+
+      fi
+
+      ```
+
+
+      ### Step 8: Test Build Process
+
+      ```bash
+
+      # Clear node_modules and reinstall
+
+      rm -rf node_modules package-lock.json
+
+      npm install
+
+
+      # Clear Vite cache
+
+      rm -rf node_modules/.vite
+
+
+      # Test build with verbose output
+
+      npm run build -- --mode development
+
+
+      # Check if chunks are now properly sized
+
+      ls -la dist/assets/*.js
+
+
+      # Verify chunk sizes are meaningful (>1KB)
+
+      find dist/assets -name "*.js" -size +1k -exec ls -lh {} \;
+
+      ```
+
+
+      ### Step 9: Fix Runtime Issues
+
+      ```bash
+
+      # Test dev server
+
+      timeout 10 npm run dev &
+
+      sleep 5
+
+      curl -s http://localhost:3000 | grep -q "Iranian Legal Archive" && echo "✓
+      Server responding" || echo "✗ Server issues"
+
+
+      # Check for console errors in build
+
+      node -e "
+
+      const fs = require('fs');
+
+      const path = './dist/index.html';
+
+      if (fs.existsSync(path)) {
+        const content = fs.readFileSync(path, 'utf8');
+        console.log('✓ HTML file generated');
+        console.log('Scripts found:', content.match(/<script[^>]*src/g)?.length || 0);
+      } else {
+        console.log('✗ No HTML file generated');
+      }
+
+      "
+
+      ```
+
+
+      ### Step 10: Final Verification
+
+      ```bash
+
+      # Verify all components can be imported
+
+      node -e "
+
+      const fs = require('fs');
+
+      const path = require('path');
+
+
+      const checkComponent = (filePath, componentName) => {
+        if (!fs.existsSync(filePath)) {
+          console.log('✗ Missing:', componentName, 'at', filePath);
+          return false;
+        }
+        const content = fs.readFileSync(filePath, 'utf8');
+        if (!content.includes('export default')) {
+          console.log('✗ No export in:', componentName);
+          return false;
+        }
+        console.log('✓ Valid:', componentName);
+        return true;
+      };
+
+
+      const components = [
+        ['src/App.jsx', 'App'],
+        ['src/main.jsx', 'main'],
+        ['src/components/pages/EnhancedDashboard.jsx', 'EnhancedDashboard'],
+        ['src/components/pages/EnhancedSearchInterface.jsx', 'EnhancedSearchInterface'],
+        ['src/components/layout/Header.jsx', 'Header'],
+        ['src/components/layout/EnhancedSidebar.jsx', 'EnhancedSidebar']
+      ];
+
+
+      let valid = 0;
+
+      components.forEach(([path, name]) => {
+        if (checkComponent(path, name)) valid++;
+      });
+
+
+      console.log('Valid components:', valid, '/', components.length);
+
+      "
+
+
+      # Final build test
+
+      npm run build && echo "✓ Build successful with proper chunks" || echo "✗
+      Build still failing"
+
+
+      # Check final chunk sizes
+
+      echo "=== Final JavaScript Chunk Sizes ==="
+
+      ls -lh dist/assets/*.js | awk '{print $5, $9}' | sort -hr
+
+      ```
+
+
+      ## Execute each step and report actual results. Only proceed to next step
+      if current step succeeds.
+model: openai/gpt-4o
