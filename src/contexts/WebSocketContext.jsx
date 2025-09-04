@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
-import { API_ENDPOINTS } from './SystemContext'
+import { API_ENDPOINTS } from '../config/apiEndpoints'
 
 const WebSocketContext = createContext()
 

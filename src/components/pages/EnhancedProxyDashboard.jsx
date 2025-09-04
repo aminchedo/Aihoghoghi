@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSystem } from '../../contexts/SystemContext'
 import { useWebSocket } from '../../contexts/WebSocketContext'
-import { IRANIAN_DNS_SERVERS } from '../../contexts/SystemContext'
+import { IRANIAN_DNS_SERVERS } from '../../config/apiEndpoints'
 import { 
   Server, 
   Globe, 

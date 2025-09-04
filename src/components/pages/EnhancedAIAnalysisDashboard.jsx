@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSystem } from '../../contexts/SystemContext'
 import { useWebSocket } from '../../contexts/WebSocketContext'
-import { AI_MODELS } from '../../contexts/SystemContext'
+import { AI_MODELS } from '../../config/apiEndpoints'
 import { 
   Brain, 
   Zap, 
