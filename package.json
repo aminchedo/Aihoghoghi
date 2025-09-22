@@ -49,7 +49,7 @@
     "react-hot-toast": "^2.4.0",
     "react-router-dom": "^6.8.1",
     "react-virtualized-auto-sizer": "^1.0.20",
-    "react-window": "^1.8.8",
+    "react-window": "^2.1.1",
     "cross-env": "^7.0.3"
   },
   "devDependencies": {
@@ -59,7 +59,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
-    "@types/react-window": "^1.8.5",
+    "@types/react-window": "^2.0.0",
     "@vitejs/plugin-react": "^3.1.0",
     "@vitest/coverage-c8": "^0.28.5",
     "@vitest/ui": "^0.28.5",
